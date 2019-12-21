@@ -17,22 +17,22 @@
             <div class="page-header">
                 <h2>Prijavite se</h2>
             </div>
-            <form method="GET" action="login">
+            <p id="login" v-on:keyup.enter = "login(kime, sifra)">
                 <table>
                     <tr>
                         <td>
-                            Ime
+                            Korisničko ime
                         </td>
                         <td>
-                            <input type="text" name="ime">
+                            <input type="text" v-model="kime">
                         </td>
                     </tr>
                     <tr>
                         <td>
-                        Šifra
+                            Šifra
                         </td>
                         <td>
-                            <input type="password" name="sifra">
+                            <input type="password" v-model="sifra">
                         </td>
                     </tr>
                     <tr>
@@ -40,15 +40,14 @@
                         
                         </td>
                         <td>
-                            <input type="submit" ="Prijavite se">
+                            <button v-on:click = "login(kime, sifra)">Prijavite se</button>
                         </td>
-                    </tr>
-                    
+                    </tr> 
                 </table>
     
                 
                 
-            </form>
+            </p>
         </div>
 
 
@@ -60,6 +59,7 @@
         <script src="js/popper.js"></script>
         <script src="js/Vue.js"></script>
         <script src="js/axios.js"></script>
+        <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="app/login.js"></script>
 

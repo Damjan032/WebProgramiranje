@@ -10,6 +10,9 @@ public class Korisnik {
 	private Uloga uloga;
 	private List<Aktivnost> aktivnosti;
 
+	public Korisnik(Uloga uloga) {
+		this.uloga = uloga;
+	}
 
 	public Korisnik(String email, String ime, String prezime, String organizacija, Uloga uloga, List<Aktivnost> aktivnosti) {
 		this.email = email;

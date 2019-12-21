@@ -1,20 +1,28 @@
 $("#header").load("header.html");
 $("#footer").load("footer.html");
-$("form").addEventListener("submit",function(event){
-    let inputs =  document.getElementsByTagName("input");
-    let flag = false;
-    for(let input of inputs){
-        if(input.type=="text" || input.type=="number"){
-            if(!input.value){
-                input.style.borderColor = "red";
-                flag = true;
-            }
+
+
+let loginapp = new Vue({
+    el:"#login",
+    data: {
+        kime : null,
+        sifra :null
+    },
+    
+    methods:{
+        login:function(k, s) {
+            let promise = axios.get("/login",k, s )
+            promise.then(response=>{
+                if (response.data.status) {
+                    // window.location.replace("vmpregled.html");
+                }else{
+                    alert(response.data.poruka);
+                }
+
+            });
         }
-        if(input.get)
     }
-    if(flag){
-        event.preventDefault();
-    }
+});
 
 
 
