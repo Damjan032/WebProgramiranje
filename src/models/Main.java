@@ -55,13 +55,11 @@ public class Main {
                 if(session.attribute("user")!=null){
                     return g.toJson(new LoginPoruka("Već ste prijavljeni", false));
                 }
-                String kime = req.params("kime");
-                String sifra = req.params("sifra");
+                String kime = req.queryParams("kime");
+                String sifra = req.queryParams("sifra");
                 LoginPoruka lp = sistem.login(kime, sifra);
                 if(lp.isStatus()) {
                     session.attribute("user", lp.getK());
-                    res.redirect("/vmpregled.html");
-                    return "OK";
                 }
                 return g.toJson(lp.toPoruka());
             });

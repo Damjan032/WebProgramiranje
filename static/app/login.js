@@ -5,19 +5,26 @@ $("#footer").load("footer.html");
 let loginapp = new Vue({
     el:"#login",
     data: {
-        kime : null,
-        sifra :null
+        kime : "",
+        sifra :""
     },
     
     methods:{
         login:function(k, s) {
-            let promise = axios.get("/login",k, s )
+            let promise = axios.get("/login",{params: {
+                kime:k,
+                sifra:s
+              }
+             }
+            )
             promise.then(response=>{
-                if (response.data.status) {
-                    // window.location.replace("vmpregled.html");
-                }else{
-                    alert(response.data.poruka);
-                }
+                    new Toast({
+                        message:response.data.poruka,
+                        type: 'danger'
+                    });
+                    if (response.data.status) {
+                        window.location.replace("/vmpregled.html");
+                    }
 
             });
         }
