@@ -16,7 +16,7 @@ public class LoginPoruka extends Poruka{
     }
 
 
-    public Korisnik getK() {
+    public Korisnik getKorisnik() {
         return k;
     }
 

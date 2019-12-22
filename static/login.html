@@ -8,49 +8,61 @@
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/toast.css">
     </head>
-    <body>
-        <div id="header">
-
-        </div>
-
-        <div class="jumbotron"><h1>Prijava korisnika</h1></div>
-        <div class="container">
-            <div class="page-header">
-                <h2>Prijavite se</h2>
-            </div>
-            <p id="login" v-on:keyup.enter = "login(kime, sifra)">
-                <table>
-                    <tr>
-                        <td>
-                            Korisničko ime
-                        </td>
-                        <td>
-                            <input type="text" v-model="kime"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Šifra
-                        </td>
-                        <td>
-                            <input type="password" v-model="sifra"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        
-                        </td>
-                        <td>
-                            <button v-on:click = "login(kime, sifra)">Prijavite se</button>
-                        </td>
-                    </tr> 
-                </table>
+    <body >
+        <div id="login">
+            <site-header>
+            </site-header>
     
-                
-                
-            </p>
+            <div class="jumbotron"><h1>Prijava korisnika</h1></div>
+            <div class="container">
+                <div class="page-header">
+                    <h2>Prijavite se</h2>
+                </div>
+                <p id="login" v-on:keyup.enter = "login(kime, sifra)">
+                    <table>
+                        <tr>
+                            <td>
+                                Korisničko ime
+                            </td>
+                            <td>
+                                <input type="text" v-model="kime"/>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Šifra
+                            </td>
+                            <td>
+                                <input type="password" v-model="sifra"/>
+                            </td>
+                            <td>
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            
+                            </td>
+                            <td>
+                                <button v-on:click = "login(kime, sifra)">Prijavite se</button>
+                            </td>
+                        </tr> 
+                    </table>
+        
+                    
+                    
+                </p>
+            </div>
+    
         </div>
-
+        
 
         <div id="footer">
 
@@ -59,9 +71,11 @@
         <script src="js/jquery.js"></script>
         <script src="js/popper.js"></script>
         <script src="js/Vue.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="js/axios.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
         <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="app/header.js"></script>
         <script src="app/login.js"></script>
 
     </body>

@@ -21,7 +21,7 @@ public class Sistem {
         }
         KorisnikNalog kn =korisnici.get(username);
         if (kn.getSifraHash() == password.hashCode()){
-            return  new LoginPoruka("Uspešno prijavljicanje", true);
+            return  new LoginPoruka("Uspešno prijavljicanje", true, kn.getKorisnik());
         }
 
         return  new LoginPoruka("Pogrešna šifra!", false);

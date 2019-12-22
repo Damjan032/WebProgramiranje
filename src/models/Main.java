@@ -37,12 +37,14 @@ public class Main {
                 Korisnik k = s.attribute("user");
                 if(k==null){
                     res.redirect("/login.html");
-                    return "OK";
+                    return null;
                 }
+                res.redirect("/vmpregled.html");
                 return null;
             });
             get("/isloggedin", (req, res) -> {
                 Session s = req.session();
+                System.out.println(s.attribute("user")!=null);
                 if(s.attribute("user")==null){
                     return g.toJson(false);
                 }else{
@@ -52,6 +54,9 @@ public class Main {
             get("/hello", (req, res) -> {return "OK";});
             get("/login", (req, res) -> {
                 Session session = req.session();
+                if(session==null){
+                    session = req.session(true);
+                }
                 if(session.attribute("user")!=null){
                     return g.toJson(new LoginPoruka("Već ste prijavljeni", false));
                 }
@@ -59,20 +64,20 @@ public class Main {
                 String sifra = req.queryParams("sifra");
                 LoginPoruka lp = sistem.login(kime, sifra);
                 if(lp.isStatus()) {
-                    session.attribute("user", lp.getK());
+                    session.attribute("user", lp.getKorisnik());
                 }
-                return g.toJson(lp.toPoruka());
+                return g.toJson(lp);
             });
 
             get("/logout", (req, res) -> {
                 Session session = req.session();
-                if(session.attribute("user")!=null){
-                    res.body(g.toJson(new Poruka("Već ste odjavljeni!", false)));
-                    return "";
+                if(session.attribute("user")==null){
+                    return g.toJson(new Poruka("Već ste odjavljeni!", false));
                 }
+                session.removeAttribute("user");
                 session.invalidate();
-                res.redirect("/login.html");
-                return "OK";});
+                return g.toJson(new Poruka("Odjava uspešna.", true));
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
