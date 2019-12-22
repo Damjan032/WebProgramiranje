@@ -78,6 +78,7 @@ public class Main {
                 session.invalidate();
                 return g.toJson(new Poruka("Odjava uspešna.", true));
             });
+
         }catch (Exception e){
             e.printStackTrace();
         }
