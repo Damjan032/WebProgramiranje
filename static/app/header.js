@@ -1,13 +1,36 @@
 Vue.component("site-header", {
 	data: function () {
 		    return {
-		      loggedin: false
+		      type: ""
 		    }
 	},
 	template: ` 
-    <nav class="navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand">Cloud service</a>
-        <button v-if = "loggedin==true" v-on:click = "odjava()">Odjavi se</button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Virtualne mašine <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Diskovi <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" v-if = "type=='super_admin'">
+                    <a class="nav-link" href="#">Organizacije <span class="sr-only">(current)</span></a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Korisnici <span class="sr-only">(current)</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Kategorije <span class="sr-only">(current)</span></a>
+                </li>
+
+            </ul>
+        </div>
+        <button v-if = "type" v-on:click = "odjava()">Odjavi se</button>
+
     </nav>	  
 `
 	, 
@@ -26,9 +49,9 @@ Vue.component("site-header", {
         }
 	},
 	mounted () {
-        axios.get('/isloggedin').then(response => {
-            this.loggedin = response.data;
-        })   
+        axios.get('/getUserType').then(response => {
+            this.type = response.data;
+        }); 
     }
 });
 

@@ -42,6 +42,8 @@ public class Main {
                 res.redirect("/vmpregled.html");
                 return null;
             });
+
+            //DEPRECATED
             get("/isloggedin", (req, res) -> {
                 Session s = req.session();
                 System.out.println(s.attribute("user")!=null);
@@ -51,6 +53,18 @@ public class Main {
                     return g.toJson(true);
                 }
             });
+
+            get("/getUserType", (req, res) -> {
+                Session s = req.session();
+                System.out.println(s.attribute("user")!=null);
+                Korisnik k = s.attribute("user");
+                if(k==null){
+                    return "";
+                }else{
+                    return g.toJson(k.getUloga().toString());
+                }
+            });
+
             get("/hello", (req, res) -> {return "OK";});
             get("/login", (req, res) -> {
                 Session session = req.session();
