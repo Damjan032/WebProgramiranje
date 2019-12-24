@@ -20,7 +20,7 @@ Vue.component("site-header", {
                 </li>
             
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Korisnici <span class="sr-only">(current)</span></a>
+                    <a v-if = "type=='super_admin'||type=='admin'" class="nav-link" href="korisnici.html">Korisnici <span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item">

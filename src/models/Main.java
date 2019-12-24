@@ -119,6 +119,14 @@ public class Main {
                 return g.toJson(p);
             });
 
+            get("/getKorisnici", (req, res) -> {
+                Session session = req.session();
+                Korisnik user = session.attribute("user");
+                if(user == null){
+                    return g.toJson(false);
+                }
+                return g.toJson(sistem.getKorisnici(user));
+            });
         }catch (Exception e){
             e.printStackTrace();
         }

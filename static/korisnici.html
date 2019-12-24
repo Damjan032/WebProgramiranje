@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title>
+            Prijavite se
+        </title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/toast.css">
+    </head>
+    <body >
+        <div id="korisnici">
+            <site-header>
+            </site-header>
+    
+            <div class="jumbotron"><h1>Pregled korisnika</h1></div>
+            <div class="container">
+                <div class="page-header">
+                    <h2>Korisnici</h2>
+                </div>
+                <p>
+                    <h3 v-if = "korisnici.length == 0">
+                       Trenutno nema korisnika 
+                    </h3>
+                    <table v-else>
+                        <tr>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Ime
+                            </th>
+                            <th>
+                                Prezime
+                            </th>
+                            <th v-if = "korisnikType=='super_admin'">
+                                Organizacija
+                            </th>
+                        </tr>
+
+                        <tr v-for = "k in korisnici">
+                            <td>
+                               {{k.email}} 
+                            </td>
+                            <td>
+                                {{k.ime}} 
+                             </td>
+                             <td>
+                                {{k.prezime}} 
+                             </td>
+                             <td v-if = "korisnikType=='super_admin'">
+                                {{k.Organizacija}} 
+                             </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                <a href="dodajKorisnika.html">
+                                    <button type="button" class="btn btn-success">Dodaj korisnima</button>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+            </div>
+    
+        </div>
+        
+
+        <div id="footer">
+
+        </div>
+        
+        <script src="js/jquery.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/Vue.js"></script>
+        <script src="js/axios.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
+        <script src="js/toast.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="app/header.js"></script>
+        <script src="app/korisnici.js"></script>
+
+    </body>
+</html>
