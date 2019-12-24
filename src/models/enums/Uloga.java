@@ -8,7 +8,7 @@ public enum Uloga {
 
     @Override
     public String toString() {
-        switch (this){
+        switch (this) {
 
             case SUPER_ADMIN:
                 return "super_admin";

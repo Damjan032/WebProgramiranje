@@ -17,7 +17,6 @@ public class Disk extends Resurs {
     }
 
 
-
     public TipDiska getTip() {
         return tip;
     }

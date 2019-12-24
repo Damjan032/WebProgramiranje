@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/toast.css">
+    <link rel="shortcut icon" href="">
 </head>
 <body >
 <div id="organizacije">
@@ -37,8 +38,7 @@
 
             <tr v-for = "o in organizacije" >
                     <td>
-                     <!-- <img v-bind:src="o.imgPath" class="rounded" > -->
-                        {{o.imgPath}}
+                     <img width="100" height="100" v-bind:src="o.imgPath" class="rounded" >
                    </td>
                    <td>
                        {{o.ime}}

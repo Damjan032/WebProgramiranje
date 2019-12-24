@@ -2,7 +2,7 @@ package models.komunikacija;
 
 import models.Korisnik;
 
-public class LoginPoruka extends Poruka{
+public class LoginPoruka extends Poruka {
     Korisnik k;
 
     public LoginPoruka(String poruka, boolean status) {

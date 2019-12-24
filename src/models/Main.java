@@ -5,12 +5,13 @@ import models.komunikacija.LoginPoruka;
 import models.komunikacija.Poruka;
 import spark.Session;
 
-import javax.imageio.ImageIO;
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.stream.Collectors;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static spark.Spark.*;
 
@@ -19,16 +20,17 @@ public class Main {
     private static Gson g = new Gson();
     private static Sistem sistem;
     private static final String DATA_PATH = "./data/sistem.json";
+
     public static void load() throws IOException {
         File f = new File(DATA_PATH);
-        if(!f.exists()){
-            if(f.createNewFile()){
-                System.out.println("File "+DATA_PATH+" created.");
+        if (!f.exists()) {
+            if (f.createNewFile()) {
+                System.out.println("File " + DATA_PATH + " created.");
             }
         }
 
         sistem = g.fromJson(new BufferedReader(new InputStreamReader(new FileInputStream(f))), Sistem.class);
-        if(sistem == null){
+        if (sistem == null) {
             sistem = new Sistem();
         }
     }
@@ -40,7 +42,7 @@ public class Main {
             get("/", (req, res) -> {
                 Session s = req.session();
                 Korisnik k = s.attribute("user");
-                if(k==null){
+                if (k == null) {
                     res.redirect("/login.html");
                     return null;
                 }
@@ -51,38 +53,40 @@ public class Main {
             //DEPRECATED
             get("/isloggedin", (req, res) -> {
                 Session s = req.session();
-                System.out.println(s.attribute("user")!=null);
-                if(s.attribute("user")==null){
+                System.out.println(s.attribute("user") != null);
+                if (s.attribute("user") == null) {
                     return g.toJson(false);
-                }else{
+                } else {
                     return g.toJson(true);
                 }
             });
 
             get("/getUserType", (req, res) -> {
                 Session s = req.session();
-                System.out.println(s.attribute("user")!=null);
+                System.out.println(s.attribute("user") != null);
                 Korisnik k = s.attribute("user");
-                if(k==null){
+                if (k == null) {
                     return "";
-                }else{
+                } else {
                     return g.toJson(k.getUloga().toString());
                 }
             });
 
-            get("/hello", (req, res) -> {return "OK";});
+            get("/hello", (req, res) -> {
+                return "OK";
+            });
             get("/login", (req, res) -> {
                 Session session = req.session();
-                if(session==null){
+                if (session == null) {
                     session = req.session(true);
                 }
-                if(session.attribute("user")!=null){
+                if (session.attribute("user") != null) {
                     return g.toJson(new LoginPoruka("Već ste prijavljeni", false));
                 }
                 String kime = req.queryParams("kime");
                 String sifra = req.queryParams("sifra");
                 LoginPoruka lp = sistem.login(kime, sifra);
-                if(lp.isStatus()) {
+                if (lp.isStatus()) {
                     session.attribute("user", lp.getKorisnik());
                 }
                 return g.toJson(lp);
@@ -90,7 +94,7 @@ public class Main {
 
             get("/logout", (req, res) -> {
                 Session session = req.session();
-                if(session.attribute("user")==null){
+                if (session.attribute("user") == null) {
                     return g.toJson(new Poruka("Već ste odjavljeni!", false));
                 }
                 session.removeAttribute("user");
@@ -111,8 +115,8 @@ public class Main {
                 System.out.println("TIP" + type);
 
                 InputStream file = req.raw().getPart("oSlika").getInputStream();
-                Poruka p = sistem.getOrgController().addOrg(ime,opis, file, type);
-                if (p.isStatus()){
+                Poruka p = sistem.getOrgController().addOrg(ime, opis, file, type);
+                if (p.isStatus()) {
 
                 }
 
@@ -122,22 +126,46 @@ public class Main {
             get("/getOrganizacije", (req, res) -> {
                 Session session = req.session();
                 Korisnik user = session.attribute("user");
-                System.out.println("DJES PICKOOOO");
-                if(user == null){
+                if (user == null) {
                     return g.toJson(false);
                 }
                 return g.toJson(sistem.getOrgController().getOrganizacije());
             });
 
+            get("/data/img/:image", (req, res) -> {
+                String slika = req.params(":image");
+                Path path = Paths.get("data/img/" + slika);
+                String type = slika.split("\\.")[1];
+                byte[] data = null;
+                try {
+                    data = Files.readAllBytes(path);
+                } catch (Exception e1) {
+
+                    e1.printStackTrace();
+                }
+                HttpServletResponse raw = res.raw();
+
+                res.type("image/" + type);
+                try {
+                    raw.getOutputStream().write(data);
+                    raw.getOutputStream().flush();
+                    raw.getOutputStream().close();
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+                return raw;
+            });
+
             get("/getKorisnici", (req, res) -> {
                 Session session = req.session();
                 Korisnik user = session.attribute("user");
-                if(user == null){
+                if (user == null) {
                     return g.toJson(false);
                 }
                 return g.toJson(sistem.getKorisnici(user));
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
