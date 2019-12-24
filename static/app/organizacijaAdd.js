@@ -35,16 +35,16 @@ let organizacijaApp = new Vue({
             if(!this.checkParams()){
                 return;
             }
-            console.log(this.slika);
-            // let slika =document.getElementsByClassName("slika");
-            const fd = new FormData();
+           // console.log(this.slika.name);
+            let data = new FormData();
 
-            fd.append('image', this.slika, this.slika.name);
-            console.log(this.fd);
-            let promise = axios.get('/orgAddSubmit', {params: {oSlika :fd, oIme : ime, oOpis : opis }})
+            data.append("nazivSlike", this.slika.name)
+            data.append('oIme', ime);
+            data.append('oOpis', opis);
+            data.append('oSlika',this.slika);
+            let promise = axios.post('/orgAddSubmit', data, { headers: {'Content-Type': 'multipart/form-data'}});
 
             promise.then(response=>{
-                console.log(response);
                 new Toast({
                     message:response.data.poruka,
                     type: 'danger'

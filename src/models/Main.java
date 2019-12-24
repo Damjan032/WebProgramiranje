@@ -5,7 +5,12 @@ import models.komunikacija.LoginPoruka;
 import models.komunikacija.Poruka;
 import spark.Session;
 
+import javax.imageio.ImageIO;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
@@ -93,14 +98,20 @@ public class Main {
                 return g.toJson(new Poruka("Odjava uspešna.", true));
             });
 
-            get("/orgAddSubmit", (req, res) -> {
+            post("/orgAddSubmit", (req, res) -> {
                 Session session = req.session();
-                String ime, opis;
+                String ime, opis, type;
+
+                req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+                Part iIme = req.raw().getPart("oIme"); //Ovo ne radi
                 ime = req.queryParams("oIme");
                 opis = req.queryParams("oOpis");
-               // c.
-             //   System.out.println(c.getClass().getName());
-                Poruka p = sistem.addOrg(ime,opis,"");
+                type = req.queryParams("nazivSlike").split("\\.")[1];
+                System.out.println("TIP" + type);
+
+                InputStream file = req.raw().getPart("oSlika").getInputStream();
+                Poruka p = sistem.getOrgController().addOrg(ime,opis, file, type);
                 if (p.isStatus()){
 
                 }

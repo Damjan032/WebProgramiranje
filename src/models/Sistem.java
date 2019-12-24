@@ -1,18 +1,28 @@
 package models;
 
+import controllers.OrganizacijaController;
 import models.enums.Uloga;
 import models.komunikacija.LoginPoruka;
 import models.komunikacija.Poruka;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Sistem {
     private HashMap<String, KorisnikNalog> korisnici = new HashMap<>();
-    private ArrayList<Organizacija> organizacije = new ArrayList<>();
+    private OrganizacijaController orgController = OrganizacijaController.getInstance();
 
-
+    public OrganizacijaController getOrgController() {
+        return orgController;
+    }
 
     public Sistem() {
         korisnici.put("superadmin",  new KorisnikNalog(new Korisnik(Uloga.SUPER_ADMIN),"superadmin".hashCode()));
@@ -31,14 +41,5 @@ public class Sistem {
         return  new LoginPoruka("Pogrešna šifra!", false);
     }
 
-    public Poruka addOrg(String name, String opis, String imgPath){
-        System.out.println("NAAAAAAAAAME" + name);
-        for (Organizacija o: organizacije) {
-            if (o.getIme().equalsIgnoreCase(name))
-                return new Poruka("Organizacija je vec uneta", false);
-        };
-        organizacije.add(new Organizacija(name,opis,imgPath, new ArrayList<>(), new ArrayList<>()));
-        return new Poruka("Uspesno uneta organizacija", true);
-    }
 
 }
