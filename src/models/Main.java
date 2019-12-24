@@ -93,6 +93,21 @@ public class Main {
                 return g.toJson(new Poruka("Odjava uspešna.", true));
             });
 
+            get("/orgAddSubmit", (req, res) -> {
+                Session session = req.session();
+                String ime, opis;
+                ime = req.queryParams("oIme");
+                opis = req.queryParams("oOpis");
+               // c.
+             //   System.out.println(c.getClass().getName());
+                Poruka p = sistem.addOrg(ime,opis,"");
+                if (p.isStatus()){
+
+                }
+
+                return g.toJson(p);
+            });
+
         }catch (Exception e){
             e.printStackTrace();
         }

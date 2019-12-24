@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
 </head>
 <body>
-    <div id="addOrganizaciju">
+    <div id="orgAdd">
         <div class="jumbotron"><h1>Prijava korisnika</h1></div>
-        <div class="container">
-            Naziv organizacije: <input type="text" v-model="oIme"/>
+        <div  class="container">
+            Naziv organizacije: <input  type="text" v-model="oIme"/>
             <p  class="alert alert-danger d-none">
                 Ovo polje je obavezno!
             </p>
@@ -24,12 +24,12 @@
                 Ovo polje je obavezno!
             </p>
             <br><br>
-            Odaberi sliku:  <input type="file" v-model="oImgPath"  name="pic" accept="image/*"/>
+            Odaberi sliku:  <input @change= "onFileSelected" class="slika" type="file"  name="slika" accept="image/*"/>
             <p  class="alert alert-danger d-none">
                 Ovo polje je obavezno!
             </p>
             <br><br>
-            <button @click = "addOrganizaciju(oIme, oOpis, oImgPath)">Dodaj organizaciju</button>
+            <button  @click = "addOrganizaciju(oIme, oOpis)">Dodaj organizaciju</button>
         </div>
 
     </div>
