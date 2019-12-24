@@ -1,26 +1,16 @@
 package models;
 
-import controllers.OrganizacijaController;
+import models.moduli.OrganizacijeModul;
 import models.enums.Uloga;
 import models.komunikacija.LoginPoruka;
-import models.komunikacija.Poruka;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Sistem {
     private HashMap<String, KorisnikNalog> korisnici = new HashMap<>();
-    private OrganizacijaController orgController = OrganizacijaController.getInstance();
+    private OrganizacijeModul orgController = OrganizacijeModul.getInstance();
 
-    public OrganizacijaController getOrgController() {
+    public OrganizacijeModul getOrgController() {
         return orgController;
     }
 
