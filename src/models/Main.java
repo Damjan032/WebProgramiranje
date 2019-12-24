@@ -119,6 +119,16 @@ public class Main {
                 return g.toJson(p);
             });
 
+            get("/getOrganizacije", (req, res) -> {
+                Session session = req.session();
+                Korisnik user = session.attribute("user");
+                System.out.println("DJES PICKOOOO");
+                if(user == null){
+                    return g.toJson(false);
+                }
+                return g.toJson(sistem.getOrgController().getOrganizacije());
+            });
+
             get("/getKorisnici", (req, res) -> {
                 Session session = req.session();
                 Korisnik user = session.attribute("user");

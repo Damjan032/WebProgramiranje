@@ -21,6 +21,7 @@ public class Sistem {
 
     public Sistem() {
         korisniciNalozi.put("superadmin",  new KorisnikNalog(new Korisnik(Uloga.SUPER_ADMIN),"superadmin".hashCode()));
+        korisnici.add(new Korisnik("a dsd", "sdsad ", "asd sad", " sadasd", Uloga.KORISNIK, null));
     }
 
 

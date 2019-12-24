@@ -37,7 +37,6 @@ let organizacijaApp = new Vue({
             }
            // console.log(this.slika.name);
             let data = new FormData();
-
             data.append("nazivSlike", this.slika.name)
             data.append('oIme', ime);
             data.append('oOpis', opis);

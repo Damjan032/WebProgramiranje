@@ -29,8 +29,10 @@ public class OrganizacijeModul {
     }
 
     public static OrganizacijeModul getInstance(){
-        if (orgControler == null)
+        if (orgControler == null) {
             orgControler = new OrganizacijeModul();
+            orgControler.organizacije.add(new Organizacija("Pera", "Mnogo dobra", "data/img/pera.png", new ArrayList<>(),new ArrayList<>() ));
+        }
 
         return orgControler;
     }
@@ -47,10 +49,10 @@ public class OrganizacijeModul {
         };
 
         BufferedImage img = ImageIO.read(new ByteArrayInputStream(imgFile.readAllBytes()));
-        File outputfile = new File("data/img/" +ime+".png");
+        File outputfile = new File("data/img/" +ime.toLowerCase().trim()+"." + type);
         ImageIO.write(img, type, outputfile);
 
-        organizacije.add(new Organizacija(ime,opis,outputfile.getAbsolutePath(), new ArrayList<>(), new ArrayList<>()));
+        organizacije.add(new Organizacija(ime,opis,"data/img/" +ime.toLowerCase().trim()+"." + type, new ArrayList<>(), new ArrayList<>()));
         return new Poruka("Uspesno uneta organizacija", true);
     }
 }
