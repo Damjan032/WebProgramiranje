@@ -1,4 +1,4 @@
-package controllers;
+package models.moduli;
 
 import models.Organizacija;
 import models.komunikacija.Poruka;
@@ -12,8 +12,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class OrganizacijaController {
-    private static OrganizacijaController orgControler = null;
+public class OrganizacijeModul {
+    private static OrganizacijeModul orgControler = null;
     private ArrayList<Organizacija> organizacije = new ArrayList<>();
 
     public ArrayList<Organizacija> getOrganizacije() {
@@ -24,13 +24,13 @@ public class OrganizacijaController {
         this.organizacije = organizacije;
     }
 
-    private OrganizacijaController() {
+    private OrganizacijeModul() {
         this.organizacije = new ArrayList<>();
     }
 
-    public static OrganizacijaController getInstance(){
+    public static OrganizacijeModul getInstance(){
         if (orgControler == null)
-            orgControler = new OrganizacijaController();
+            orgControler = new OrganizacijeModul();
 
         return orgControler;
     }
