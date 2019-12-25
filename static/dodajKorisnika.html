@@ -15,111 +15,116 @@
     
             <div class="jumbotron"><h1>Dodavanje korisnika</h1></div>
             <div class="container">
-                <div class="page-header">
-                    <h2>Novi korisnik</h2>
+                <div v-if  = "organizacije.length == 0"  >
+                    <h2>Dodavanje korisnika nije moguće jer ne postoji nijedna organizacija</h2>
                 </div>
-                <p id="login" v-on:keyup.enter = "login(kime, sifra)">
-                    <table>
-                        <tr>
-                            <td>
-                                Ime
-                            </td>
-                            <td>
-                                <input type="text" v-model="ime"/>
-                            </td>
-                            <td >
-                                <p  class="alert alert-danger d-none">
-                                    Ovo polje je obavezno!
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Prezime
-                            </td>
-                            <td>
-                                <input type="text" v-model="prezime"/>
-                            </td>
-                            <td >
-                                <p  class="alert alert-danger d-none">
-                                    Ovo polje je obavezno!
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Email
-                            </td>
-                            <td>
-                                <input type="text" v-model="email"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Šifra
-                            </td>
-                            <td>
-                                <input type="password" v-model="sifra"/>
-                            </td>
-                            <td>
-                                <p  class="alert alert-danger d-none">
-                                    Ovo polje je obavezno!
-                                </p>
-                            </td>
-                        </tr>
-                        <datalist id="tipovi">
-                            <option value="admin">
-                            <option value="korisnik">
-                        </datalist>
-                        <tr>
-                            <td>
-                                Tip korisnika
-                            </td>
-                            <td>
+                <template v-else>
+
+                    <div class="page-header">
+                        <h2>Novi korisnik</h2>
+                    </div>
+                    <p id="login" v-on:keyup.enter = "login(kime, sifra)">
+                        <table>
+                            <tr>
+                                <td>
+                                    Ime
+                                </td>
+                                <td>
+                                    <input type="text" v-model="ime"/>
+                                </td>
+                                <td >
+                                    <p  class="alert alert-danger d-none">
+                                        Ovo polje je obavezno!
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Prezime
+                                </td>
+                                <td>
+                                    <input type="text" v-model="prezime"/>
+                                </td>
+                                <td >
+                                    <p  class="alert alert-danger d-none">
+                                        Ovo polje je obavezno!
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Email
+                                </td>
+                                <td>
+                                    <input type="text" v-model="email"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Šifra
+                                </td>
+                                <td>
+                                    <input type="password" v-model="sifra"/>
+                                </td>
+                                <td>
+                                    <p  class="alert alert-danger d-none">
+                                        Ovo polje je obavezno!
+                                    </p>
+                                </td>
+                            </tr>
+                            <datalist id="tipovi">
+                                <option value="admin">
+                                <option value="korisnik">
+                            </datalist>
+                            <tr>
+                                <td>
+                                    Tip korisnika
+                                </td>
+                                <td>
+                                    
+                                    <select name="org" v-model="tipKorisnika">
+                                        <option value="admin">Admin</option>
+                                        <option value="korisnik">Korisnik</option>
+                                      </select>
+                                </td>
+                                <td >
+                                    <p  class="alert alert-danger d-none">
+                                        Ovo polje je obavezno!
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Organizacija
+                                </td>
+                                <td>
+                                    <select name="org" v-model="organizacija">
+                                        <option v-for = "o in organizacije" :value="o.ime">Admin</option>
+                                    </select>
+                                </td>
+                                <td >
+                                    <p  class="alert alert-danger d-none">
+                                        Ovo polje je obavezno!
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                 
-                                <select name="org" v-model="tipKorisnika">
-                                    <option value="admin">Admin</option>
-                                    <option value="korisnik">Korisnik</option>
-                                  </select>
-                            </td>
-                            <td >
-                                <p  class="alert alert-danger d-none">
-                                    Ovo polje je obavezno!
-                                </p>
-                            </td>
-                        </tr>
-                        <datalist id="organizacije">
-                            <option v-for= "o in organizacije" :value="o.ime">
-                        </datalist>
-                        <tr>
-                            <td>
-                                Organizacija
-                            </td>
-                            <td>
-                                <select name="org" v-model="organizacija">
-                                    <option v-for = "o in organizacije" :value="o.ime">Admin</option>
-                                </select>
-                            </td>
-                            <td >
-                                <p  class="alert alert-danger d-none">
-                                    Ovo polje je obavezno!
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-success" v-on:click = "dodajKorisnika()">Dodaj korisnika</button>
-                            </td>
-                        </tr> 
-                    </table>
-        
-                    
-                    
-                </p>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-success" v-on:click = "dodajKorisnika()">Dodaj korisnika</button>
+                                </td>
+                            </tr> 
+                        </table>
+            
+                        
+                        
+                    </p>
+                </template>
+                </div>
             </div>
+
     
         </div>
         

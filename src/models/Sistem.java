@@ -1,16 +1,12 @@
 package models;
 
-import models.enums.Uloga;
-import models.komunikacija.KorisnikTrans;
-import models.komunikacija.LoginPoruka;
-import models.komunikacija.Poruka;
-import models.moduli.KorisniciModul;
-import models.moduli.OrganizacijeModul;
+import komunikacija.KorisnikTrans;
+import komunikacija.LoginPoruka;
+import komunikacija.Poruka;
+import moduli.KorisniciModul;
+import moduli.OrganizacijeModul;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Sistem {
     private OrganizacijeModul orgController = OrganizacijeModul.getInstance();
@@ -39,7 +35,7 @@ public class Sistem {
     }
 
     public List<Korisnik> getKorisnici(Korisnik user) {
-        return korisniciModul.getKorisnici();
+        return korisniciModul.getKorisnici(user);
     }
 
     public Poruka dodajKorisnika(Korisnik user, KorisnikTrans kt) {
@@ -52,5 +48,15 @@ public class Sistem {
 
     public void setKorisniciModul(KorisniciModul korisniciModul) {
         this.korisniciModul = korisniciModul;
+    }
+
+
+    public Korisnik getKorisnik(Korisnik user, String email) {
+        return korisniciModul.getKorisnik(user, email);
+    }
+
+    public Poruka azurirajKorisnika(Korisnik user, KorisnikTrans fromJson) {
+        return korisniciModul.azurirajKorisnika(user, fromJson);
+
     }
 }

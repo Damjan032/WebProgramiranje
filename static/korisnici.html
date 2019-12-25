@@ -14,6 +14,9 @@
             </site-header>
     
             <div class="jumbotron"><h1>Pregled korisnika</h1></div>
+
+            <
+
             <div class="container">
                 <div class="page-header">
                     <h2>Korisnici</h2>
@@ -64,7 +67,9 @@
 
                             </td>
                             <td>
-
+                                <a v-if = "korisnikType=='admin'" href="dodajKorisnika.html">
+                                    <button type="button" class="btn btn-success">Dodaj korisnika</button>
+                                </a>
                             </td>
                             <td >
                                 <a v-if = "korisnikType=='super_admin'" href="dodajKorisnika.html">

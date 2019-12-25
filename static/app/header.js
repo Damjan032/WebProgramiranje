@@ -52,7 +52,7 @@ Vue.component("site-header", {
         }
 	},
 	mounted () {
-        axios.get('/getUserType').then(response => {
+        axios.get('/tipKorisnika').then(response => {
             this.type = response.data;
         }); 
     }

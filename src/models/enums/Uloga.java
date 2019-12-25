@@ -18,4 +18,16 @@ public enum Uloga {
                 return "korisnik";
         }
     }
+
+    public static Uloga fromString(String uloga){
+        switch (uloga) {
+
+            case "super_admin":
+                return SUPER_ADMIN;
+            case "admin":
+                return ADMIN;
+            default:
+                return KORISNIK;
+        }
+    }
 }

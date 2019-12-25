@@ -1,7 +1,7 @@
-package models.moduli;
+package moduli;
 
 import models.Organizacija;
-import models.komunikacija.Poruka;
+import komunikacija.Poruka;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

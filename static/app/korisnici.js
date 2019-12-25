@@ -1,14 +1,14 @@
-let loginapp = new Vue({
+let korisniciapp = new Vue({
     el:"#korisnici",
     data: {
         korisnici : null,
         korisnikType : null
     },
     mounted () {
-        axios.get('/getKorisnici').then(response => {
+        axios.get('/korisnici').then(response => {
             this.korisnici = response.data;
         }); 
-        axios.get('/getUserType').then(response => {
+        axios.get('/tipKorisnika').then(response => {
             this.korisnikType = response.data;
         }); 
     },

@@ -1,6 +1,4 @@
-package models.komunikacija;
-
-import models.enums.Uloga;
+package komunikacija;
 
 public class KorisnikTrans {
 

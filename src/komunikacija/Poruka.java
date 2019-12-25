@@ -1,4 +1,4 @@
-package models.komunikacija;
+package komunikacija;
 
 public class Poruka {
     String poruka;

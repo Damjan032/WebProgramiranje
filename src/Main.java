@@ -1,9 +1,9 @@
-package models;
-
 import com.google.gson.Gson;
-import models.komunikacija.KorisnikTrans;
-import models.komunikacija.LoginPoruka;
-import models.komunikacija.Poruka;
+import komunikacija.KorisnikTrans;
+import komunikacija.LoginPoruka;
+import komunikacija.Poruka;
+import models.Korisnik;
+import models.Sistem;
 import spark.Session;
 
 import javax.servlet.MultipartConfigElement;
@@ -40,6 +40,8 @@ public class Main {
             }
         }
 
+        manipulacijaKorisnicima();
+
         sistem = g.fromJson(new BufferedReader(new InputStreamReader(new FileInputStream(f))), Sistem.class);
         if (sistem == null) {
             sistem = new Sistem();
@@ -66,17 +68,6 @@ public class Main {
             get("/isloggedin", (req, res) -> {
                 Session s = req.session();
                 return g.toJson(proveraPrijave(s));
-            });
-
-            get("/getUserType", (req, res) -> {
-                Session s = req.session();
-                System.out.println(s.attribute("user") != null);
-                Korisnik k = s.attribute("user");
-                if (k == null) {
-                    return "";
-                } else {
-                    return g.toJson(k.getUloga().toString());
-                }
             });
 
             get("/getUserOrg", (req, res) -> {
@@ -175,26 +166,65 @@ public class Main {
                 return raw;
             });
 
-            get("/getKorisnici", (req, res) -> {
-                Session session = req.session();
-                Korisnik user = session.attribute("user");
-                if(user == null) {
-                    return g.toJson(false);
-                }
-                return g.toJson(sistem.getKorisnici(user));
-            });
-
-
-            post("/dodajKorisnika", (req, res)->{
-                Session s = req.session();
-                if(proveraPrijave(s)){
-                    Korisnik user = s.attribute("user");
-                    return g.toJson(sistem.dodajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
-                }
-                return new Poruka("Niste prijavljeni", false);
-            });
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    public static void manipulacijaKorisnicima(){
+        get("/tipKorisnika", (req, res) -> {
+            Session s = req.session();
+            System.out.println(s.attribute("user") != null);
+            Korisnik k = s.attribute("user");
+            if (k == null) {
+                return "";
+            } else {
+                return g.toJson(k.getUloga().toString());
+            }
+        });
+        get("/korisnici", (req, res) -> {
+            Session session = req.session();
+            Korisnik user = session.attribute("user");
+            if(user == null) {
+                return g.toJson(false);
+            }
+            return g.toJson(sistem.getKorisnici(user));
+        });
+
+        get("/korisnici/:email", (req, res) -> {
+            Session session = req.session();
+            Korisnik user = session.attribute("user");
+            if(user == null) {
+                return g.toJson(false);
+            }
+            String email = req.params(":email");
+            return g.toJson(sistem.getKorisnik(user,email));
+        });
+
+        post("/korisnici", (req, res)->{
+            Session s = req.session();
+            if(proveraPrijave(s)){
+                Korisnik user = s.attribute("user");
+                return g.toJson(sistem.dodajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
+            }
+            return new Poruka("Niste prijavljeni", false);
+        });
+        put("/korisnici", (req, res)->{
+            Session s = req.session();
+            if(proveraPrijave(s)){
+                Korisnik user = s.attribute("user");
+                return g.toJson(sistem.azurirajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
+            }
+            return new Poruka("Niste prijavljeni", false);
+        });
+        delete("/korisnici",(req, res)->{
+            Session s = req.session();
+            if(proveraPrijave(s)){
+                Korisnik user = s.attribute("user");
+                return g.toJson(sistem.azurirajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
+            }
+            return new Poruka("Niste prijavljeni", false);
+        });
+    }
+
 }

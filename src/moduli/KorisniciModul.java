@@ -1,10 +1,10 @@
-package models.moduli;
+package moduli;
 
 import models.Korisnik;
 import models.KorisnikNalog;
 import models.enums.Uloga;
-import models.komunikacija.KorisnikTrans;
-import models.komunikacija.Poruka;
+import komunikacija.KorisnikTrans;
+import komunikacija.Poruka;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +55,9 @@ public class KorisniciModul {
         if (user.getUloga()==Uloga.KORISNIK){
             return new Poruka("Niste ovlašćeni za ovu akciju!",false);
         }
+        if (k.getUloga()==null){
+            return new Poruka("Niste odabrali nijednu organizaciju!",false);
+        }
         Uloga u;
         switch (k.getUloga()){
             case "admin": {
@@ -81,5 +84,40 @@ public class KorisniciModul {
     public KorisnikNalog get(String username) {
 
         return korisniciNalozi.get(username);
+    }
+
+    public Korisnik getKorisnik(Korisnik user, String email) {
+        Korisnik nadjeniKorisnik = korisniciNalozi.get(email).getKorisnik();
+        if (nadjeniKorisnik.getUloga()==Uloga.SUPER_ADMIN){
+            return null;
+        }
+        if(user.getUloga()==Uloga.ADMIN){
+            if(!user.getOrganizacija().equals(nadjeniKorisnik.getOrganizacija())){
+                return null;
+            }
+        }
+        return nadjeniKorisnik;
+    }
+
+    public Poruka azurirajKorisnika(Korisnik user, KorisnikTrans fromJson) {
+        if(!korisnikRegistrovan(fromJson.getEmail())){
+            return new Poruka("Korisnik kojeg ste izmenili ne postoji!", false);
+        }
+        KorisnikNalog izmenjeniKorisnik = korisniciNalozi.get(fromJson.getEmail());
+        Korisnik k = izmenjeniKorisnik.getKorisnik();
+        if(user.getUloga()==Uloga.ADMIN){
+            if(!user.getOrganizacija().equals(k.getOrganizacija())){
+                return new Poruka("Ne možete da menjate korisnike iz drugih otrganizacija.",false);
+            }
+            if (k.getUloga()==Uloga.SUPER_ADMIN ){
+                return new Poruka("Ne možete da menjate super admina.",false);
+            }
+        }else if(user.getUloga()==Uloga.KORISNIK){
+            return new Poruka("Niste ovlašćeni za ovu akciju!",false);
+        }
+        k.setIme(fromJson.getIme());
+        k.setPrezime(fromJson.getPrezime());
+        k.setUloga(Uloga.fromString(fromJson.getUloga()));
+        return new Poruka("Izmena uspešna.", true);
     }
 }

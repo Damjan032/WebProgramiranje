@@ -14,7 +14,7 @@ let loginapp = new Vue({
         axios.get('/getOrganizacije').then(response => {
             this.organizacije = response.data;
         }); 
-        axios.get('/getUserType').then(response => {
+        axios.get('/tipKorisnika').then(response => {
             this.tip = response.data;
         });
         if(this.tip == "admin"){
@@ -30,12 +30,11 @@ let loginapp = new Vue({
     methods:{
         checkParams: checkFormParams
         ,
-
         dodajKorisnika:function() {
             if(!this.checkParams()){
                 return;
             }
-            let promise = axios.post("/dodajKorisnika",{
+            let promise = axios.post("/korisnici",{
                 email: this.email,
                 ime: this.ime,
                 prezime: this.prezime,
