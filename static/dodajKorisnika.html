@@ -9,28 +9,49 @@
         <link rel="stylesheet" href="css/toast.css">
     </head>
     <body >
-        <div id="login">
+        <div id="korisnici">
             <site-header>
             </site-header>
     
-            <div class="jumbotron"><h1>Prijava korisnika</h1></div>
+            <div class="jumbotron"><h1>Dodavanje korisnika</h1></div>
             <div class="container">
                 <div class="page-header">
-                    <h2>Prijavite se</h2>
+                    <h2>Novi korisnik</h2>
                 </div>
                 <p id="login" v-on:keyup.enter = "login(kime, sifra)">
                     <table>
                         <tr>
                             <td>
-                                Korisničko ime
+                                Ime
                             </td>
                             <td>
-                                <input type="text" v-model="kime"/>
+                                <input type="text" v-model="ime"/>
                             </td>
                             <td >
                                 <p  class="alert alert-danger d-none">
                                     Ovo polje je obavezno!
                                 </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Prezime
+                            </td>
+                            <td>
+                                <input type="text" v-model="prezime"/>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Email
+                            </td>
+                            <td>
+                                <input type="text" v-model="email"/>
                             </td>
                         </tr>
                         <tr>
@@ -46,12 +67,51 @@
                                 </p>
                             </td>
                         </tr>
+                        <datalist id="tipovi">
+                            <option value="admin">
+                            <option value="korisnik">
+                        </datalist>
+                        <tr>
+                            <td>
+                                Tip korisnika
+                            </td>
+                            <td>
+                                
+                                <select name="org" v-model="tipKorisnika">
+                                    <option value="admin">Admin</option>
+                                    <option value="korisnik">Korisnik</option>
+                                  </select>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
+                        <datalist id="organizacije">
+                            <option v-for= "o in organizacije" :value="o.ime">
+                        </datalist>
+                        <tr>
+                            <td>
+                                Organizacija
+                            </td>
+                            <td>
+                                <select name="org" v-model="organizacija">
+                                    <option v-for = "o in organizacije" :value="o.ime">Admin</option>
+                                </select>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
                         <tr>
                             <td>
                             
                             </td>
                             <td>
-                                <button @click = "login(kime, sifra)">Prijavite se</button>
+                                <button type="button" class="btn btn-success" v-on:click = "dodajKorisnika()">Dodaj korisnika</button>
                             </td>
                         </tr> 
                     </table>
@@ -76,7 +136,8 @@
         <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="app/header.js"></script>
-        <script src="app/login.js"></script>
+        <script src="app/form-logic.js"></script>
+        <script src="app/dodaj-korisnika.js"></script>
 
     </body>
 </html>

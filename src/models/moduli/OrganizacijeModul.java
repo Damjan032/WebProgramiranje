@@ -24,7 +24,7 @@ public class OrganizacijeModul {
         this.organizacije = organizacije;
     }
 
-    private OrganizacijeModul() {
+    public OrganizacijeModul() {
         this.organizacije = new ArrayList<>();
     }
 

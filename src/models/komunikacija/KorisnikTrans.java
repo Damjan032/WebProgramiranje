@@ -1,23 +1,18 @@
-package models;
+package models.komunikacija;
 
 import models.enums.Uloga;
 
-import java.util.List;
+public class KorisnikTrans {
 
-public class Korisnik {
-    private String email, ime, prezime, organizacija;
-    private Uloga uloga;
-    private List<Aktivnost> aktivnosti;
+    private String email, ime, prezime, organizacija, sifra, uloga;
 
-    public Korisnik(Uloga uloga) {
-        this.uloga = uloga;
-    }
 
-    public Korisnik(String email, String ime, String prezime, String organizacija, Uloga uloga) {
+    public KorisnikTrans(String email, String ime, String prezime, String organizacija, String sifra, String uloga) {
         this.email = email;
         this.ime = ime;
         this.prezime = prezime;
         this.organizacija = organizacija;
+        this.sifra = sifra;
         this.uloga = uloga;
     }
 
@@ -53,19 +48,15 @@ public class Korisnik {
         this.organizacija = organizacija;
     }
 
-    public Uloga getUloga() {
+    public String getSifra() {
+        return sifra;
+    }
+
+    public void setSifra(String sifra) {
+        this.sifra = sifra;
+    }
+
+    public String getUloga() {
         return uloga;
-    }
-
-    public void setUloga(Uloga uloga) {
-        this.uloga = uloga;
-    }
-
-    public List<Aktivnost> getAktivnosti() {
-        return aktivnosti;
-    }
-
-    public void setAktivnosti(List<Aktivnost> aktivnosti) {
-        this.aktivnosti = aktivnosti;
     }
 }

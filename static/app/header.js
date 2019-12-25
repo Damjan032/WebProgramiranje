@@ -6,8 +6,11 @@ Vue.component("site-header", {
 	},
 	template: ` 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand">Cloud service</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href = "/" class="navbar-brand">Cloud service</a>
+        <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#">Virtualne mašine <span class="sr-only">(current)</span></a>

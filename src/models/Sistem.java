@@ -1,7 +1,10 @@
 package models;
 
 import models.enums.Uloga;
+import models.komunikacija.KorisnikTrans;
 import models.komunikacija.LoginPoruka;
+import models.komunikacija.Poruka;
+import models.moduli.KorisniciModul;
 import models.moduli.OrganizacijeModul;
 
 import java.util.ArrayList;
@@ -10,25 +13,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Sistem {
-    private HashMap<String, KorisnikNalog> korisniciNalozi = new HashMap<>();
     private OrganizacijeModul orgController = OrganizacijeModul.getInstance();
-    private List<Korisnik> korisnici = new ArrayList<>();
+    private KorisniciModul korisniciModul;
 
     public OrganizacijeModul getOrgController() {
         return orgController;
     }
 
-    public Sistem() {
-        korisniciNalozi.put("superadmin", new KorisnikNalog(new Korisnik(Uloga.SUPER_ADMIN), "superadmin".hashCode()));
-        korisnici.add(new Korisnik("a dsd", "sdsad ", "asd sad", " sadasd", Uloga.KORISNIK, null));
+
+    public Sistem(){
+        orgController = new OrganizacijeModul();
+        korisniciModul = new KorisniciModul();
     }
 
-
     public LoginPoruka login(String username, String password) {
-        if (!korisniciNalozi.containsKey(username)) {
+        if (!korisniciModul.korisnikRegistrovan(username)) {
             return new LoginPoruka("Korisnik sa korisničkim imenom: \"" + username + "\" ne postoji", false);
         }
-        KorisnikNalog kn = korisniciNalozi.get(username);
+        KorisnikNalog kn = korisniciModul.get(username);
         if (kn.getSifraHash() == password.hashCode()) {
             return new LoginPoruka("Uspešno prijavljicanje", true, kn.getKorisnik());
         }
@@ -37,16 +39,18 @@ public class Sistem {
     }
 
     public List<Korisnik> getKorisnici(Korisnik user) {
-        switch (user.getUloga()) {
+        return korisniciModul.getKorisnici();
+    }
 
-            case SUPER_ADMIN:
-                return korisnici;
-            case ADMIN:
-                return korisnici.stream().
-                        filter(k -> k.getOrganizacija().equals(user.getOrganizacija())).
-                        collect(Collectors.toList());
-            default:
-                return null;
-        }
+    public Poruka dodajKorisnika(Korisnik user, KorisnikTrans kt) {
+        return korisniciModul.dodajKorisnika(user,kt);
+    }
+
+    public KorisniciModul getKorisniciModul() {
+        return korisniciModul;
+    }
+
+    public void setKorisniciModul(KorisniciModul korisniciModul) {
+        this.korisniciModul = korisniciModul;
     }
 }

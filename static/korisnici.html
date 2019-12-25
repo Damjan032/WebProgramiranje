@@ -22,20 +22,23 @@
                     <h3 v-if = "korisnici.length == 0">
                        Trenutno nema korisnika 
                     </h3>
-                    <table v-else>
+                    <table class="table" v-else>
                         <tr>
-                            <th>
-                                Email
-                            </th>
-                            <th>
-                                Ime
-                            </th>
-                            <th>
-                                Prezime
-                            </th>
-                            <th v-if = "korisnikType=='super_admin'">
-                                Organizacija
-                            </th>
+                            <thead class="thead-light">
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Ime
+                                </th>
+                                <th>
+                                    Prezime
+                                </th>
+                                <th v-if = "korisnikType=='super_admin'">
+                                    Organizacija
+                                </th>
+
+                            </thead>
                         </tr>
 
                         <tr v-for = "k in korisnici">
@@ -49,7 +52,7 @@
                                 {{k.prezime}} 
                              </td>
                              <td v-if = "korisnikType=='super_admin'">
-                                {{k.Organizacija}} 
+                                {{k.organizacija}} 
                              </td>
                         </tr>
                         <tr>
@@ -63,9 +66,9 @@
                             <td>
 
                             </td>
-                            <td>
-                                <a href="dodajKorisnika.html">
-                                    <button type="button" class="btn btn-success">Dodaj korisnima</button>
+                            <td >
+                                <a v-if = "korisnikType=='super_admin'" href="dodajKorisnika.html">
+                                    <button type="button" class="btn btn-success">Dodaj korisnika</button>
                                 </a>
                             </td>
                         </tr>
