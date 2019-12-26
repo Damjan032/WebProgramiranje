@@ -9,16 +9,12 @@ import moduli.OrganizacijeModul;
 import java.util.List;
 
 public class Sistem {
-    private OrganizacijeModul orgController = OrganizacijeModul.getInstance();
+
     private KorisniciModul korisniciModul;
 
-    public OrganizacijeModul getOrgController() {
-        return orgController;
-    }
 
 
     public Sistem(){
-        orgController = new OrganizacijeModul();
         korisniciModul = new KorisniciModul();
     }
 

@@ -4,18 +4,29 @@ package models;
 import java.util.List;
 
 public class Organizacija {
-    private String ime, opis;
+    private String id;
+    private String ime;
+    private String opis;
     private String imgPath; //ne znam da l je bolje samo putanju da cuvamo zbog fronta, a ne celu sliku
-    private List<Korisnik> korisnici;
-    private List<Resurs> resursi; // object privremeno dok ne provalim sta su resursi njemu
+    private List<String> korisnici;
+    private List<String> resursi; // object privremeno dok ne provalim sta su resursi njemu
 
 
-    public Organizacija(String ime, String opis, String imgPath, List<Korisnik> korisnici, List<Resurs> resursi) {
+    public Organizacija(String id, String ime, String opis, String imgPath, List<String> korisnici, List<String> resursi) {
+        this.id = id;
         this.ime = ime;
         this.opis = opis;
         this.imgPath = imgPath;
         this.korisnici = korisnici;
         this.resursi = resursi;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIme() {
@@ -42,19 +53,19 @@ public class Organizacija {
         this.imgPath = imgPath;
     }
 
-    public List<Korisnik> getKorisnici() {
+    public List<String> getKorisnici() {
         return korisnici;
     }
 
-    public void setKorisnici(List<Korisnik> korisnici) {
+    public void setKorisnici(List<String> korisnici) {
         this.korisnici = korisnici;
     }
 
-    public List<Resurs> getResursi() {
+    public List<String> getResursi() {
         return resursi;
     }
 
-    public void setResursi(List<Resurs> resursi) {
+    public void setResursi(List<String> resursi) {
         this.resursi = resursi;
     }
 }
