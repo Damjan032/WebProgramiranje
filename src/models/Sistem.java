@@ -5,7 +5,6 @@ import models.komunikacija.KorisnikTrans;
 import models.komunikacija.LoginPoruka;
 import models.komunikacija.Poruka;
 import models.moduli.KorisniciModul;
-import models.moduli.OrganizacijeModul;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,16 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Sistem {
-    private OrganizacijeModul orgController = OrganizacijeModul.getInstance();
+
     private KorisniciModul korisniciModul;
 
-    public OrganizacijeModul getOrgController() {
-        return orgController;
-    }
 
 
     public Sistem(){
-        orgController = new OrganizacijeModul();
         korisniciModul = new KorisniciModul();
     }
 

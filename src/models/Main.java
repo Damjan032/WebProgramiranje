@@ -1,6 +1,9 @@
 package models;
 
 import com.google.gson.Gson;
+import controllers.OrganizacijaController;
+import exceptions.BadRequestException;
+import exceptions.UnauthorizedException;
 import models.komunikacija.KorisnikTrans;
 import models.komunikacija.LoginPoruka;
 import models.komunikacija.Poruka;
@@ -49,8 +52,11 @@ public class Main {
     public static void main(String[] args) {
         try {
             load();
+            OrganizacijaController organizacijaController = new OrganizacijaController();
 
             staticFiles.externalLocation(new File("./static").getCanonicalPath());
+            organizacijaController.init();
+
             get("/", (req, res) -> {
                 Session s = req.session();
                 Korisnik k = s.attribute("user");
@@ -120,36 +126,6 @@ public class Main {
                 return g.toJson(new Poruka("Odjava uspešna.", true));
             });
 
-            post("/orgAddSubmit", (req, res) -> {
-                Session session = req.session();
-                String ime, opis, type;
-
-                req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
-                Part iIme = req.raw().getPart("oIme"); //Ovo ne radi
-                ime = req.queryParams("oIme");
-                opis = req.queryParams("oOpis");
-                type = req.queryParams("nazivSlike").split("\\.")[1];
-                System.out.println("TIP" + type);
-
-                InputStream file = req.raw().getPart("oSlika").getInputStream();
-                Poruka p = sistem.getOrgController().addOrg(ime,opis, file, type);
-                if (p.isStatus()){
-
-                }
-
-                return g.toJson(p);
-            });
-
-            get("/getOrganizacije", (req, res) -> {
-                Session session = req.session();
-                Korisnik user = session.attribute("user");
-                if (user == null) {
-                    return g.toJson(false);
-                }
-                return g.toJson(sistem.getOrgController().getOrganizacije());
-            });
-
             get("/data/img/:image", (req, res) -> {
                 String slika = req.params(":image");
                 Path path = Paths.get("data/img/" + slika);
@@ -192,6 +168,18 @@ public class Main {
                     return g.toJson(sistem.dodajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
                 }
                 return new Poruka("Niste prijavljeni", false);
+            });
+
+            exception(UnauthorizedException.class, (e, req, res) -> {
+                res.status(401);
+                res.type("application/json");
+                res.body("{ \"ErrorMessage\" : \"Unauthorized\"}");
+            });
+            exception(BadRequestException.class, (e, req, res) -> {
+                res.status(400);
+                BadRequestException badRequestException = (BadRequestException) e;
+                res.type("application/json");
+                res.body("{ \"ErrorMessage\" : \"" + badRequestException. getMessage() + "\"}");
             });
         }catch (Exception e){
             e.printStackTrace();

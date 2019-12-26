@@ -35,23 +35,25 @@ let organizacijaApp = new Vue({
             if(!this.checkParams()){
                 return;
             }
-           // console.log(this.slika.name);
+            // console.log(this.slika.name);
             let data = new FormData();
             data.append("nazivSlike", this.slika.name)
             data.append('oIme', ime);
             data.append('oOpis', opis);
             data.append('oSlika',this.slika);
-            let promise = axios.post('/orgAddSubmit', data, { headers: {'Content-Type': 'multipart/form-data'}});
+            let promise = axios.post('/organizacije', data, { headers: {'Content-Type': 'multipart/form-data'}});
 
             promise.then(response=>{
-                new Toast({
-                    message:response.data.poruka,
-                    type: 'danger'
-                });
                 if (response.data.status) {
                     window.location.replace("/vmpregled.html");
                 }
 
+            }).catch(error=>{
+                let msg = error.response.data.ErrorMessage;
+                new Toast({
+                    message:msg,
+                    type: 'danger'
+                });
             });
         }
 

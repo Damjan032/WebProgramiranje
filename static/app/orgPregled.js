@@ -5,7 +5,7 @@ let orgPregled = new Vue({
         korisnikType : null
     },
     mounted () {
-        axios.get('/getOrganizacije').then(response => {
+        axios.get('/organizacije').then(response => {
             this.organizacije = response.data;
             console.log(this.organizacije);
         });
