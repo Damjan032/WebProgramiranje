@@ -1,11 +1,12 @@
 package models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import models.enums.Akcija;
 
 public class Aktivnost {
-    private Date pocetak;
-    private Date zavrsetak;
-    private String naziv;
+    private LocalDateTime pocetak;
+    private LocalDateTime zavrsetak;
+    private Akcija akcija;
 
 
 }

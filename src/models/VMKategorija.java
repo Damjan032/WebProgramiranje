@@ -1,16 +1,30 @@
 package models;
 
 public class VMKategorija {
+    private String id;
     private String ime;
-    private int brJezgra;
-    private double RAM; //gb
-    private int brGPU;
+    private Integer brJezgra;
+    private Double RAM; //gb
+    private Integer brGPU;
 
-    public VMKategorija(String ime, int brJezgra, double RAM, int brGPU) {
+    public VMKategorija(String id, String ime, Integer brJezgra, Double RAM, Integer brGPU) {
+        this.id = id;
         this.ime = ime;
         this.brJezgra = brJezgra;
         this.RAM = RAM;
         this.brGPU = brGPU;
+    }
+
+    public VMKategorija() {
+        super();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIme() {

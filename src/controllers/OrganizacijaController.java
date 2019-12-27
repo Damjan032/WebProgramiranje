@@ -12,6 +12,7 @@ import exceptions.UnauthorizedException;
 import java.io.InputStream;
 import java.util.Optional;
 
+import models.Organizacija;
 import models.komunikacija.Poruka;
 import services.OrganizacijaService;
 import spark.Request;
@@ -24,6 +25,12 @@ public class OrganizacijaController implements Controller {
 
     private static Gson g = new Gson();
     OrganizacijaService organizacijaService = new OrganizacijaService();
+
+    private static OrganizacijaController instance = null;
+
+    public static OrganizacijaController getInstance() {
+        return  Optional.ofNullable(instance).orElseGet(OrganizacijaController::new);
+    }
 
     @Override
     public void init() {

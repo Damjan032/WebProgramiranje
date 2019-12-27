@@ -1,12 +1,15 @@
-package models;
+package dto;
 
-public abstract class Resurs {
-    private String id;
+import models.enums.TipResursa;
 
-    private String ime;
+public abstract class ResursDTO {
+    protected String id;
 
+    protected String ime;
 
-    public Resurs(String id, String ime) {
+    protected TipResursa tipResursa;
+
+    public ResursDTO(String id, String ime) {
         this.id = id;
         this.ime = ime;
     }
@@ -26,4 +29,6 @@ public abstract class Resurs {
     public void setId(String id) {
         this.id = id;
     }
+
+
 }

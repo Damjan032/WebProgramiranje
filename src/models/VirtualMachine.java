@@ -3,30 +3,30 @@ package models;
 import java.util.List;
 
 public class VirtualMachine extends Resurs {
-    private VMKategorija kategorija;
-    private List<Disk> diskovi;
+    private String kategorija;
+    private List<String> diskovi;
+    private List<Aktivnost> aktivnosti;
 
 
-    public VirtualMachine(String ime, VMKategorija kategorija, List<Disk> diskovi) {
-        super(ime);
+    public VirtualMachine(String id, String ime, String kategorija, List<String> diskovi) {
+        super(id, ime);
         this.kategorija = kategorija;
         this.diskovi = diskovi;
     }
 
-
-    public VMKategorija getKategorija() {
+    public String getKategorija() {
         return kategorija;
     }
 
-    public void setKategorija(VMKategorija kategorija) {
+    public void setKategorija(String kategorija) {
         this.kategorija = kategorija;
     }
 
-    public List<Disk> getDiskovi() {
+    public List<String> getDiskovi() {
         return diskovi;
     }
 
-    public void setDiskovi(List<Disk> diskovi) {
+    public void setDiskovi(List<String> diskovi) {
         this.diskovi = diskovi;
     }
 }

@@ -3,13 +3,13 @@ package dao;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import exceptions.InternalServerErrorException;
 import exceptions.NotFoundException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,22 +17,27 @@ import java.util.stream.Collectors;
 import models.Organizacija;
 
 public class OrganizacijaDAO {
+
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/org.json";
 
-    public List<Organizacija> fetchAll() throws FileNotFoundException {
-        // TODO: Čitanje svih organizacija iz fajla
-        JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
-        return g.fromJson(reader, new TypeToken<List<Organizacija>>(){}.getType());
+    public List<Organizacija> fetchAll() {
+        try {
+            JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
+            return g.fromJson(reader, new TypeToken<List<Organizacija>>() {
+            }.getType());
+        } catch (FileNotFoundException e) {
+            throw new InternalServerErrorException("File " + FILE_PATH + " ne postoji.");
+        }
     }
 
-    public Organizacija fetchById(String id) throws FileNotFoundException {
+    public Organizacija fetchById(String id) {
         return fetchAll().stream().filter(organizacija -> organizacija.getId().equals(id)).findFirst().orElseThrow(NotFoundException::new);
     }
-    public Optional<Organizacija> fetchByIme(String ime) throws FileNotFoundException {
+
+    public Optional<Organizacija> fetchByIme(String ime) {
         return fetchAll().stream().filter(organizacija -> organizacija.getIme().equals(ime)).findFirst();
     }
-
 
     public Organizacija create(Organizacija organizacija) throws IOException {
         List<Organizacija> list = fetchAll();

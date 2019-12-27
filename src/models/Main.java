@@ -1,23 +1,29 @@
 package models;
 
+import static spark.Spark.get;
+import static spark.Spark.post;
+import static spark.Spark.staticFiles;
+
 import com.google.gson.Gson;
 import controllers.OrganizacijaController;
-import exceptions.BadRequestException;
-import exceptions.UnauthorizedException;
-import models.komunikacija.KorisnikTrans;
-import models.komunikacija.LoginPoruka;
-import models.komunikacija.Poruka;
-import spark.Session;
-
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-import java.io.*;
+import controllers.VMKategorijeController;
+import controllers.VirtuelnaMasinaController;
+import dao.VirtuelnaMasinaDAO;
+import exceptions.ExceptionsHandler;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static spark.Spark.*;
+import javax.servlet.http.HttpServletResponse;
+import models.komunikacija.KorisnikTrans;
+import models.komunikacija.LoginPoruka;
+import models.komunikacija.Poruka;
+import services.VirtuelnaMasinaService;
+import spark.Session;
 
 public class Main {
 
@@ -26,20 +32,20 @@ public class Main {
     private static final String DATA_PATH = "./data/sistem.json";
 
 
-    static boolean proveraPrijave(Session s){
-        System.out.println(s.attribute("user")!=null);
-        if(s.attribute("user")==null){
+    static boolean proveraPrijave(Session s) {
+        System.out.println(s.attribute("user") != null);
+        if (s.attribute("user") == null) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     public static void load() throws IOException {
         File f = new File(DATA_PATH);
-        if(!f.exists()){
-            if(f.createNewFile()){
-                System.out.println("File "+DATA_PATH+" created.");
+        if (!f.exists()) {
+            if (f.createNewFile()) {
+                System.out.println("File " + DATA_PATH + " created.");
             }
         }
 
@@ -52,11 +58,12 @@ public class Main {
     public static void main(String[] args) {
         try {
             load();
-            OrganizacijaController organizacijaController = new OrganizacijaController();
 
             staticFiles.externalLocation(new File("./static").getCanonicalPath());
-            organizacijaController.init();
-
+            OrganizacijaController.getInstance().init();
+            VirtuelnaMasinaController.getInstance().init();
+            ExceptionsHandler.getInstance().init();
+            VMKategorijeController.getInstance().init();
             get("/", (req, res) -> {
                 Session s = req.session();
                 Korisnik k = s.attribute("user");
@@ -104,13 +111,13 @@ public class Main {
                 if (session == null) {
                     session = req.session(true);
                 }
-                if(session.attribute("user")!=null){
+                if (session.attribute("user") != null) {
                     return g.toJson(new LoginPoruka("Već ste prijavljeni", false));
                 }
                 String kime = req.queryParams("kime");
                 String sifra = req.queryParams("sifra");
                 LoginPoruka lp = sistem.login(kime, sifra);
-                if(lp.isStatus()) {
+                if (lp.isStatus()) {
                     session.attribute("user", lp.getKorisnik());
                 }
                 return g.toJson(lp);
@@ -118,7 +125,7 @@ public class Main {
 
             get("/logout", (req, res) -> {
                 Session session = req.session();
-                if(session.attribute("user")==null){
+                if (session.attribute("user") == null) {
                     return g.toJson(new Poruka("Već ste odjavljeni!", false));
                 }
                 session.removeAttribute("user");
@@ -154,34 +161,31 @@ public class Main {
             get("/getKorisnici", (req, res) -> {
                 Session session = req.session();
                 Korisnik user = session.attribute("user");
-                if(user == null) {
+                if (user == null) {
                     return g.toJson(false);
                 }
                 return g.toJson(sistem.getKorisnici(user));
             });
 
-
-            post("/dodajKorisnika", (req, res)->{
+            post("/dodajKorisnika", (req, res) -> {
                 Session s = req.session();
-                if(proveraPrijave(s)){
+                if (proveraPrijave(s)) {
                     Korisnik user = s.attribute("user");
                     return g.toJson(sistem.dodajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
                 }
                 return new Poruka("Niste prijavljeni", false);
             });
+            VirtuelnaMasinaService service = new VirtuelnaMasinaService();
+            VirtuelnaMasinaDAO dao = new VirtuelnaMasinaDAO();
 
-            exception(UnauthorizedException.class, (e, req, res) -> {
-                res.status(401);
-                res.type("application/json");
-                res.body("{ \"ErrorMessage\" : \"Unauthorized\"}");
-            });
-            exception(BadRequestException.class, (e, req, res) -> {
-                res.status(400);
-                BadRequestException badRequestException = (BadRequestException) e;
-                res.type("application/json");
-                res.body("{ \"ErrorMessage\" : \"" + badRequestException. getMessage() + "\"}");
-            });
-        }catch (Exception e){
+//            dao.create(new VirtualMachine(null, "naziv", "1", new ArrayList<>()));
+//            dao.create(new VirtualMachine(null, "naziv2", "2", new ArrayList<>()));
+//            dao.create(new VirtualMachine(null, "naziv3", "3", new ArrayList<>()));
+//            dao.create(new VirtualMachine(null, "naziv4", "1", new ArrayList<>()));
+
+
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
