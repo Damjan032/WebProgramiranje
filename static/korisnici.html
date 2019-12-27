@@ -15,8 +15,6 @@
     
             <div class="jumbotron"><h1>Pregled korisnika</h1></div>
 
-            <
-
             <div class="container">
                 <div class="page-header">
                     <h2>Korisnici</h2>
@@ -44,8 +42,8 @@
                             </thead>
                         </tr>
 
-                        <tr v-for = "k in korisnici">
-                            <td>
+                        <tr v-for = "k in korisnici" v-bind:data-href = "'/korisnici/' + k.email" class="clickable-table-row" v-bind:data-href="'korisnici'+k.email">
+                            <td >
                                {{k.email}} 
                             </td>
                             <td>

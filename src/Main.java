@@ -1,10 +1,11 @@
 import com.google.gson.Gson;
+import controllers.KorisnikController;
 import controllers.OrganizacijaController;
-import exceptions.BadRequestException;
-import exceptions.UnauthorizedException;
-import models.komunikacija.KorisnikTrans;
-import models.komunikacija.LoginPoruka;
-import models.komunikacija.Poruka;
+import komunikacija.KorisnikTrans;
+import komunikacija.LoginPoruka;
+import komunikacija.Poruka;
+import models.Korisnik;
+import models.Sistem;
 import spark.Session;
 
 import javax.servlet.MultipartConfigElement;
@@ -35,14 +36,11 @@ public class Main {
 
     public static void load() throws IOException {
         File f = new File(DATA_PATH);
-        if(!f.exists()){
-            if(f.createNewFile()){
-                System.out.println("File "+DATA_PATH+" created.");
+        if(!f.exists()) {
+            if (f.createNewFile()) {
+                System.out.println("File " + DATA_PATH + " created.");
             }
         }
-
-        manipulacijaKorisnicima();
-
         sistem = g.fromJson(new BufferedReader(new InputStreamReader(new FileInputStream(f))), Sistem.class);
         if (sistem == null) {
             sistem = new Sistem();
@@ -53,9 +51,12 @@ public class Main {
         try {
             load();
             OrganizacijaController organizacijaController = new OrganizacijaController();
+            KorisnikController korisnikController = new KorisnikController();
+
 
             staticFiles.externalLocation(new File("./static").getCanonicalPath());
             organizacijaController.init();
+            korisnikController.init();
 
             get("/", (req, res) -> {
                 Session s = req.session();
@@ -186,29 +187,6 @@ public class Main {
             return g.toJson(sistem.getKorisnik(user,email));
         });
 
-            post("/dodajKorisnika", (req, res)->{
-                Session s = req.session();
-                if(proveraPrijave(s)){
-                    Korisnik user = s.attribute("user");
-                    return g.toJson(sistem.dodajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
-                }
-                return new Poruka("Niste prijavljeni", false);
-            });
-
-            exception(UnauthorizedException.class, (e, req, res) -> {
-                res.status(401);
-                res.type("application/json");
-                res.body("{ \"ErrorMessage\" : \"Unauthorized\"}");
-            });
-            exception(BadRequestException.class, (e, req, res) -> {
-                res.status(400);
-                BadRequestException badRequestException = (BadRequestException) e;
-                res.type("application/json");
-                res.body("{ \"ErrorMessage\" : \"" + badRequestException. getMessage() + "\"}");
-            });
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         post("/korisnici", (req, res)->{
             Session s = req.session();
             if(proveraPrijave(s)){

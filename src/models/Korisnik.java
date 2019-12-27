@@ -3,11 +3,14 @@ package models;
 import models.enums.Uloga;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Korisnik {
     private String email, ime, prezime, organizacija;
     private Uloga uloga;
     private List<Aktivnost> aktivnosti;
+
+    private UUID ID;
 
     public Korisnik(Uloga uloga) {
         this.uloga = uloga;
@@ -67,5 +70,14 @@ public class Korisnik {
 
     public void setAktivnosti(List<Aktivnost> aktivnosti) {
         this.aktivnosti = aktivnosti;
+    }
+
+
+    public UUID getID() {
+        return ID;
+    }
+
+    public void setID(UUID ID) {
+        this.ID = ID;
     }
 }

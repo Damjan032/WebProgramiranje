@@ -8,7 +8,6 @@ import models.Korisnik;
 import models.Organizacija;
 import models.Resurs;
 import models.enums.Uloga;
-import models.komunikacija.Poruka;
 import spark.Request;
 
 import javax.imageio.ImageIO;
@@ -16,6 +15,7 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,8 +67,8 @@ public class OrganizacijaService implements Service<String, String> {
         List<Korisnik> korisnici = new ArrayList<>();
         List<Resurs> resursi = new ArrayList<>();
 
-        List<Long> korisniciId = organizacija.getKorisnici();
-        List<Long> resursiId = organizacija.getResursi();
+        List<String> korisniciId = organizacija.getKorisnici();
+        List<String> resursiId = organizacija.getResursi();
 
         if (korisniciId != null) {
             organizacija.getKorisnici().forEach(korisnikId -> {

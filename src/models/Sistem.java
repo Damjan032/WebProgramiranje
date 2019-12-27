@@ -4,7 +4,6 @@ import komunikacija.KorisnikTrans;
 import komunikacija.LoginPoruka;
 import komunikacija.Poruka;
 import moduli.KorisniciModul;
-import moduli.OrganizacijeModul;
 
 import java.util.List;
 

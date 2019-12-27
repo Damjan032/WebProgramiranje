@@ -11,8 +11,6 @@ import exceptions.UnauthorizedException;
 
 import java.io.InputStream;
 import java.util.Optional;
-
-import models.komunikacija.Poruka;
 import services.OrganizacijaService;
 import spark.Request;
 import spark.Session;

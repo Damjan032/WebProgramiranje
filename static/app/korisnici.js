@@ -1,3 +1,9 @@
+jQuery(document).ready(function($) {
+    $(".clickable-table-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+
 let korisniciapp = new Vue({
     el:"#korisnici",
     data: {
