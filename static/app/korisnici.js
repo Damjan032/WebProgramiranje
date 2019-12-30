@@ -5,21 +5,29 @@ jQuery(document).ready(function($) {
 });
 
 let korisniciapp = new Vue({
-    el:"#korisnici",
+    el:"#korisnik",
     data: {
         korisnici : null,
-        korisnikType : null
+        korisnikType : null,
+        items: [
+            { message: 'Foo' },
+            { message: 'Bar' }
+          ]
     },
-    mounted () {
-        axios.get('/korisnici').then(response => {
-            this.korisnici = response.data;
-        }); 
-        axios.get('/korisnik').then(response => {
-            this.korisnikType = response.data.uloga;
-        }); 
+    created() {
+        axios.get('/korisnici').then(response => (
+            this.korisnici = response.data));
+        axios.get('/korisnik').then(response => (
+            this.korisnikType = response.data.uloga)); 
     },
     methods:{
-        
+        test: function () {
+            for(k of this.korisnici)
+            {
+                console.log(k);
+            }
+
+        }
     }
 });
 

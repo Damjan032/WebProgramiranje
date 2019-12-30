@@ -22,11 +22,6 @@ public class KorisnikDAO {
     private static String FILE_PATH = "./data/korisnici.json";
 
 
-
-    public KorisnikDAO() {
-        ucitajIzFajla();
-    }
-
     private ArrayList<KorisnikNalog> kreirajPodatke(){
         var list = new ArrayList<KorisnikNalog>();
         list.add(new KorisnikNalog(new Korisnik("superadmin",Uloga.SUPER_ADMIN),"superadmin".hashCode()));
@@ -39,35 +34,13 @@ public class KorisnikDAO {
     }
 
 
-    private List<KorisnikNalog> loadAll() throws FileNotFoundException {
-        File f = new File(FILE_PATH);
-        if(!(f.exists())){
-            try {
-                if(!f.createNewFile()){
-                    System.out.println("NEMOGUĆE JE KREIRATI FAJL");
-                }else{
-                    kreirajPodatke();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("NEMOGUĆE JE KREIRATI FAJL");
-            }
-        }else{
-            kreirajPodatke();
-        }
-        JsonReader reader = new JsonReader(new FileReader(f));
-        return g.fromJson(reader, new TypeToken<List<KorisnikNalog>>(){}.getType());
-    }
-
-
     public List<KorisnikNalog> fetchAll() throws FileNotFoundException {
-
-        return loadAll().stream().filter(k->k.getKorisnik().getUloga()==Uloga.SUPER_ADMIN).collect(Collectors.toList());
+        return ucitajIzFajla();
     }
     public KorisnikNalog fetchByEmail(String ime) throws IOException {
-        var res = loadAll();
+        var res = ucitajIzFajla();
         if(res.isEmpty()){
-            kreirajPodatke();
+            res = kreirajPodatke();
         }
         return res.stream().
                 filter(kn -> kn.getKorisnik().getEmail().equals(ime)).
@@ -102,9 +75,7 @@ public class KorisnikDAO {
         List<KorisnikNalog> korisnici = fetchAll().stream()
                 .filter((element) -> !element.getKorisnik().getEmail().equals(id))
                 .collect(Collectors.toList());
-        upisListeUFile(
-                korisnici
-                );
+        upisListeUFile(korisnici);
         return korisnici;
     }
 

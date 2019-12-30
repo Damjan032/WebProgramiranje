@@ -10,10 +10,10 @@ let loginapp = new Vue({
        organizacija: null,
        organizacije : null
     },
-    mounted : function() {
+    created : function() {
         axios.get('/organizacije').then(response => {
             this.organizacije = response.data;
-        }); 
+        });  
         axios.get('/korisnik').then(response => {
                 this.korisnik = response.data;
                 let org = response.data.uloga;
@@ -39,11 +39,11 @@ let loginapp = new Vue({
             )
             promise.then(response=>{
                     
-                    if (response.data.status) {
+                    if (response.status) {
                         window.location.replace("/korisnici.html");
                     }else{
                         new Toast({
-                            message:response.data.poruka,
+                            message:response.statusText,
                             type: 'danger'
                         });
                     }

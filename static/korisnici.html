@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>
-            Prijavite se
+            Korisnici
         </title>
         <meta charset="utf-8">
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="css/toast.css">
     </head>
     <body >
-        <div id="korisnici">
+        <div id="korisnik">
             <site-header>
             </site-header>
     
@@ -42,23 +42,23 @@
                             </thead>
                         </tr>
 
-                        <tr v-for = "k in korisnici" v-bind:data-href = "'/korisnici/' + k.email" class="clickable-table-row" v-bind:data-href="'korisnici'+k.email">
+                        <tr v-for = "k in korisnici" v-bind:data-href = "'/korisnici/' + k.email" class="clickable-table-row">
                             <td >
-                               {{k.email}} 
-                            </td>
+                                {{ k.email }} 
+                             </td>
                             <td>
-                                {{k.ime}} 
+                                {{ k.ime }} 
                              </td>
                              <td>
-                                {{k.prezime}} 
+                                {{ k.prezime }} 
                              </td>
                              <td v-if = "korisnikType=='SUPER_ADMIN'">
-                                {{k.organizacija}} 
+                                {{ k.organizacija }} 
                              </td>
                         </tr>
                     </table>
                     
-                    <a v-if = "korisnikType=='SUPER_ADMIN'" href="dodajKorisnika.html">
+                    <a v-if = "korisnikType=='SUPER_ADMIN'||korisnikType=='ADMIN'" href="dodajKorisnika.html">
                         <button type="button" class="btn btn-success">Dodaj korisnika</button>
                     </a>
                 </p>
@@ -66,16 +66,11 @@
     
         </div>
         
-
-        <div id="footer">
-
-        </div>
         
         <script src="js/jquery.js"></script>
         <script src="js/popper.js"></script>
         <script src="js/Vue.js"></script>
         <script src="js/axios.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
         <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="app/header.js"></script>

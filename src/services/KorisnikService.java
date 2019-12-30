@@ -2,6 +2,7 @@ package services;
 
 import com.google.gson.Gson;
 import dao.KorisnikDAO;
+import dao.OrganizacijaDAO;
 import dto.KorisnikDTO;
 import exceptions.BadRequestException;
 import exceptions.NotFoundException;
@@ -27,9 +28,13 @@ public class KorisnikService{
 
     private Gson g = new Gson();
     private KorisnikDAO korisnikDAO = new KorisnikDAO();
+    private OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
 
     public List<String> fetchAll(Request req, Response res) throws FileNotFoundException {
         Korisnik korisnik = req.session().attribute("korisnik");
+        if (korisnik == null){
+            throw new UnauthorizedException();
+        }
         if(korisnik.getUloga() == Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
@@ -42,6 +47,9 @@ public class KorisnikService{
 
     public String fetchById(Request req, Response res) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k == null){
+            throw new UnauthorizedException();
+        }
         String email = req.params("email");
         if (k.getUloga() == Uloga.KORISNIK){
             throw new UnauthorizedException();
@@ -62,6 +70,9 @@ public class KorisnikService{
 
     public String create(Request req, Response res) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k == null) {
+            throw new UnauthorizedException();
+        }
         String body = req.body();
         KorisnikTrans korisnikTrans = g.fromJson(body, KorisnikTrans.class);
         if (Uloga.fromString(korisnikTrans.getUloga())==Uloga.SUPER_ADMIN){
@@ -79,6 +90,9 @@ public class KorisnikService{
 
     public String update(Request req, Response res) throws IOException {
         Korisnik korisnik = req.session().attribute("korisnik");
+        if (korisnik == null){
+            throw new UnauthorizedException();
+        }
         String body = req.body();
         String email = req.params("email");
         Korisnik noviKorisnik = mapKorisnikTransToKorisnik(g.fromJson(body, KorisnikTrans.class));
@@ -104,6 +118,9 @@ public class KorisnikService{
     public List<String> delete(Request req, Response res) throws IOException {
         String email = req.params("email");
         Korisnik k = req.session().attribute("korisnik");
+        if (k == null){
+            throw new UnauthorizedException();
+        }
         Korisnik korisnikBrisani = korisnikDAO.fetchByEmail(email).getKorisnik();
         if (korisnikBrisani.getUloga()==Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se brisati super admin!");
@@ -126,11 +143,14 @@ public class KorisnikService{
     private String mapToKorisnikDTOString(KorisnikNalog kn) {
 
         Korisnik k = kn.getKorisnik();
-        String organizacija = k.getOrganizacija();
-
+        String organizacijaId = k.getOrganizacija();
 
 
         Organizacija o = null;
+        try {
+            o = organizacijaDAO.fetchById(organizacijaId);
+        } catch (Exception ignored) {
+        }
 
 
         return g.toJson(new KorisnikDTO.Builder().

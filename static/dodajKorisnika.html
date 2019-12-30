@@ -99,7 +99,7 @@
                                 </td>
                                 <td>
                                     <select name="org" v-model="organizacija">
-                                        <option v-for = "o in organizacije" :value="o.ime">Admin</option>
+                                        <option v-for = "o in organizacije" v-bind:value="o.ime"></option>
                                     </select>
                                 </td>
                                 <td >

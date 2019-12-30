@@ -63,6 +63,9 @@ public class KorisnikDTO {
             korisnikDTO.prezime = this.prezime;
             korisnikDTO.email = this.email;
             korisnikDTO.aktivnosti = this.aktivnosti;
+            if (organizacija != null){
+                korisnikDTO.organizacija = this.organizacija.getIme();
+            }
             return korisnikDTO;
         }
     }

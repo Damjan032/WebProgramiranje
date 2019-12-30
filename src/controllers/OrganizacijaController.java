@@ -30,7 +30,8 @@ public class OrganizacijaController implements Controller {
 
         get("/organizacije", (req, res) -> {
             res.type("application/json");
-            return organizacijaService.fetchAll();});
+            var v = organizacijaService.fetchAll();
+            return v;});
 
         get("/organizacije/:id", (req, res) -> {
             res.type("application/json");
