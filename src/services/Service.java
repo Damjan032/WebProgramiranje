@@ -9,5 +9,5 @@ public interface Service <T, ID> {
     T fetchById(ID id) throws IOException;
     T create(String s) throws IOException;
     T update(String body, ID id) throws IOException;
-    void delete(String id) throws IOException;
+    List<T> delete(String id) throws IOException;
 }

@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -59,11 +58,13 @@ public class OrganizacijaDAO {
         return organizacija;
     }
 
-    public void delete(String id) throws IOException {
-        upisListeUFile(
-            fetchAll().stream()
+    public List<Organizacija> delete(String id) throws IOException {
+        List<Organizacija> orgs = fetchAll().stream()
                 .filter((element) -> !element.getId().equals(id))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+        upisListeUFile(orgs
+            );
+        return orgs;
     }
 
     private void upisListeUFile(List<Organizacija> organizacijas) throws IOException {

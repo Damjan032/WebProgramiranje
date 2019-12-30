@@ -35,7 +35,7 @@
                                 <th>
                                     Prezime
                                 </th>
-                                <th v-if = "korisnikType=='super_admin'">
+                                <th v-if = "korisnikType=='SUPER_ADMIN'">
                                     Organizacija
                                 </th>
 
@@ -52,30 +52,15 @@
                              <td>
                                 {{k.prezime}} 
                              </td>
-                             <td v-if = "korisnikType=='super_admin'">
+                             <td v-if = "korisnikType=='SUPER_ADMIN'">
                                 {{k.organizacija}} 
                              </td>
                         </tr>
-                        <tr>
-                            <td>
-
-
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-                                <a v-if = "korisnikType=='admin'" href="dodajKorisnika.html">
-                                    <button type="button" class="btn btn-success">Dodaj korisnika</button>
-                                </a>
-                            </td>
-                            <td >
-                                <a v-if = "korisnikType=='super_admin'" href="dodajKorisnika.html">
-                                    <button type="button" class="btn btn-success">Dodaj korisnika</button>
-                                </a>
-                            </td>
-                        </tr>
                     </table>
+                    
+                    <a v-if = "korisnikType=='SUPER_ADMIN'" href="dodajKorisnika.html">
+                        <button type="button" class="btn btn-success">Dodaj korisnika</button>
+                    </a>
                 </p>
             </div>
     

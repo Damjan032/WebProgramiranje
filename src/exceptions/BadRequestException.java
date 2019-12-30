@@ -1,5 +1,7 @@
 package exceptions;
 
+import spark.Response;
+
 public class BadRequestException extends RuntimeException{
     String message;
 

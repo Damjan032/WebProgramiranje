@@ -14,8 +14,8 @@ let korisniciapp = new Vue({
         axios.get('/korisnici').then(response => {
             this.korisnici = response.data;
         }); 
-        axios.get('/tipKorisnika').then(response => {
-            this.korisnikType = response.data;
+        axios.get('/korisnik').then(response => {
+            this.korisnikType = response.data.uloga;
         }); 
     },
     methods:{

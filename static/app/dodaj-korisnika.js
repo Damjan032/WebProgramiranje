@@ -1,7 +1,7 @@
 let loginapp = new Vue({
     el:"#korisnici",
     data: {
-        tip : "",
+        korisnik : null,
         email: null,
        ime: null,
        prezime: null,
@@ -11,20 +11,14 @@ let loginapp = new Vue({
        organizacije : null
     },
     mounted : function() {
-        axios.get('/getOrganizacije').then(response => {
+        axios.get('/organizacije').then(response => {
             this.organizacije = response.data;
         }); 
-        axios.get('/tipKorisnika').then(response => {
-            this.tip = response.data;
-        });
-        if(this.tip == "admin"){
-            axios.get('/getUserOrg').then(response => {
-                let org;
-                org = response.data;
+        axios.get('/korisnik').then(response => {
+                this.korisnik = response.data;
+                let org = response.data.uloga;
                 $("#org").prop("disabled", true).prop("value", org);
-                
-            });
-        }   
+            });   
     },
     
     methods:{
@@ -39,7 +33,8 @@ let loginapp = new Vue({
                 ime: this.ime,
                 prezime: this.prezime,
                 sifra: this.sifra,
-                organizacija: this.organizacija
+                organizacija: this.organizacija,
+                uloga:this.tipKorisnika
               }
             )
             promise.then(response=>{

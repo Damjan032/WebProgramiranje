@@ -1,34 +1,31 @@
 package dto;
 
 import models.Aktivnost;
-import models.Korisnik;
 import models.Organizacija;
-import models.Resurs;
 import models.enums.Uloga;
 
 import java.util.List;
-import java.util.UUID;
 
 public class KorisnikDTO {
 
     private String email, ime, prezime;
-    private Organizacija organizacija;
+    private String organizacija;
     private Uloga uloga;
     private List<Aktivnost> aktivnosti;
 
-    private UUID ID;
+    private String ID;
     public static final class Builder {
         private String email, ime, prezime;
         private Organizacija organizacija;
         private Uloga uloga;
         private List<Aktivnost> aktivnosti;
 
-        private UUID ID;
+        private String ID;
 
         public  Builder() {
         }
 
-        public KorisnikDTO.Builder withId(UUID id) {
+        public KorisnikDTO.Builder withId(String id) {
             this.ID = id;
             return this;
         }
@@ -52,7 +49,9 @@ public class KorisnikDTO {
             return this;
         }
 
-        public KorisnikDTO.Builder withResursi(Organizacija organizacija) {
+
+
+        public KorisnikDTO.Builder withOrganizacija(Organizacija organizacija) {
             this.organizacija = organizacija;
             return this;
         }

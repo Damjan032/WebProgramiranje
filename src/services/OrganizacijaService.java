@@ -15,11 +15,9 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class OrganizacijaService implements Service<String, String> {
@@ -59,8 +57,8 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     @Override
-    public void delete(String id) throws IOException {
-        organizacijaDAO.delete(id);
+    public List<String> delete(String id) throws IOException {
+       return  organizacijaDAO.delete(id).stream().map(this::mapToOrganizacijaDTOString).collect(Collectors.toList());
     }
 
     private String mapToOrganizacijaDTOString(Organizacija organizacija) {
@@ -71,6 +69,9 @@ public class OrganizacijaService implements Service<String, String> {
         List<String> resursiId = organizacija.getResursi();
 
         if (korisniciId != null) {
+
+
+
             organizacija.getKorisnici().forEach(korisnikId -> {
                 // TODO Uz pomoc korinikDAO izvuci korinsike i upisi ih ovde za svaki id iz liste
                 korisnici.add(new Korisnik(Uloga.ADMIN));

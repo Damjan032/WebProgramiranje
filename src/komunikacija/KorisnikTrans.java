@@ -1,9 +1,13 @@
 package komunikacija;
 
+import models.Aktivnost;
+
+import java.util.List;
+
 public class KorisnikTrans {
 
     private String email, ime, prezime, organizacija, sifra, uloga;
-
+    private List<Aktivnost> aktivnosti;
 
     public KorisnikTrans(String email, String ime, String prezime, String organizacija, String sifra, String uloga) {
         this.email = email;
@@ -56,5 +60,13 @@ public class KorisnikTrans {
 
     public String getUloga() {
         return uloga;
+    }
+
+    public List<Aktivnost> getAktivnosti() {
+        return null;
+    }
+
+    public void setAktivnosti(List<Aktivnost> aktivnosti) {
+        this.aktivnosti = aktivnosti;
     }
 }

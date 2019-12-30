@@ -6,34 +6,38 @@ Vue.component("site-header", {
 	},
 	template: ` 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button v-if = "type" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <a href = "/" class="navbar-brand">Cloud service</a>
-        <div class="collapse navbar-collapse" id="navbar">
+        <div  class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
+                <li v-if = "type" class="nav-item">
                     <a class="nav-link" href="#">Virtualne mašine <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
+                <li v-if = "type == 'SUPER_ADMIN'" class="nav-item">
+                    <a class="nav-link" href="#">Kategorije <span class="sr-only">(current)</span></a>
+                </li>
+                <li v-if = "type" class="nav-item">
                     <a class="nav-link" href="#">Diskovi <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item" v-if = "type=='super_admin'">
+                <li class="nav-item" v-if = "type=='SUPER_ADMIN'">
                     <a class="nav-link" href="#">Organizacije <span class="sr-only">(current)</span></a>
                 </li>
             
                 <li class="nav-item">
-                    <a v-if = "type=='super_admin'||type=='admin'" class="nav-link" href="korisnici.html">Korisnici <span class="sr-only">(current)</span></a>
+                    <a v-if = "type=='SUPER_ADMIN'||type=='ADMIN'" class="nav-link" href="korisnici.html">Korisnici <span class="sr-only">(current)</span></a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Kategorije <span class="sr-only">(current)</span></a>
-                </li>
+                
 
             </ul>
         </div>
-        <button v-if = "type" v-on:click = "odjava()">Odjavi se</button>
-
+        <span v-if = "type" class="navbar-text">
+            <button class = "dropdown-item">Izmeni nalog</button>
+            <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
+        </span>
+        
     </nav>	  
 `
 	, 
@@ -52,8 +56,8 @@ Vue.component("site-header", {
         }
 	},
 	mounted () {
-        axios.get('/tipKorisnika').then(response => {
-            this.type = response.data;
+        axios.get('/korisnik').then(response => {
+            this.type = response.data.uloga;
         }); 
     }
 });

@@ -1,5 +1,6 @@
 package exceptions;
 
-public class UnauthorizedException extends RuntimeException {
+import spark.Response;
 
+public class UnauthorizedException extends RuntimeException {
 }
