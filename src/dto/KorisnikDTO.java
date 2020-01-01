@@ -9,25 +9,17 @@ import java.util.List;
 public class KorisnikDTO {
 
     private String email, ime, prezime;
-    private String organizacija;
+    private Organizacija organizacija;
     private Uloga uloga;
     private List<Aktivnost> aktivnosti;
 
-    private String ID;
     public static final class Builder {
         private String email, ime, prezime;
         private Organizacija organizacija;
         private Uloga uloga;
         private List<Aktivnost> aktivnosti;
 
-        private String ID;
-
         public  Builder() {
-        }
-
-        public KorisnikDTO.Builder withId(String id) {
-            this.ID = id;
-            return this;
         }
         public KorisnikDTO.Builder withIme(String ime) {
             this.ime = ime;
@@ -49,23 +41,24 @@ public class KorisnikDTO {
             return this;
         }
 
-
-
         public KorisnikDTO.Builder withOrganizacija(Organizacija organizacija) {
             this.organizacija = organizacija;
             return this;
         }
 
+        public KorisnikDTO.Builder withUloga(Uloga uloga){
+            this.uloga = uloga;
+            return this;
+
+        }
+
         public KorisnikDTO build() {
             KorisnikDTO korisnikDTO = new KorisnikDTO();
-            korisnikDTO.ID = this.ID;
             korisnikDTO.ime = this.ime;
             korisnikDTO.prezime = this.prezime;
             korisnikDTO.email = this.email;
             korisnikDTO.aktivnosti = this.aktivnosti;
-            if (organizacija != null){
-                korisnikDTO.organizacija = this.organizacija.getIme();
-            }
+            korisnikDTO.organizacija = this.organizacija;
             return korisnikDTO;
         }
     }

@@ -56,6 +56,7 @@ public class OrganizacijaDTO {
 
         public OrganizacijaDTO build() {
             OrganizacijaDTO organizacijaDTO = new OrganizacijaDTO();
+            organizacijaDTO.id = this.id;
             organizacijaDTO.opis = this.opis;
             organizacijaDTO.korisnici = this.korisnici;
             organizacijaDTO.imgPath = this.imgPath;

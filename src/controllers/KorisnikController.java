@@ -20,22 +20,27 @@ public class KorisnikController implements Controller{
     @Override
     public void init() {
         get("/korisnici", (req, res) -> {
-            return g.toJson(korisnikService.fetchAll(req,res));
+            res.type("application/json");
+            return korisnikService.fetchAll(req,res);
         });
 
         get("/korisnici/:id", (req, res) -> {
-            return g.toJson(korisnikService.fetchById(req, res));
+            res.type("application/json");
+            return korisnikService.fetchById(req, res);
         });
 
         post("/korisnici", (req, res)->{
-            return g.toJson(korisnikService.create(req,res));
+            res.type("application/json");
+            return korisnikService.create(req,res);
         });
 
         put("/korisnici/:id", (req, res)->{
+            res.type("application/json");
             return g.toJson(korisnikService.update(req, res));
         });
         delete("/korisnici/:id",(req, res)->{
-            return g.toJson(korisnikService.delete(req, res));
+            res.type("application/json");
+            return korisnikService.delete(req, res);
         });
     }
 }

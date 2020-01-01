@@ -58,6 +58,12 @@
                                 <td>
                                     <input type="text" v-model="email"/>
                                 </td>
+                    
+                                <td>
+                                    <p  class="alert alert-danger d-none">
+                                        Ovo polje je obavezno!
+                                    </p>
+                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -72,10 +78,6 @@
                                     </p>
                                 </td>
                             </tr>
-                            <datalist id="tipovi">
-                                <option value="admin">
-                                <option value="korisnik">
-                            </datalist>
                             <tr>
                                 <td>
                                     Tip korisnika
@@ -85,7 +87,7 @@
                                     <select name="org" v-model="tipKorisnika">
                                         <option value="admin">Admin</option>
                                         <option value="korisnik">Korisnik</option>
-                                      </select>
+                                    </select>
                                 </td>
                                 <td >
                                     <p  class="alert alert-danger d-none">
@@ -99,7 +101,7 @@
                                 </td>
                                 <td>
                                     <select name="org" v-model="organizacija">
-                                        <option v-for = "o in organizacije" v-bind:value="o.ime"></option>
+                                        <option v-for = "o in organizacije">{{o.ime}}</option>
                                     </select>
                                 </td>
                                 <td >
@@ -137,7 +139,6 @@
         <script src="js/popper.js"></script>
         <script src="js/Vue.js"></script>
         <script src="js/axios.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
         <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="app/header.js"></script>

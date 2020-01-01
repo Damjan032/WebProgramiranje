@@ -10,7 +10,7 @@ let loginapp = new Vue({
        organizacija: null,
        organizacije : null
     },
-    created : function() {
+    mounted() {
         axios.get('/organizacije').then(response => {
             this.organizacije = response.data;
         });  

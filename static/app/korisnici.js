@@ -4,30 +4,33 @@ jQuery(document).ready(function($) {
     });
 });
 
+
+const korisnici = { template: '<korisnici></korisnici>' }
+const detaljiKorisnika = { template: '<detalji-korisnika></detalji-korisnika>' }
+
+const router = new VueRouter({
+	  mode: 'hash',
+	  routes: [
+	    { path: '/', component: korisnici},
+	    { path: '/detaljiKorisnika', component: detaljiKorisnika }
+	  ]
+});
+
 let korisniciapp = new Vue({
-    el:"#korisnik",
+    router,
+    el:"#kor",
     data: {
         korisnici : null,
-        korisnikType : null,
-        items: [
-            { message: 'Foo' },
-            { message: 'Bar' }
-          ]
+        selektovaniKorisnik:null,
+        korisnikType : null
     },
-    created() {
-        axios.get('/korisnici').then(response => (
-            this.korisnici = response.data));
-        axios.get('/korisnik').then(response => (
-            this.korisnikType = response.data.uloga)); 
+    mounted() {
+        bus.$on('selektovaniKorisnik', (korisnik)=>{
+                    this.selektovaniKorisnik = korisnik;
+        });
     },
     methods:{
-        test: function () {
-            for(k of this.korisnici)
-            {
-                console.log(k);
-            }
-
-        }
+       
     }
 });
 

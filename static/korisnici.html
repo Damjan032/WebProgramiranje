@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="css/toast.css">
     </head>
     <body >
-        <div id="korisnik">
+        <div id="kor">
             <site-header>
             </site-header>
     
@@ -19,49 +19,7 @@
                 <div class="page-header">
                     <h2>Korisnici</h2>
                 </div>
-                <p>
-                    <h3 v-if = "korisnici.length == 0">
-                       Trenutno nema korisnika 
-                    </h3>
-                    <table class="table" v-else>
-                        <tr>
-                            <thead class="thead-light">
-                                <th>
-                                    Email
-                                </th>
-                                <th>
-                                    Ime
-                                </th>
-                                <th>
-                                    Prezime
-                                </th>
-                                <th v-if = "korisnikType=='SUPER_ADMIN'">
-                                    Organizacija
-                                </th>
-
-                            </thead>
-                        </tr>
-
-                        <tr v-for = "k in korisnici" v-bind:data-href = "'/korisnici/' + k.email" class="clickable-table-row">
-                            <td >
-                                {{ k.email }} 
-                             </td>
-                            <td>
-                                {{ k.ime }} 
-                             </td>
-                             <td>
-                                {{ k.prezime }} 
-                             </td>
-                             <td v-if = "korisnikType=='SUPER_ADMIN'">
-                                {{ k.organizacija }} 
-                             </td>
-                        </tr>
-                    </table>
-                    
-                    <a v-if = "korisnikType=='SUPER_ADMIN'||korisnikType=='ADMIN'" href="dodajKorisnika.html">
-                        <button type="button" class="btn btn-success">Dodaj korisnika</button>
-                    </a>
-                </p>
+                <router-view></router-view>
             </div>
     
         </div>
@@ -70,10 +28,15 @@
         <script src="js/jquery.js"></script>
         <script src="js/popper.js"></script>
         <script src="js/Vue.js"></script>
+        <script src="js/vue-router.js"></script>
         <script src="js/axios.js"></script>
         <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="app/header.js"></script>
+        <script src="app/form-logic.js"></script>
+
+        <script src="app/pregledKorisnika.js"></script>
+        <script src="app/detaljiKorisnika.js"></script>
         <script src="app/korisnici.js"></script>
 
     </body>
