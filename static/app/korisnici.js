@@ -6,18 +6,14 @@ const detaljiKorisnika = { template: '<detalji-korisnika></detalji-korisnika>' }
 
 const router = new VueRouter({
     routes: [
-    { path: '/',
-        component: korisnici},
-    { path: '/detaljiKorisnika/:korisnik',
-        name:"detaljiKorisnika",
-        component: detaljiKorisnika,
-        props: true 
-    },
-    { path: '/test/:id',
-        name:"test",
-        component: test,
-        props: true 
-    }
+        { path: '/',
+            component: korisnici
+        },
+        { path: '/detaljiKorisnika/:korisnik',
+            name:"detaljiKorisnika",
+            component: detaljiKorisnika,
+            props: true 
+        }
     ]
 });
 

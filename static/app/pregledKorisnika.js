@@ -13,7 +13,6 @@ Vue.component("korisnici", {
     <div class="page-header">
         <h2>Korisnici</h2>
     </div>
-    <router-link to="/test/69">test 69</router-link>
     <h3 v-if = "korisnici.length == 0">
         Trenutno nema korisnika 
     </h3>
