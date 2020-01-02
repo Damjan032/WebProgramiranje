@@ -25,11 +25,7 @@ public class Main {
 
     static boolean proveraPrijave(Session s){
         System.out.println(s.attribute("user")!=null);
-        if(s.attribute("user")==null){
-            return false;
-        }else{
-            return true;
-        }
+        return s.attribute("user") != null;
     }
 
     public static void main(String[] args) {
@@ -46,7 +42,7 @@ public class Main {
 
             get("/", (req, res) -> {
                 Session s = req.session();
-                Korisnik k = s.attribute("user");
+                Korisnik k = s.attribute("korisnik");
                 if (k == null) {
                     res.redirect("/login.html");
                     return null;

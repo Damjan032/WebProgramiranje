@@ -1,6 +1,15 @@
 
 Vue.component("detalji-korisnika", {
-    props:['selektovaniKorisnik'],
+    props:{
+        korisnik:{
+            default:()=>{
+                return {email:"Kurcina"}
+            }
+        },
+        proba:{
+            default:20
+        }
+    },
 	data: function () {
         return {
             ime: null,
@@ -10,7 +19,8 @@ Vue.component("detalji-korisnika", {
 	},
     template: ` 
 <div>
-    <h1></h1>
+
+    <h1>Korisnik: {{korisnik.email}}</h1>
     <table class="table">                
         <tr>
             <td>
@@ -63,7 +73,7 @@ Vue.component("detalji-korisnika", {
 		checkParams: checkFormParams
         ,
         izmeniKorisnika:function() {
-            console.log(this.selektovaniKorisnik);
+            console.log(this.korisnik);
             if(!this.checkParams()){
                 return;
             }
@@ -89,12 +99,16 @@ Vue.component("detalji-korisnika", {
             });
         }
     },
-    // created(){
-    //     bus.$on('selektovaniKorisnik', (korisnik)=>{
-    //         this.selektovaniKorisnik = korisnik;
-    //     });
-    // },
+    created(){
+        console.log(this.korisnik);
+        // bus.$emit('kreiran', true);
+        // bus.$on('selektovaniKorisnik', (korisnik)=>{
+        //     console.log(korisnik);
+        //     this.selektovaniKorisnik = korisnik;
+        // });
+    },
 	mounted () {
+        console.log(this.korisnik);
         // let email = this.selektovaniKorisnik.email;
         // axios.get('/korisnici/'+email).then(response => {
         //     this.korisnik = response.data;

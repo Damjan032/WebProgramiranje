@@ -1,19 +1,24 @@
-jQuery(document).ready(function($) {
-    $(".clickable-table-row").click(function() {
-        window.location = $(this).data("href");
-    });
-});
 
-
+Vue.use(VueRouter);
+const test = { template: '<test></test>' }
 const korisnici = { template: '<korisnici></korisnici>' }
 const detaljiKorisnika = { template: '<detalji-korisnika></detalji-korisnika>' }
 
 const router = new VueRouter({
-	  mode: 'hash',
-	  routes: [
-	    { path: '/', component: korisnici},
-	    { path: '/detaljiKorisnika', component: detaljiKorisnika }
-	  ]
+    routes: [
+    { path: '/',
+        component: korisnici},
+    { path: '/detaljiKorisnika/:korisnik',
+        name:"detaljiKorisnika",
+        component: detaljiKorisnika,
+        props: true 
+    },
+    { path: '/test/:id',
+        name:"test",
+        component: test,
+        props: true 
+    }
+    ]
 });
 
 let korisniciapp = new Vue({
@@ -21,13 +26,23 @@ let korisniciapp = new Vue({
     el:"#kor",
     data: {
         korisnici : null,
-        selektovaniKorisnik:null,
+        selKorisnik:null,
         korisnikType : null
     },
     mounted() {
-        bus.$on('selektovaniKorisnik', (korisnik)=>{
-                    this.selektovaniKorisnik = korisnik;
+        bus.$on('selektovani-korisnik', (korisnik)=>{
+            selKorisnik = korisnik;
+            console.log(korisnik);
+            window.location = "#/detaljiKorisnika/:selKorisnik";
+
         });
+
+        // bus.$on('kreiran', (message)=>{
+        //     bus.$emit('propustSelektovanogKorisnika', this.selektovaniKorisnik);
+        // });     
+        // bus.$on('selektovaniKorisnik', (korisnik)=>{
+        //             this.selektovaniKorisnik = korisnik;
+        // });
     },
     methods:{
        

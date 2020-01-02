@@ -1,15 +1,19 @@
 var bus = new Vue();
 
 Vue.component("korisnici", {
-    props:['selektovaniKorisnik'],
 	data: function () {
 		    return {
+                selektKorisnik:'',
 				korisnici : null,
 		        korisnikType : null	        		    
 		    }
 	},
     template: `
 <div>
+    <div class="page-header">
+        <h2>Korisnici</h2>
+    </div>
+    <router-link to="/test/69">test 69</router-link>
     <h3 v-if = "korisnici.length == 0">
         Trenutno nema korisnika 
     </h3>
@@ -29,9 +33,11 @@ Vue.component("korisnici", {
                 </th>
         </tr>
 
-        <tr v-for = "k in korisnici" v-on:click = "select(k)" class="clickable-table-row">
+        <tr v-for = "k in korisnici" class="clickable-table-row">
             <td>
-                {{ k.email }} 
+                <router-link :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
+                    {{ k.email }} 
+                </router-link>
             </td>
             <td>
                 {{ k.ime }} 
@@ -53,10 +59,15 @@ Vue.component("korisnici", {
 	, 
 	methods : {
 		select:function (korisnik) {
-            bus.$emit('selektovaniKorisnik', korisnik);
+            this.selektKorisnik = korisnik;
+            // bus.$emit('selektovani-korisnik', korisnik);
+            // setTimeout(function(){            
+                // window.location = "#/detaljiKorisnika";
+                // },
+                // 1000
+            // )
             // console.log("Selektovan je korisnik: "+korisnik);
             // this.selektovaniKorisnik = korisnik;
-            window.location = "#/detaljiKorisnika";
         }
 	},
 	mounted () {

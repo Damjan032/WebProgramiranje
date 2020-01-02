@@ -16,10 +16,8 @@
             <div class="jumbotron"><h1>Pregled korisnika</h1></div>
 
             <div class="container">
-                <div class="page-header">
-                    <h2>Korisnici</h2>
-                </div>
-                <router-view></router-view>
+                <router-link to="/test/69">test 69</router-link>
+                <router-view :selektovani-korisnik="selKorisnik"></router-view>
             </div>
     
         </div>
@@ -35,6 +33,7 @@
         <script src="app/header.js"></script>
         <script src="app/form-logic.js"></script>
 
+        <script src="app/test.js"></script>
         <script src="app/pregledKorisnika.js"></script>
         <script src="app/detaljiKorisnika.js"></script>
         <script src="app/korisnici.js"></script>
