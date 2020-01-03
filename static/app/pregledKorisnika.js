@@ -34,18 +34,24 @@ Vue.component("korisnici", {
 
         <tr v-for = "k in korisnici" class="clickable-table-row">
             <td>
-                <router-link :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
+                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
                     {{ k.email }} 
                 </router-link>
             </td>
             <td>
-                {{ k.ime }} 
+                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
+                    {{ k.ime }}
+                </router-link> 
             </td>
             <td>
-                {{ k.prezime }} 
+                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
+                    {{ k.prezime }} 
+                </router-link>
             </td>
             <td v-if = "korisnikType=='SUPER_ADMIN'">
-                {{ k.organizacija.ime }} 
+                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
+                    {{ k.organizacija.ime }} 
+                </router-link>
             </td>
         </tr>
     </table>

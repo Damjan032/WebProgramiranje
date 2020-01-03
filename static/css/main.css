@@ -1,6 +1,7 @@
 a.block-link{
     display: block;
     text-decoration: none;
+    color: black;
 }
 
 a.block-link:hover{

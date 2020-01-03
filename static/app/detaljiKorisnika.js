@@ -4,7 +4,9 @@ Vue.component("detalji-korisnika", {
         return {
             ime: null,
             prezime: null,
-            uloga: null		
+            uloga: null,
+            email:null,
+            organizacija:null
         }
 	},
     template: ` 
@@ -17,7 +19,7 @@ Vue.component("detalji-korisnika", {
                 Ime 
             </td>
             <td>
-                <input type="text" v-model = "prezime">
+                <input type="text" v-model = "ime">
             </td>
             <td >
                 <p  class="alert alert-danger d-none">
@@ -54,8 +56,29 @@ Vue.component("detalji-korisnika", {
                 </td>
             </td>                           
         </tr>
+        <tr>
+            <td>
+                Email 
+            </td>
+            <td>
+                {{$route.params.korisnik.email}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Organizacija 
+            </td>
+            <td>
+                {{$route.params.korisnik.organizacija.ime}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button v-on:click = "izmeniKorisnika()" type="button" class="btn btn-success">Izmeni korisnika</button>
+                <button v-on:click = "obrisiKorisnika()" type="button" class="btn btn-danger">Obriši korisnika</button>
+            </td>
+        </tr>
     </table>    
-    <button v-on:click = "izmeniKorisnika()" type="button" class="btn btn-success">Izmeni korisnika</button>
 </div>		  
 `
 	, 
@@ -71,8 +94,26 @@ Vue.component("detalji-korisnika", {
                 email: this.email,
                 ime: this.ime,
                 prezime: this.prezime,
-                organizacija: this.korisnik.organizacija,
+                organizacija: this.organizacija,
                 uloga:this.tipKorisnika
+              }
+            )
+            promise.then(response=>{
+                    
+                    if (response.status == 200) {
+                        window.location.replace("/korisnici.html");
+                    }else{
+                        new Toast({
+                            message:response.statusText,
+                            type: 'danger'
+                        });
+                    }
+
+            });
+        },
+        obrisiKorisnika:function() {
+            let promise = axios.delete("/korisnici",{
+                email: this.email,
               }
             )
             promise.then(response=>{
@@ -98,7 +139,11 @@ Vue.component("detalji-korisnika", {
         // });
     },
 	mounted () {
-        console.log(this.korisnik);
+        this.ime =  this.$route.params.korisnik.ime;
+        this.prezime =  this.$route.params.korisnik.prezime;
+        this.uloga = this.$route.params.korisnik.uloga;
+        this.email = this.$route.params.korisnik.email;
+        this.organizacija = this.$route.params.korisnik.organizacija;
         // let email = this.selektovaniKorisnik.email;
         // axios.get('/korisnici/'+email).then(response => {
         //     this.korisnik = response.data;
