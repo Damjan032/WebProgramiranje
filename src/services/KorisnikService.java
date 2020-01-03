@@ -100,7 +100,6 @@ public class KorisnikService{
             throw new UnauthorizedException();
         }
         String body = req.body();
-        String email = req.params("email");
         Korisnik noviKorisnik = mapKorisnikTransToKorisnik(g.fromJson(body, KorisnikTrans.class));
         if (korisnikDAO.fetchByEmail(noviKorisnik.getEmail()).getKorisnik().getUloga()== Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se menjati super admin!");
@@ -121,7 +120,7 @@ public class KorisnikService{
                 throw new UnauthorizedException();
             }
         }
-        return mapToKorisnikDTOString(korisnikDAO.update(noviKorisnik,email));
+        return mapToKorisnikDTOString(korisnikDAO.update(noviKorisnik));
     }
 
     public List<String> delete(Request req, Response res) throws IOException {

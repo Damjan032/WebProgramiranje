@@ -49,16 +49,16 @@ public class KorisnikDAO {
 
 
     public KorisnikNalog create(KorisnikTrans korisnik) throws IOException {
-        KorisnikNalog k = new KorisnikNalog(korisnik.getEmail(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getOrganizacija(), Uloga.fromString(korisnik.getUloga()),korisnik.getSifra().hashCode());
+        KorisnikNalog k = new KorisnikNalog(korisnik.getEmail(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getOrganizacija(), Uloga.fromString(korisnik.getUloga()), korisnik.getSifra().hashCode());
         List<KorisnikNalog> list = fetchAll();
         list.add(k);
         upisListeUFile(list);
         return k;
     }
 
-    public KorisnikNalog update(Korisnik korisnik, String email) throws IOException {
+    public KorisnikNalog update(Korisnik korisnik) throws IOException {
         List<KorisnikNalog> korisnici = fetchAll();
-        KorisnikNalog korisnikNalog = korisnici.stream().filter(kn-> kn.getKorisnik().getEmail().equals(email)).findFirst().orElse(null);
+        KorisnikNalog korisnikNalog = korisnici.stream().filter(kn-> kn.getKorisnik().getEmail().equals(korisnik.getEmail())).findFirst().orElse(null);
         if(korisnikNalog != null){
             Korisnik k = korisnikNalog.getKorisnik();
             k.setIme(korisnik.getIme());

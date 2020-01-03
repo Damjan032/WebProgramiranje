@@ -34,11 +34,11 @@ public class KorisnikController implements Controller{
             return korisnikService.create(req,res);
         });
 
-        put("/korisnici/:id", (req, res)->{
+        put("/korisnici", (req, res)->{
             res.type("application/json");
             return g.toJson(korisnikService.update(req, res));
         });
-        delete("/korisnici/:id",(req, res)->{
+        delete("/korisnici/:email",(req, res)->{
             res.type("application/json");
             return korisnikService.delete(req, res);
         });

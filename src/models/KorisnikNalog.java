@@ -11,7 +11,7 @@ public class KorisnikNalog {
         this.sifraHash = sifraHash;
     }
 
-    public KorisnikNalog(String email, String ime, String prezime, String organizacija, Uloga fromString, int sifraHasH) {
+    public KorisnikNalog(String email, String ime, String prezime, String organizacija, Uloga fromString, int sifraHash) {
         korisnik = new Korisnik(email, ime, prezime, organizacija, fromString);
         this.sifraHash = sifraHash;
     }

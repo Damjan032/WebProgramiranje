@@ -95,7 +95,7 @@ Vue.component("detalji-korisnika", {
                 ime: this.ime,
                 prezime: this.prezime,
                 organizacija: this.organizacija,
-                uloga:this.tipKorisnika
+                uloga:this.uloga
               }
             )
             promise.then(response=>{
@@ -112,10 +112,7 @@ Vue.component("detalji-korisnika", {
             });
         },
         obrisiKorisnika:function() {
-            let promise = axios.delete("/korisnici",{
-                email: this.email,
-              }
-            )
+            let promise = axios.delete("/korisnici/"+this.email);
             promise.then(response=>{
                     
                     if (response.status == 200) {
@@ -143,7 +140,7 @@ Vue.component("detalji-korisnika", {
         this.prezime =  this.$route.params.korisnik.prezime;
         this.uloga = this.$route.params.korisnik.uloga;
         this.email = this.$route.params.korisnik.email;
-        this.organizacija = this.$route.params.korisnik.organizacija;
+        this.organizacija = this.$route.params.korisnik.organizacija.ime;
         // let email = this.selektovaniKorisnik.email;
         // axios.get('/korisnici/'+email).then(response => {
         //     this.korisnik = response.data;
