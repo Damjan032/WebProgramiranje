@@ -34,7 +34,7 @@ Vue.component("site-header", {
             </ul>
         </div>
         <span v-if = "type" class="navbar-text">
-            <button class = "dropdown-item">Izmeni nalog</button>
+            <a href = "/izmenaProfila.html"><button class = "dropdown-item">Izmeni nalog</button></a>
             <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
         </span>
         

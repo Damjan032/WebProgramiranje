@@ -20,8 +20,10 @@ public enum Uloga {
     }
 
     public static Uloga fromString(String uloga){
+        if (uloga==null){
+            return null;
+        }
         switch (uloga) {
-
             case "super_admin":
                 return SUPER_ADMIN;
             case "admin":

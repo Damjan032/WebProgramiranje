@@ -1,14 +1,15 @@
 package models;
 
-import komunikacija.KorisnikTrans;
 import models.enums.Uloga;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Korisnik {
-    private String email, ime, prezime, organizacija;
+    private String email;
+    private String ime;
+    private String prezime;
+    private String organizacija;
     private Uloga uloga;
     private List<Aktivnost> aktivnosti = new ArrayList<>();
 

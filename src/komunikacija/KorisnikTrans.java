@@ -6,7 +6,12 @@ import java.util.List;
 
 public class KorisnikTrans {
 
-    private String email, ime, prezime, organizacija, sifra, uloga;
+    private String email;
+    private String ime;
+    private String prezime;
+    private String organizacija;
+    private String sifra;
+    private String uloga;
     private List<Aktivnost> aktivnosti;
 
     public KorisnikTrans(String email, String ime, String prezime, String organizacija, String sifra, String uloga) {

@@ -127,14 +127,6 @@ Vue.component("detalji-korisnika", {
             });
         }
     },
-    created(){
-        console.log(this.korisnik);
-        // bus.$emit('kreiran', true);
-        // bus.$on('selektovaniKorisnik', (korisnik)=>{
-        //     console.log(korisnik);
-        //     this.selektovaniKorisnik = korisnik;
-        // });
-    },
 	mounted () {
         this.ime =  this.$route.params.korisnik.ime;
         this.prezime =  this.$route.params.korisnik.prezime;

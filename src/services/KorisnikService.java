@@ -8,7 +8,6 @@ import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
 import komunikacija.KorisnikTrans;
-import models.Aktivnost;
 import models.Korisnik;
 import models.KorisnikNalog;
 import models.Organizacija;
@@ -18,10 +17,8 @@ import spark.Response;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class KorisnikService{
@@ -100,24 +97,26 @@ public class KorisnikService{
             throw new UnauthorizedException();
         }
         String body = req.body();
-        Korisnik noviKorisnik = mapKorisnikTransToKorisnik(g.fromJson(body, KorisnikTrans.class));
-        if (korisnikDAO.fetchByEmail(noviKorisnik.getEmail()).getKorisnik().getUloga()== Uloga.SUPER_ADMIN){
+        KorisnikNalog noviKorisnik = mapKorisnikTransToKorisnik(g.fromJson(body, KorisnikTrans.class));
+        if (korisnikDAO.fetchByEmail(noviKorisnik.getKorisnik().getEmail()).getKorisnik().getUloga()== Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se menjati super admin!");
         }
-        if (noviKorisnik.getUloga()==Uloga.SUPER_ADMIN){
+        if (noviKorisnik.getKorisnik().getUloga()==Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se uloga promeniti na super admina!");
         }
-        if(korisnik.getUloga()==Uloga.KORISNIK){
-            if(!korisnik.getEmail().equals(noviKorisnik.getEmail())){
-                throw new UnauthorizedException();
+        if(!korisnik.getEmail().equals(noviKorisnik.getKorisnik().getEmail())) {
+            if(korisnik.getUloga()==Uloga.KORISNIK){
+                if(!korisnik.getEmail().equals(noviKorisnik.getKorisnik().getEmail())){
+                    throw new UnauthorizedException();
+                }
             }
-        }
-        if(korisnik.getUloga() == Uloga.ADMIN){
-            if (noviKorisnik.getUloga()!= Uloga.KORISNIK){
-                throw new BadRequestException("Možete menjati samo korisnike koji nisu admini!");
-            }
-            if(!korisnik.getOrganizacija().equals(noviKorisnik.getOrganizacija())){
-                throw new UnauthorizedException();
+            if(korisnik.getUloga() == Uloga.ADMIN){
+                if (noviKorisnik.getKorisnik().getUloga()!= Uloga.KORISNIK){
+                    throw new BadRequestException("Možete menjati samo korisnike koji nisu admini!");
+                }
+                if(!korisnik.getOrganizacija().equals(noviKorisnik.getKorisnik().getOrganizacija())){
+                    throw new UnauthorizedException();
+                }
             }
         }
         return mapToKorisnikDTOString(korisnikDAO.update(noviKorisnik));
@@ -143,24 +142,23 @@ public class KorisnikService{
     }
 
 
-    private Korisnik mapKorisnikTransToKorisnik(KorisnikTrans kt){
-        return new Korisnik(kt.getEmail(), kt.getIme(), kt.getPrezime(), kt.getOrganizacija(), Uloga.fromString(kt.getUloga()));
+    private KorisnikNalog mapKorisnikTransToKorisnik(KorisnikTrans kt){
+        return new KorisnikNalog(kt.getEmail(), kt.getIme(), kt.getPrezime(), kt.getOrganizacija(), Uloga.fromString(kt.getUloga()), kt.getSifra());
     }
 
 
-    private String mapToKorisnikDTOString(KorisnikNalog kn) {
+    private String mapToKorisnikDTOString(KorisnikNalog kn){
 
         Korisnik k = kn.getKorisnik();
         String organizacijaId = k.getOrganizacija();
 
         Organizacija org;
-        Optional<Organizacija> optOrg;
         try {
-            optOrg = organizacijaDAO.fetchByIme(organizacijaId);
-            org = optOrg.get();
-        } catch (Exception ignored) {
-            org = null;
+            org = organizacijaDAO.fetchByIme(organizacijaId).orElse(null);
+        } catch (Exception e) {
+            org=null;
         }
+
 
         System.out.println(k.getUloga());
         return g.toJson(new KorisnikDTO.Builder().

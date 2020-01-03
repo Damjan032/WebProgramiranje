@@ -49,26 +49,43 @@ public class KorisnikDAO {
 
 
     public KorisnikNalog create(KorisnikTrans korisnik) throws IOException {
-        KorisnikNalog k = new KorisnikNalog(korisnik.getEmail(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getOrganizacija(), Uloga.fromString(korisnik.getUloga()), korisnik.getSifra().hashCode());
+        KorisnikNalog k = new KorisnikNalog(korisnik.getEmail(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getOrganizacija(), Uloga.fromString(korisnik.getUloga()), korisnik.getSifra());
         List<KorisnikNalog> list = fetchAll();
         list.add(k);
         upisListeUFile(list);
         return k;
     }
 
-    public KorisnikNalog update(Korisnik korisnik) throws IOException {
+    public KorisnikNalog update(KorisnikNalog noviKorisnikNalog) throws IOException {
         List<KorisnikNalog> korisnici = fetchAll();
+        Korisnik korisnik = noviKorisnikNalog.getKorisnik();
         KorisnikNalog korisnikNalog = korisnici.stream().filter(kn-> kn.getKorisnik().getEmail().equals(korisnik.getEmail())).findFirst().orElse(null);
         if(korisnikNalog != null){
             Korisnik k = korisnikNalog.getKorisnik();
-            k.setIme(korisnik.getIme());
-            k.setPrezime(korisnik.getPrezime());
-            k.setUloga(korisnik.getUloga());
-            k.setOrganizacija(korisnik.getOrganizacija());
+            if(checkStringAttribute(korisnik.getIme())){
+                k.setIme(korisnik.getIme());
+            }
+            if (checkStringAttribute(korisnik.getPrezime())) {
+                k.setPrezime(korisnik.getPrezime());
+            }
+            if(korisnik.getUloga()!=null) {
+                k.setUloga(korisnik.getUloga());
+            }
+            if(checkStringAttribute(korisnik.getOrganizacija())) {
+                k.setOrganizacija(korisnik.getOrganizacija());
+            }
+            if (noviKorisnikNalog.getSifraHash()!=null){
+                korisnikNalog.setSifraHash(noviKorisnikNalog.getSifraHash());
+            }
         }
 
         upisListeUFile(korisnici);
         return korisnikNalog;
+    }
+
+
+    private boolean checkStringAttribute(String ime) {
+        return ime!=null&& !ime.equals("");
     }
 
     public List<KorisnikNalog> delete(String id) throws IOException {

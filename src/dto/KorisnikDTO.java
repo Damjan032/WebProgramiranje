@@ -8,13 +8,17 @@ import java.util.List;
 
 public class KorisnikDTO {
 
-    private String email, ime, prezime;
+    private String email;
+    private String ime;
+    private String prezime;
     private Organizacija organizacija;
     private Uloga uloga;
     private List<Aktivnost> aktivnosti;
 
     public static final class Builder {
-        private String email, ime, prezime;
+        private String email;
+        private String ime;
+        private String prezime;
         private Organizacija organizacija;
         private Uloga uloga;
         private List<Aktivnost> aktivnosti;

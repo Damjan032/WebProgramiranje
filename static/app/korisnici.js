@@ -26,19 +26,6 @@ let korisniciapp = new Vue({
         korisnikType : null
     },
     mounted() {
-        bus.$on('selektovani-korisnik', (korisnik)=>{
-            selKorisnik = korisnik;
-            console.log(korisnik);
-            window.location = "#/detaljiKorisnika/:selKorisnik";
-
-        });
-
-        // bus.$on('kreiran', (message)=>{
-        //     bus.$emit('propustSelektovanogKorisnika', this.selektovaniKorisnik);
-        // });     
-        // bus.$on('selektovaniKorisnik', (korisnik)=>{
-        //             this.selektovaniKorisnik = korisnik;
-        // });
     },
     methods:{
        
