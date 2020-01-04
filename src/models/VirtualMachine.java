@@ -7,8 +7,8 @@ public class VirtualMachine extends Resurs {
     private List<Disk> diskovi;
 
 
-    public VirtualMachine(String ime, VMKategorija kategorija, List<Disk> diskovi) {
-        super(ime);
+    public VirtualMachine(String id, String ime, VMKategorija kategorija, List<Disk> diskovi) {
+        super(id, ime);
         this.kategorija = kategorija;
         this.diskovi = diskovi;
     }

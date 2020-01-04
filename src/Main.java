@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import controllers.KorisnikController;
 import controllers.LoginController;
 import controllers.OrganizacijaController;
+import exceptions.ExceptionsHandler;
 import komunikacija.KorisnikTrans;
 import komunikacija.LoginPoruka;
 import komunikacija.Poruka;
@@ -39,6 +40,8 @@ public class Main {
             organizacijaController.init();
             korisnikController.init();
             loginController.init();
+            ExceptionsHandler.getInstance().init();
+
 
             get("/", (req, res) -> {
                 Session s = req.session();

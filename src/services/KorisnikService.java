@@ -27,7 +27,8 @@ public class KorisnikService implements Service {
 
     @Override
     public Object fetchById(Object o) throws IOException {
-        return korisnikDAO.fetchById((UUID) o);
+        return null;
+       // return korisnikDAO.fetchById((UUID) o);
     }
 
     @Override

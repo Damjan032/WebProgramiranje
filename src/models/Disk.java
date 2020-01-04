@@ -6,11 +6,11 @@ import models.enums.TipDiska;
 public class Disk extends Resurs {
     private TipDiska tip;
     private double kapacitet;
-    private VirtualMachine vm;
+    private String vm;
 
 
-    public Disk(String ime, TipDiska tip, double kapacitet, VirtualMachine vm) {
-        super(ime);
+    public Disk(String id, String ime, TipDiska tip, double kapacitet, String vm) {
+        super(id, ime);
         this.tip = tip;
         this.kapacitet = kapacitet;
         this.vm = vm;
@@ -33,11 +33,11 @@ public class Disk extends Resurs {
         this.kapacitet = kapacitet;
     }
 
-    public VirtualMachine getVm() {
+    public String getVm() {
         return vm;
     }
 
-    public void setVm(VirtualMachine vm) {
+    public void setVm(String vm) {
         this.vm = vm;
     }
 }

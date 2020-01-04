@@ -1,27 +1,25 @@
 package controllers;
 
-import static spark.Spark.before;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
 import com.google.gson.Gson;
-import exceptions.UnauthorizedException;
 
-import java.io.InputStream;
 import java.util.Optional;
+
 import services.OrganizacijaService;
-import spark.Request;
-import spark.Session;
-
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.http.Part;
-
 public class OrganizacijaController implements Controller {
 
     private static Gson g = new Gson();
     OrganizacijaService organizacijaService = new OrganizacijaService();
+
+    private static OrganizacijaController instance = null;
+
+    public static OrganizacijaController getInstance() {
+        return  Optional.ofNullable(instance).orElseGet(OrganizacijaController::new);
+    }
 
     @Override
     public void init() {
@@ -30,8 +28,7 @@ public class OrganizacijaController implements Controller {
 
         get("/organizacije", (req, res) -> {
             res.type("application/json");
-            var v = organizacijaService.fetchAll();
-            return v;});
+            return organizacijaService.fetchAll();});
 
         get("/organizacije/:id", (req, res) -> {
             res.type("application/json");
@@ -56,6 +53,5 @@ public class OrganizacijaController implements Controller {
             organizacijaService.delete(id);
             return "";
         });
-
     }
 }
