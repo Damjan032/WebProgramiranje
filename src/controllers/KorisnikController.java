@@ -18,29 +18,63 @@ public class KorisnikController implements Controller{
     KorisnikService korisnikService = new KorisnikService();
 
     @Override
-    public void init() {
+    public void init(){}
+    /*{
+
+        get("/tipKorisnika", (req, res) -> {
+            Session s = req.session();
+            System.out.println(s.attribute("user") != null);
+            Korisnik k = s.attribute("user");
+            if (k == null) {
+                res.status(401);
+                return "";
+            } else {
+                return g.toJson(k.getUloga().toString());
+            }
+        });
         get("/korisnici", (req, res) -> {
-            res.type("application/json");
-            return korisnikService.fetchAll(req,res);
+            Session session = req.session();
+            Korisnik user = session.attribute("user");
+            if(user == null) {
+                res.status(401);
+                return g.toJson(false);
+            }
+            return g.toJson(sistem.getKorisnici(user));
         });
 
-        get("/korisnici/:id", (req, res) -> {
-            res.type("application/json");
-            return korisnikService.fetchById(req, res);
+        get("/korisnici/:email", (req, res) -> {
+            Session session = req.session();
+            Korisnik user = session.attribute("user");
+            if(user == null) {
+                return g.toJson(false);
+            }
+            String email = req.params(":email");
+            return g.toJson(sistem.getKorisnik(user,email));
         });
 
         post("/korisnici", (req, res)->{
-            res.type("application/json");
-            return korisnikService.create(req,res);
+            Session s = req.session();
+            if(proveraPrijave(s)){
+                Korisnik user = s.attribute("user");
+                return g.toJson(sistem.dodajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
+            }
+            return new Poruka("Niste prijavljeni", false);
         });
-
         put("/korisnici", (req, res)->{
-            res.type("application/json");
-            return g.toJson(korisnikService.update(req, res));
+            Session s = req.session();
+            if(proveraPrijave(s)){
+                Korisnik user = s.attribute("user");
+                return g.toJson(sistem.azurirajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
+            }
+            return new Poruka("Niste prijavljeni", false);
         });
-        delete("/korisnici/:email",(req, res)->{
-            res.type("application/json");
-            return korisnikService.delete(req, res);
-        });
-    }
+        delete("/korisnici",(req, res)->{
+            Session s = req.session();
+            if(proveraPrijave(s)){
+                Korisnik user = s.attribute("user");
+                return g.toJson(sistem.azurirajKorisnika(user, g.fromJson(req.body(), KorisnikTrans.class)));
+            }
+            return new Poruka("Niste prijavljeni", false);
+        }
+    });*/
 }

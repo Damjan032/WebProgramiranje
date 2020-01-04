@@ -46,45 +46,45 @@
             </tr>
 
             <tr v-for = "o in organizacije" >
-                    <td>
-                     <img width="50" height="50" v-bind:src="o.imgPath" class="rounded" >
-                   </td>
-                   <td text-align="center">
-                       <p>{{o.ime}}</p>
-                   </td>
-                   <td text-align="center">
-                       {{o.opis}}
-                   </td>
+                <td>
+                    <img width="50" height="50" v-bind:src="o.imgPath" class="rounded" >
+                </td>
+                <td text-align="center">
+                    <p>{{o.ime}}</p>
+                </td>
+                <td text-align="center">
+                    {{o.opis}}
+                </td>
                 <td>
                     <button type="button" class="btn btn-secondary">Pregled korisnika</button>
                 </td>
-                    <td>
-                        <button type="button" class="btn btn-secondary" @click= "izmeni(o.id)">Izmeni</button>
-                    </td>
+                <td>
+                   <button type="button" class="btn btn-secondary" @click= "izmena(o.id)" >Izmeni</button>
+                </td>
                 <td>
                     <button @click= "obrisi(o.id)" type="button" class="btn btn-secondary">Obriši</button>
                 </td>
-               </tr>
-           </table>
-           </p>
-       </div>
+            </tr>
+        </table>
+        </p>
+    </div>
 
-   </div>
+</div>
 
 
-   <div id="footer">
+<div id="footer">
 
-   </div>
+</div>
 
-   <script src="js/jquery.js"></script>
-   <script src="js/popper.js"></script>
-   <script src="js/Vue.js"></script>
-   <script src="js/axios.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
-   <script src="js/toast.js"></script>
-   <script src="bootstrap/js/bootstrap.min.js"></script>
-   <script src="app/header.js"></script>
-   <script src="app/orgPregled.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/Vue.js"></script>
+<script src="js/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
+<script src="js/toast.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="app/header.js"></script>
+<script src="app/orgIzmena.js"></script>
 
-   </body>
-   </html>
+</body>
+</html>

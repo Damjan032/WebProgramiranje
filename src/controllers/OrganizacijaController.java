@@ -56,5 +56,6 @@ public class OrganizacijaController implements Controller {
             organizacijaService.delete(id);
             return "";
         });
+
     }
 }

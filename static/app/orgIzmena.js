@@ -1,4 +1,4 @@
-let orgPregled = new Vue({
+let orgIzmena = new Vue({
     el:"#organizacije",
     data: {
         organizacije : null,
@@ -9,20 +9,16 @@ let orgPregled = new Vue({
             this.organizacije = response.data;
             console.log(this.organizacije);
         });
-        axios.get('/korisnik').then(response => {
-            this.korisnikType = response.data.uloga;
+        axios.get('/getUserType').then(response => {
+            this.korisnikType = response.data;
         });
     },
     methods:{
         obrisi:function(id){
+            console.log(id);
             axios.delete('/organizacije/'+id).then(response => {
-                      window.location.reload();
+                 window.location.reload()
             });
-        },
-
-
-        izmeni:function(id){
-            axios.get('/orgIzmena.html?id='+id);
         }
     }
 });
