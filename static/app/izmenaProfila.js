@@ -71,6 +71,11 @@ new Vue({
                             type: 'danger'
                         });
                     }
+                }).catch(error=>{
+                    new Toast({
+                        message:error.response.data.ErrorMessage,
+                        type: 'danger'
+                    });
                 });
             }
        }

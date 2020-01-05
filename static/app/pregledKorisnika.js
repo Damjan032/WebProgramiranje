@@ -50,7 +50,7 @@ Vue.component("korisnici", {
             </td>
             <td v-if = "korisnikType=='SUPER_ADMIN'">
                 <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
-                    {{ k.organizacija.ime }} 
+                    {{ k.organizacija }} 
                 </router-link>
             </td>
         </tr>

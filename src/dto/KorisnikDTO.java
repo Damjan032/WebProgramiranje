@@ -11,7 +11,7 @@ public class KorisnikDTO {
     private String email;
     private String ime;
     private String prezime;
-    private Organizacija organizacija;
+    private String organizacija;
     private Uloga uloga;
     private List<Aktivnost> aktivnosti;
 
@@ -19,7 +19,7 @@ public class KorisnikDTO {
         private String email;
         private String ime;
         private String prezime;
-        private Organizacija organizacija;
+        private String organizacija;
         private Uloga uloga;
         private List<Aktivnost> aktivnosti;
 
@@ -45,7 +45,7 @@ public class KorisnikDTO {
             return this;
         }
 
-        public KorisnikDTO.Builder withOrganizacija(Organizacija organizacija) {
+        public KorisnikDTO.Builder withOrganizacija(String organizacija) {
             this.organizacija = organizacija;
             return this;
         }

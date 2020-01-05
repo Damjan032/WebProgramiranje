@@ -110,6 +110,12 @@ Vue.component("detalji-korisnika", {
                     }
 
             });
+            promise.catch(error=>{
+                new Toast({
+                    message:error.response.data.ErrorMessage,
+                    type: 'danger'
+                });
+            })
         },
         obrisiKorisnika:function() {
             let promise = axios.delete("/korisnici/"+this.email);
@@ -125,6 +131,12 @@ Vue.component("detalji-korisnika", {
                     }
 
             });
+            promise.catch(error=>{
+                new Toast({
+                    message:error.response.data.ErrorMessage,
+                    type: 'danger'
+                });
+            })
         }
     },
 	mounted () {
