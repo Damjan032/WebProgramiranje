@@ -2,6 +2,7 @@ package dto;
 
 import java.util.List;
 import models.Korisnik;
+import models.KorisnikNalog;
 import models.Resurs;
 
 public class OrganizacijaDTO {
@@ -9,7 +10,7 @@ public class OrganizacijaDTO {
     private String ime;
     private String opis;
     private String imgPath;
-    private List<Korisnik> korisnici;
+    private List<KorisnikNalog> korisnici;
     private List<ResursDTO> resursi;
 
 
@@ -19,7 +20,7 @@ public class OrganizacijaDTO {
         private String ime;
         private String opis;
         private String imgPath;
-        private List<Korisnik> korisnici;
+        private List<KorisnikNalog> korisnici;
         private List<ResursDTO> resursi;
 
         public  Builder() {
@@ -44,7 +45,7 @@ public class OrganizacijaDTO {
             return this;
         }
 
-        public Builder withKorisnici(List<Korisnik> korisnici) {
+        public Builder withKorisnici(List<KorisnikNalog> korisnici) {
             this.korisnici = korisnici;
             return this;
         }

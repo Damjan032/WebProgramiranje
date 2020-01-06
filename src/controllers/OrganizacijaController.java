@@ -44,7 +44,7 @@ public class OrganizacijaController implements Controller {
         put("/organizacije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return organizacijaService.update(req.body(), id);
+            return organizacijaService.updateWithImage(req, id);
         });
 
         delete("/organizacije/:id", (req, res) -> {

@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import controllers.KorisnikController;
 import controllers.LoginController;
 import controllers.OrganizacijaController;
+import controllers.VMKategorijaController;
 import exceptions.ExceptionsHandler;
 import komunikacija.KorisnikTrans;
 import komunikacija.LoginPoruka;
@@ -33,13 +34,14 @@ public class Main {
         try {
             staticFiles.externalLocation(new File("./static").getCanonicalPath());
 
-            OrganizacijaController organizacijaController = new OrganizacijaController();
             KorisnikController korisnikController = new KorisnikController();
             LoginController loginController = new LoginController();
 
-            organizacijaController.init();
+
+            OrganizacijaController.getInstance().init();
             korisnikController.init();
             loginController.init();
+            VMKategorijaController.getInstance().init();
             ExceptionsHandler.getInstance().init();
 
 

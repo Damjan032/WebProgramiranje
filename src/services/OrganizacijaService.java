@@ -2,8 +2,10 @@ package services;
 
 import com.google.gson.Gson;
 import dao.DiskDAO;
+import dao.KorisnikDAO;
 import dao.OrganizacijaDAO;
 import dto.DiskDTO;
+import dto.KorisnikDTO;
 import dto.OrganizacijaDTO;
 import dto.ResursDTO;
 import exceptions.BadRequestException;
@@ -20,9 +22,13 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
+
+import jdk.jshell.spi.ExecutionControl;
 import models.Disk;
 import models.Korisnik;
+import models.KorisnikNalog;
 import models.Organizacija;
+import models.Organizacija.Resurs;
 import models.enums.Uloga;
 import spark.Request;
 
@@ -43,8 +49,8 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     @Override
-    public String create(String req) {
-        return "";
+    public String create(String req) throws ExecutionControl.NotImplementedException {
+        throw new ExecutionControl.NotImplementedException("Nema ovoga");
     }
 
     public String createWithImage(Request req) throws IOException, ServletException {
@@ -59,6 +65,24 @@ public class OrganizacijaService implements Service<String, String> {
         return mapToOrganizacijaDTOString(organizacijaDAO.create(organizacija));
     }
 
+    public String updateWithImage(Request req, String id) throws IOException, ServletException {
+        req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+        String ime = req.queryParams("oIme");
+        String opis = req.queryParams("oOpis");
+        if(ime.trim().equals("") || opis.trim().equals("")) {
+            throw new BadRequestException("Sva polja moraju biti popunjena");
+        }
+        if (organizacijaDAO.fetchByIme(ime).isPresent() && !organizacijaDAO.fetchById(id).getIme().equalsIgnoreCase(ime)) {
+            throw new BadRequestException("Organizacija sa imenom: " + ime +" posotji");
+        }
+        Organizacija organizacija = organizacijaDAO.fetchById(id);
+        organizacija.setOpis(opis);
+        organizacija.setIme(ime);
+        organizacija.setImgPath(dodajSliku(req));
+
+        return mapToOrganizacijaDTOString(organizacijaDAO.update(organizacija,id));
+    }
+
     @Override
     public String update(String organizacija, String id) throws IOException {
         return mapToOrganizacijaDTOString(organizacijaDAO.update(g.fromJson(organizacija, Organizacija.class), id));
@@ -70,16 +94,22 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     private String mapToOrganizacijaDTOString(Organizacija organizacija) {
-        List<Korisnik> korisnici = new ArrayList<>();
+        List<KorisnikNalog> korisnici = new ArrayList<>();
         List<ResursDTO> resursi = new ArrayList<>();
+        KorisnikDAO korisnikDAO = new KorisnikDAO();
 
         List<String> korisniciId = organizacija.getKorisnici();
-        List<Organizacija.Resurs> resursiId = organizacija.getResursi();
+        List<Resurs> resursiId = organizacija.getResursi();
 
         if (korisniciId != null) {
             organizacija.getKorisnici().forEach(korisnikId -> {
                 // TODO Uz pomoc korinikDAO izvuci korinsike i upisi ih ovde za svaki id iz liste
-                korisnici.add(new Korisnik(Uloga.ADMIN));
+                try {
+                    korisnici.add(korisnikDAO.fetchByEmail(korisnikId));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             });
         }
 
@@ -111,7 +141,7 @@ public class OrganizacijaService implements Service<String, String> {
         return path;
     }
 
-    private ResursDTO mapToResursDTO(Organizacija.Resurs resurs) {
+    private ResursDTO mapToResursDTO(Resurs resurs) {
         switch (resurs.getTip()) {
             case DISK:
                 Disk disk = diskDTO.fetchById(resurs.getId());

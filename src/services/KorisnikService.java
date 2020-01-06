@@ -144,6 +144,7 @@ public class KorisnikService{
 
 
     private KorisnikNalog mapKorisnikTransToKorisnik(KorisnikTrans kt){
+      //  return null;
         return new KorisnikNalog(kt.getEmail(), kt.getIme(), kt.getPrezime(), kt.getOrganizacija(), Uloga.fromString(kt.getUloga()), kt.getSifra());
     }
 

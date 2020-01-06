@@ -1,0 +1,75 @@
+<html>
+<head>
+    <title>
+        Prijavite se
+    </title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="shortcut icon" href="">
+</head>
+<body >
+<div id="orgKorisnici">
+    <site-header>
+    </site-header>
+
+    <div class="jumbotron"><h1>Pregled korisnika</h1></div>
+    <div class="container">
+        <div class="page-header">
+            <h2>Organizacije</h2>
+        </div>
+        <p>
+        <h3 >
+            Trenutno nema organizacija
+        </h3>
+        <table class="table">
+            <tr>
+                <th>
+                    Ime
+                </th>
+                <th>
+                    Prezime
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Uloga
+                </th>
+            </tr>
+
+            <tr v-for = "k in korisnici" >
+                <td text-align="center">
+                    <p>{{k.ime}}</p>
+                </td>
+                <td text-align="center">
+                    {{k.prezime}}
+                </td>
+                <td text-align="center">
+                    <p>{{k.email}}</p>
+                </td>
+            </tr>
+        </table>
+        </p>
+    </div>
+
+</div>
+
+
+<div id="footer">
+
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/Vue.js"></script>
+<script src="js/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
+<script src="js/toast.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="app/header.js"></script>
+<script src="app/orgKorisnici.js"></script>
+
+</body>
+</html>

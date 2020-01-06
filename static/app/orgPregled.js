@@ -20,9 +20,16 @@ let orgPregled = new Vue({
             });
         },
 
+        pregledKorisnika:function(id){
+            window.location.href="/orgKorisnici.html?id="+id;
+        },
 
         izmeni:function(id){
-            axios.get('/orgIzmena.html?id='+id);
+            window.location.href="/orgIzmena.html?id="+id;
+        },
+
+        pregledResursa:function(id){
+            window.location.href="/orgResursi.html?id="+id;
         }
     }
 });

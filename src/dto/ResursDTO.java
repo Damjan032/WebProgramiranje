@@ -2,7 +2,7 @@ package dto;
 
 import models.enums.TipResursa;
 
-public abstract class ResursDTO {
+public class ResursDTO {
     protected String id;
 
     protected String ime;
@@ -12,6 +12,12 @@ public abstract class ResursDTO {
     public ResursDTO(String id, String ime) {
         this.id = id;
         this.ime = ime;
+    }
+
+    public ResursDTO(String id, String ime, TipResursa tipResursa) {
+        this.id = id;
+        this.ime = ime;
+        this.tipResursa = tipResursa;
     }
 
     public String getIme() {
