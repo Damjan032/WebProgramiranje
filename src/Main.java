@@ -1,8 +1,5 @@
 import com.google.gson.Gson;
-import controllers.KorisnikController;
-import controllers.LoginController;
-import controllers.OrganizacijaController;
-import controllers.VMKategorijaController;
+import controllers.*;
 import exceptions.ExceptionsHandler;
 import komunikacija.KorisnikTrans;
 import komunikacija.LoginPoruka;
@@ -43,7 +40,7 @@ public class Main {
             loginController.init();
             VMKategorijaController.getInstance().init();
             ExceptionsHandler.getInstance().init();
-
+            VirtuelnaMasinaController.getInstance().init();
 
             get("/", (req, res) -> {
                 Session s = req.session();

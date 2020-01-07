@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodavanje virtuelne masine</title>
+
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <div id="virtuelnaMasinaAdd">
+        <div class="jumbotron"><h1>Dodavanje kategorije</h1></div>
+        <div  class="container">
+            Ime virtuelne masine: <input  type="text" v-model="ime" v-bind:placeholder="virtuelnaMasina.ime"/>
+            <p  class="alert alert-danger d-none">
+                Ovo polje je obavezno!
+            </p>
+            <br><br>
+            Kategorija:
+            <select v-model="kategorija" >
+                <option v-for = "kat in vmKategorije" v-bind:value="kat.ime">{{kat.ime}}</option>
+            </select>
+            <p  class="alert alert-danger d-none">
+                Ovo polje je obavezno!
+            </p>
+            <br><br>
+            <button  @click = "izmeni()">Dodaj kategoriju</button>
+        </div>
+
+    </div>
+
+
+    <div id="footer">
+
+    </div>
+
+
+    <script src="js/jquery.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/Vue.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="app/header.js"></script>
+    <script src="app/virtuelnaMasinaIzmena.js"></script>
+</body>
+</html>

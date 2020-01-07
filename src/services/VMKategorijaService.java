@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dao.VMKategorijaDAO;
 import exceptions.BadRequestException;
 import models.VMKategorija;
+import models.VirtuelnaMasina;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,7 +47,10 @@ public class VMKategorijaService implements Service<String, String> {
 
     @Override
     public void delete(String id) throws IOException {
-        // TODO proveri da l ima virtuele masine sa tom kategorijom, al to kad uradis VM
+        VirtuelnaMasinaService virtuelnaMasinaService = new VirtuelnaMasinaService();
+        if(virtuelnaMasinaService.fetchByKatgegorijaId(id)){
+            throw new BadRequestException("Kategorija VM ne sme biti obrisana jer postoje VM te kategorije");
+        }
         vmKategorijaDAO.delete(id);
     }
 }
