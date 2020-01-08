@@ -47,6 +47,13 @@ public class OrganizacijaController implements Controller {
             return organizacijaService.updateWithImage(req, id);
         });
 
+        put("/organizacije/:id/vm/:vmId", (req, res) -> {
+            res.type("application/json");
+            String id = req.params("id");
+            String vmID = req.params("vmId");
+            return organizacijaService.addVM(req.body(), id, vmID);
+        });
+
         delete("/organizacije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");

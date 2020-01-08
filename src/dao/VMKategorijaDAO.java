@@ -24,8 +24,9 @@ public class VMKategorijaDAO {
     public List<VMKategorija> fetchAll() {
         try {
             JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
-            return g.fromJson(reader, new TypeToken<List<VMKategorija>>() {
+            List<VMKategorija> vmKategorijas = g.fromJson(reader, new TypeToken<List<VMKategorija>>() {
             }.getType());
+            return vmKategorijas;
         } catch (FileNotFoundException e) {
             throw new InternalServerErrorException("File " + FILE_PATH + " ne postoji.");
         }

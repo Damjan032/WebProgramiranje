@@ -30,6 +30,14 @@ let virtuelnaMasinaPegled = new Vue({
 
     },
     methods:{
+        pregledAktivnosti:function(id){
+             window.location.href="/virtuelneMasineAktinvosti.html?id="+id;
+        },
+        activnost(vm){
+         let promise = axios.put("/virtuelneMasine/activnost/"+vm.id,{});
+
+        },
+
         filter(event) {
                 console.log(event.target.value);
                 console.log(this.filterIme);

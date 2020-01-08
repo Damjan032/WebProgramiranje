@@ -2,7 +2,7 @@ let orgPregled = new Vue({
     el:"#orgResursi",
     data: {
         organizacija : "",
-        korisnici : ""
+        resursi : ""
     },
     mounted () {
         let uri = window.location.search.substring(1);
@@ -11,13 +11,15 @@ let orgPregled = new Vue({
 
                 axios.get('/organizacije/'+params.get("id")).then(response => {
                     this.organizacija = response.data;
-                    this.korisnici = this.organizacija.korisnici;
-                    console.log(this.organizacija);
-                    console.log(this.organizacija.korisnici);
+                    this.resursi = this.organizacija.resursi;;
                 });
 
     },
     methods:{
+
+        dodajVM:function(){
+            window.location.href="/orgVirtuelnaMasinaAdd.html?id="+this.organizacija.id;
+        },
 
          dodajDisk:function(){
              window.location.href="/orgDiskAdd.html?id="+this.organizacija.id;

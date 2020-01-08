@@ -1,29 +1,36 @@
 package models;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Aktivnost {
-    private LocalDateTime pocetak;
-    private LocalDateTime zavrsetak;
-
-    public Aktivnost(LocalDateTime pocetak, LocalDateTime zavrsetak) {
+    private String pocetak;
+    private String zavrsetak;
+    public Aktivnost(String pocetak, String zavrsetak) {
         this.pocetak = pocetak;
         this.zavrsetak = zavrsetak;
     }
-
-    public LocalDateTime getZavrsetak() {
+    public Aktivnost(LocalDateTime pocetak, LocalDateTime zavrsetak) {
+        DateTimeFormatter FORMATER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.pocetak = pocetak.format(FORMATER);
+        if(zavrsetak!=null)
+            this.zavrsetak = zavrsetak.format(FORMATER);
+    }
+    public String getZavrsetak() {
         return zavrsetak;
     }
 
     public void setZavrsetak(LocalDateTime zavrsetak) {
-        this.zavrsetak = zavrsetak;
+        DateTimeFormatter FORMATER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.zavrsetak = zavrsetak.format(FORMATER);
     }
 
-    public LocalDateTime getPocetak() {
+    public String getPocetak() {
         return pocetak;
     }
 
     public void setPocetak(LocalDateTime pocetak) {
-        this.pocetak = pocetak;
+        DateTimeFormatter FORMATER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.pocetak = pocetak.format(FORMATER);
     }
 }

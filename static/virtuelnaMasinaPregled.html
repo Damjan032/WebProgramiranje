@@ -85,7 +85,7 @@
                 <td>
                     <label class="switch">
                         <!-- <input type="checkbox" v-model="module.checked" v-bind:id="module.id"> !-->
-                        <input type="checkbox">
+                        <input type="checkbox" v-bind:checked="vm.isActiv" v-on:click="activnost(vm)">
                         <span class="slider round"></span>
                     </label>
                 </td>

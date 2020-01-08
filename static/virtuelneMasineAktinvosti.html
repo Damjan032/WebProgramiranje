@@ -1,46 +1,50 @@
 <html>
 <head>
     <title>
-        Prijavite se
+        Virtuelne masine
     </title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap/css/slider.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/toast.css">
     <link rel="shortcut icon" href="">
+
 </head>
 <body >
-<div id="orgResursi">
+<div id="virtuelneMasineAktivnosti">
     <site-header>
     </site-header>
 
     <div class="jumbotron"><h1>Pregled korisnika</h1></div>
     <div class="container">
         <div class="page-header">
-            <h2>Organizacije</h2>
+            <h2>Pregled aktivnosti virtuelnih masine {{virtuelnaMasina.ime}}</h2>
         </div>
-        <p>
-        <table class="table">
-            <tr>
-                <th>
-                    Naziv Virtuelne masine
-                </th>
-            </tr>
-            <tr v-for = "res in resursi" >
-                <td text-align="center">
-                    {{res.ime}}
-                </td>
-                <th>
-                    <button>Opsirnije</button> <!-- TODO Pregled diskova koji su resursi te organizacije a nalaze se u okviru date vm !-->
-                </th>
-            </tr>
+        <br><br>
 
+        <br><br>
+        <p>
+            <table class="table">
+                <tr>
+                    <th>
+                        Pocetak aktivnosti
+                    </th>
+                    <th>
+                        Kraj aktivnosti
+                    </th>
+                </tr>
+
+                <tr v-for = "a in aktivnosti" >
+                    <td>
+                         <p>{{a.pocetak}}</p>
+                    </td>
+                    <td text-align="center">
+                        {{a.zavrsetak}}
+                    </td>
+                </tr>
         </table>
         </p>
-        <br><br>
-        <button @click= "dodajVM()" type="button" class="btn btn-secondary">Dodaj VM</button>
-        <button @click= "dodajDisk()" type="button" class="btn btn-secondary">Dodaj Disk</button>
-
     </div>
 
 </div>
@@ -49,7 +53,6 @@
 <div id="footer">
 
 </div>
-
 <script src="js/jquery.js"></script>
 <script src="js/popper.js"></script>
 <script src="js/Vue.js"></script>
@@ -58,7 +61,7 @@
 <script src="js/toast.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script src="app/header.js"></script>
-<script src="app/orgResursi.js"></script>
+<script src="app/virtuelneMasineAktinvosti.js"></script>
 
 </body>
 </html>

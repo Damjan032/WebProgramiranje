@@ -1,13 +1,8 @@
 package services;
 
 import com.google.gson.Gson;
-import dao.DiskDAO;
-import dao.KorisnikDAO;
-import dao.OrganizacijaDAO;
-import dto.DiskDTO;
-import dto.KorisnikDTO;
-import dto.OrganizacijaDTO;
-import dto.ResursDTO;
+import dao.*;
+import dto.*;
 import exceptions.BadRequestException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -24,11 +19,9 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 
 import jdk.jshell.spi.ExecutionControl;
-import models.Disk;
-import models.Korisnik;
-import models.KorisnikNalog;
-import models.Organizacija;
+import models.*;
 import models.Organizacija.Resurs;
+import models.enums.TipResursa;
 import models.enums.Uloga;
 import spark.Request;
 
@@ -36,8 +29,8 @@ public class OrganizacijaService implements Service<String, String> {
 
     private Gson g = new Gson();
     private OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
-    private DiskDAO diskDTO = new DiskDAO();
-
+    private DiskDAO diskDAO = new DiskDAO();
+    private VirtuelnaMasinaDAO virtuelnaMasinaDAO = new VirtuelnaMasinaDAO();
     @Override
     public List<String> fetchAll() throws FileNotFoundException {
         return organizacijaDAO.fetchAll().stream().map(this::mapToOrganizacijaDTOString).collect(Collectors.toList());
@@ -144,14 +137,31 @@ public class OrganizacijaService implements Service<String, String> {
     private ResursDTO mapToResursDTO(Resurs resurs) {
         switch (resurs.getTip()) {
             case DISK:
-                Disk disk = diskDTO.fetchById(resurs.getId());
+                Disk disk = diskDAO.fetchById(resurs.getId());
                 return new DiskDTO.Builder().withId(disk.getId()).withIme(disk.getIme()).withKapacitet(disk.getKapacitet())
                         .withTip(disk.getTip()).withTipResursa(resurs.getTip()).withVm(disk.getVm()).build();
-//          case VM:
-//              resursi.add(vmDTO.fetch(resurs.getId()));
-//          break;
+          case VM:
+               //public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi, List<Aktivnost> aktivnosti)
+              VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(resurs.getId());
+              List<Disk> diskovi = new ArrayList<>();
+              virtuelnaMasina.getDiskovi().forEach(diskId ->{
+                  diskovi.add(diskDAO.fetchById(diskId));
+              });
+              VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
+              return new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(), vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()), diskovi, virtuelnaMasina.getAktivnosti());
             default:
                 return null;
         }
+    }
+
+    public boolean addVM(String req, String id, String vmID) throws IOException {
+        Organizacija organizacija = organizacijaDAO.fetchById(id);
+
+        if(organizacija.getResursi().stream().filter(resurs -> resurs.getId().equals(vmID)).findFirst().isPresent()){
+            throw new BadRequestException("Izaberi virtuelna masina je vec u listi resursa date organizacije.");
+        }
+        organizacija.getResursi().add(new Resurs(vmID, TipResursa.VM));
+        update(g.toJson(organizacija), id);
+        return true;
     }
 }

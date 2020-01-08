@@ -52,6 +52,12 @@ public class VirtuelnaMasinaController implements Controller {
             return virtuelnaMasinaService.update(req.body(), id);
         });
 
+        put("/virtuelneMasine/activnost/:id", (req, res) -> {
+            res.type("application/json");
+            String id = req.params("id");
+            return virtuelnaMasinaService.updateActivnost(req.body(), id);
+        });
+
         delete("/virtuelneMasine/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");

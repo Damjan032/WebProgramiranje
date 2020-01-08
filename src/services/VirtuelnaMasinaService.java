@@ -7,6 +7,7 @@ import dao.VirtuelnaMasinaDAO;
 import dto.DiskDTO;
 import dto.VirtuelnaMasinaDTO;
 import exceptions.BadRequestException;
+import javaxt.utils.Array;
 import jdk.jshell.spi.ExecutionControl;
 import models.Aktivnost;
 import models.Disk;
@@ -15,6 +16,7 @@ import spark.Request;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,8 +45,12 @@ public class VirtuelnaMasinaService implements Service<String, String> {
 
             });
         }
-        return
-                g.toJson(new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(), vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()), diskovi, aktivnosti));
+        VirtuelnaMasinaDTO virtuelnaMasinaDTO = new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(),
+                vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()),
+                diskovi,
+                virtuelnaMasina.getAktivnosti()==null? aktivnosti : virtuelnaMasina.getAktivnosti());
+        virtuelnaMasinaDTO.setIsActiv();
+        return g.toJson(virtuelnaMasinaDTO);
     }
 
     @Override
@@ -95,5 +101,25 @@ public class VirtuelnaMasinaService implements Service<String, String> {
 
     public Object fetchFiltred(Request req) {
         return null;//fetchAll().stream().filter()
+    }
+
+    public String updateActivnost(String body, String id) throws IOException {
+        VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(id);
+        VirtuelnaMasinaDTO virtuelnaMasinaDTO = g.fromJson(body, VirtuelnaMasinaDTO.class);
+        virtuelnaMasinaDTO.setAktivnosti(virtuelnaMasina.getAktivnosti());
+
+        boolean aktivnost = virtuelnaMasinaDTO.getIsActiv();
+        if(aktivnost==true){
+            virtuelnaMasina.getAktivnosti().get(virtuelnaMasina.getAktivnosti().size()-1).setZavrsetak(LocalDateTime.now());
+        }
+        else{
+            if(virtuelnaMasina.getAktivnosti()== null) {
+                virtuelnaMasina.setAktivnosti(new ArrayList<>());
+            }
+            virtuelnaMasina.getAktivnosti().add(new Aktivnost(LocalDateTime.now(), null));
+        }
+        virtuelnaMasinaDTO.setIsActiv(!aktivnost);
+        System.out.println( virtuelnaMasina.getAktivnosti().get(0).getPocetak());
+        return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
     }
 }

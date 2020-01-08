@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dodavanje virtuelne masine</title>
+
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+</head>
+<body>
+<div id="orgVirtuelnaMasinaAdd">
+    <div class="jumbotron"><h1>Dodavanje kategorije</h1></div>
+    <div  class="container">
+        Izaberi VM:
+        <select v-model="izabranaVM" >
+            <option v-for = "vm in virtuelneMasine" v-bind:value="vm.id">{{vm.ime}}</option>
+        </select>
+        <br><br>
+        <button  @click = "dodajVM()">Dodaj kategoriju</button>
+    </div>
+
+</div>
+
+
+<div id="footer">
+
+</div>
+
+
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/Vue.js"></script>
+<script src="js/toast.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="app/header.js"></script>
+<script src="app/orgVirtuelnaMasinaAdd.js"></script>
+</body>
+</html>

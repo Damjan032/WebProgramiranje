@@ -70,9 +70,14 @@ public class Organizacija {
         this.resursi = resursi;
     }
 
-    public class Resurs {
+    public static class Resurs {
         private String id;
         private TipResursa tip;
+
+        public Resurs(String id, TipResursa tip) {
+            this.id = id;
+            this.tip = tip;
+        }
 
         public String getId() {
             return id;

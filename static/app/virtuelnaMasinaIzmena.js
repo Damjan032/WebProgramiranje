@@ -57,7 +57,7 @@ let virtuelnaMasinaAdd = new Vue({
               }
             )
             promise.then(response=>{
-                window.location.href="/virtuelnaMasinaPregled.html";
+
 
             }).catch(error=>{
                 let msg = error.response.data.ErrorMessage;

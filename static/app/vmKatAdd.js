@@ -6,6 +6,13 @@ let vmKatAdd = new Vue({
         ram : 0,
         gpuJezgara : 0
     },
+    mounted () {
+            let uri = window.location.search.substring(1);
+            let params = new URLSearchParams(uri);
+            console.log(params.get("id"));
+    
+
+        },
 
     methods : {
 
