@@ -27,7 +27,6 @@ public class KorisnikService{
 
     private Gson g = new Gson();
     private KorisnikDAO korisnikDAO = new KorisnikDAO();
-    private OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
 
     public List<String> fetchAll(Request req, Response res) throws FileNotFoundException {
         Korisnik korisnik = req.session().attribute("korisnik");

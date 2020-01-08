@@ -3,9 +3,11 @@ package dao;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import exceptions.NotFoundException;
 import komunikacija.KorisnikTrans;
 import models.Korisnik;
 import models.KorisnikNalog;
+import models.Organizacija;
 import models.enums.Uloga;
 
 import java.io.File;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class KorisnikDAO {
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/korisnici.json";
+    private OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
 
 
     private ArrayList<KorisnikNalog> kreirajPodatke(){
@@ -44,7 +47,7 @@ public class KorisnikDAO {
         }
         return res.stream().
                 filter(kn -> kn.getKorisnik().getEmail().equals(ime)).
-                findFirst().orElse(null);
+                findFirst().orElseThrow(NotFoundException::new);
     }
 
 
@@ -89,6 +92,9 @@ public class KorisnikDAO {
     }
 
     public List<KorisnikNalog> delete(String id) throws IOException {
+        Organizacija o = organizacijaDAO.fetchById(fetchByEmail(id).getKorisnik().getOrganizacija());
+        o.setKorisnici(o.getKorisnici().stream().filter(kid->!kid.equals(id)).collect(Collectors.toList()));
+        organizacijaDAO.update(o, o.getId());
         List<KorisnikNalog> korisnici = fetchAll().stream()
                 .filter((element) -> !element.getKorisnik().getEmail().equals(id))
                 .collect(Collectors.toList());
@@ -122,10 +128,4 @@ public class KorisnikDAO {
         }
         return new ArrayList<>();
     }
-
-
-    private Korisnik mapToKorisnik(KorisnikNalog korisnikNalog) {
-        return korisnikNalog.getKorisnik();
-    }
-
 }
