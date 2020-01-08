@@ -20,7 +20,7 @@ public class OrganizacijaDAO {
 
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/org.json";
-
+    private KorisnikDAO korisnikDAO = new KorisnikDAO();
     public List<Organizacija> fetchAll() {
         try {
             JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
@@ -65,10 +65,19 @@ public class OrganizacijaDAO {
     }
 
     public void delete(String id) throws IOException {
+        Organizacija o = fetchById(id);
+        o.getKorisnici().forEach(k->{
+            try {
+                korisnikDAO.delete(k);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         upisListeUFile(
                 fetchAll().stream()
                         .filter((element) -> !element.getId().equals(id))
                         .collect(Collectors.toList()));
+
     }
 
     private void upisListeUFile(List<Organizacija> organizacijas) throws IOException {
