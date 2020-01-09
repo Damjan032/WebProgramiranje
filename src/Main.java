@@ -49,7 +49,7 @@ public class Main {
                     res.redirect("/login.html");
                     return null;
                 }
-                res.redirect("/vmpregled.html");
+                res.redirect("/virtuelnaMasinaPregled.html");
                 return null;
             });
 

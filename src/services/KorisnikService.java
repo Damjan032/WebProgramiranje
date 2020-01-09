@@ -75,20 +75,23 @@ public class KorisnikService{
         }
         String body = req.body();
         KorisnikTrans korisnikTrans = g.fromJson(body, KorisnikTrans.class);
-        if (korisnikDAO.fetchByEmail(korisnikTrans.getEmail())!=null){
-            throw new BadRequestException("Korisnik sa emailom "+korisnikTrans.getEmail()+" već postoji.");
+        try {
+
+                korisnikDAO.fetchByEmail(korisnikTrans.getEmail());
+        }catch (NotFoundException nfe){
+            if (Uloga.fromString(korisnikTrans.getUloga())==Uloga.SUPER_ADMIN){
+                throw new UnauthorizedException();
+            }
+            if (k.getUloga() == Uloga.KORISNIK){
+                throw new UnauthorizedException();
+            }
+            if (k.getUloga() == Uloga.ADMIN && !k.getOrganizacija().equals(korisnikTrans.getOrganizacija())){
+                throw new BadRequestException("Uneli ste organizaciju koja ne odgovara vašoj.");
+            }
+            KorisnikNalog newKorisnik = korisnikDAO.create(korisnikTrans);
+            return mapToKorisnikDTOString(newKorisnik);
         }
-        if (Uloga.fromString(korisnikTrans.getUloga())==Uloga.SUPER_ADMIN){
-            throw new UnauthorizedException();
-        }
-        if (k.getUloga() == Uloga.KORISNIK){
-            throw new UnauthorizedException();
-        }
-        if (k.getUloga() == Uloga.ADMIN && !k.getOrganizacija().equals(korisnikTrans.getOrganizacija())){
-            throw new BadRequestException("Uneli ste organizaciju koja ne odgovara vašoj.");
-        }
-        KorisnikNalog newKorisnik = korisnikDAO.create(korisnikTrans);
-        return mapToKorisnikDTOString(newKorisnik);
+        throw new BadRequestException("Korisnik sa imenom"+korisnikTrans.getEmail()+" već postoji");
     }
 
     public String update(Request req, Response res) throws IOException {

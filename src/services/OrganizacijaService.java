@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 
+import exceptions.NotFoundException;
 import jdk.jshell.spi.ExecutionControl;
 import models.*;
 import models.Organizacija.Resurs;
@@ -96,12 +97,13 @@ public class OrganizacijaService implements Service<String, String> {
 
         if (korisniciId != null) {
             organizacija.getKorisnici().forEach(korisnikId -> {
-                // TODO Uz pomoc korinikDAO izvuci korinsike i upisi ih ovde za svaki id iz liste
+                KorisnikNalog k = null;
                 try {
-                    korisnici.add(korisnikDAO.fetchByEmail(korisnikId));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    k = korisnikDAO.fetchByEmail(korisnikId);
+                }catch (NotFoundException nfe) {
+                    nfe.printStackTrace();
                 }
+                korisnici.add(k);
 
             });
         }

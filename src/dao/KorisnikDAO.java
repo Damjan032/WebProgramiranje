@@ -38,7 +38,7 @@ public class KorisnikDAO {
     public List<KorisnikNalog> fetchAll() throws FileNotFoundException {
         return ucitajIzFajla();
     }
-    public KorisnikNalog fetchByEmail(String ime) throws IOException {
+    public KorisnikNalog fetchByEmail(String ime) throws NotFoundException {
         var res = ucitajIzFajla();
         if(res.isEmpty()){
             res = kreirajPodatke();
