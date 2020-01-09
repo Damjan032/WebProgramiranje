@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 public class KorisnikDAO {
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/korisnici.json";
-    private OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
-
 
     private ArrayList<KorisnikNalog> kreirajPodatke(){
         var list = new ArrayList<KorisnikNalog>();
@@ -92,6 +90,7 @@ public class KorisnikDAO {
     }
 
     public List<KorisnikNalog> delete(String id) throws IOException {
+        OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
         Organizacija o = organizacijaDAO.fetchById(fetchByEmail(id).getKorisnik().getOrganizacija());
         o.setKorisnici(o.getKorisnici().stream().filter(kid->!kid.equals(id)).collect(Collectors.toList()));
         organizacijaDAO.update(o, o.getId());

@@ -20,7 +20,6 @@ public class OrganizacijaDAO {
 
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/org.json";
-    private KorisnikDAO korisnikDAO = new KorisnikDAO();
     public List<Organizacija> fetchAll() {
         try {
             JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
@@ -65,6 +64,8 @@ public class OrganizacijaDAO {
     }
 
     public void delete(String id) throws IOException {
+        KorisnikDAO korisnikDAO = new KorisnikDAO();
+
         Organizacija o = fetchById(id);
         o.getKorisnici().forEach(k->{
             try {
