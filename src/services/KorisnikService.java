@@ -154,8 +154,6 @@ public class KorisnikService{
     private String mapToKorisnikDTOString(KorisnikNalog kn){
 
         Korisnik k = kn.getKorisnik();
-        
-        System.out.println(k.getUloga());
         return g.toJson(new KorisnikDTO.Builder().
                 withIme(k.getIme()).
                 withAktivnosti(k.getAktivnosti()).

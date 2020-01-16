@@ -19,7 +19,7 @@ Vue.component("site-header", {
                     <a class="nav-link" href="vmKatPregled.html">Kategorije v-mašina<span class="sr-only">(current)</span></a>
                 </li>
                 <li v-if = "type" class="nav-item">
-                    <a class="nav-link" href="#">Diskovi <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="diskovi.html">Diskovi <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" v-if = "type=='SUPER_ADMIN'">
                     <a class="nav-link" href="organizacije.html">Organizacije <span class="sr-only">(current)</span></a>

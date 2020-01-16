@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>
+            Diskovi
+        </title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/toast.css">
+    </head>
+    <body >
+        <div id="kor">
+            <site-header>
+            </site-header>
+    
+            <div class="jumbotron"><h1>Pregled korisnika</h1></div>
+
+            <div class="container">
+                <router-view :selektovani-korisnik="selKorisnik"></router-view>
+            </div>
+    
+        </div>
+        
+        
+        <script src="js/jquery.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/Vue.js"></script>
+        <script src="js/vue-router.js"></script>
+        <script src="js/axios.js"></script>
+        <script src="js/toast.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="app/header.js"></script>
+        <script src="app/form-logic.js"></script>
+
+        <script src="app/test.js"></script>
+        <script src="app/pregledKorisnika.js"></script>
+        <script src="app/detaljiKorisnika.js"></script>
+        <script src="app/korisnici.js"></script>
+
+    </body>
+</html>
