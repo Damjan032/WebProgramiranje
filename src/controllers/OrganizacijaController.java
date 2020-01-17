@@ -1,26 +1,15 @@
 package controllers;
 
-import static spark.Spark.before;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
 import com.google.gson.Gson;
-import exceptions.UnauthorizedException;
 
-import java.io.InputStream;
 import java.util.Optional;
 
-import models.Organizacija;
-import models.komunikacija.Poruka;
 import services.OrganizacijaService;
-import spark.Request;
-import spark.Session;
-
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.http.Part;
-
 public class OrganizacijaController implements Controller {
 
     private static Gson g = new Gson();
@@ -55,7 +44,14 @@ public class OrganizacijaController implements Controller {
         put("/organizacije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return organizacijaService.update(req.body(), id);
+            return organizacijaService.updateWithImage(req, id);
+        });
+
+        put("/organizacije/:id/vm/:vmId", (req, res) -> {
+            res.type("application/json");
+            String id = req.params("id");
+            String vmID = req.params("vmId");
+            return organizacijaService.addVM(req.body(), id, vmID);
         });
 
         delete("/organizacije/:id", (req, res) -> {

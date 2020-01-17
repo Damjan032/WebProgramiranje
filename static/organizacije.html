@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>
+            Organizacije
+        </title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/toast.css">
+    </head>
+    <body >
+        <div id="orgs">
+            <site-header>
+            </site-header>
+    
+            <div class="jumbotron"><h1>Pregled organizacija</h1></div>
+
+            <div class="container">
+                <div class="page-header">
+                    <h2>Organizacije</h2>
+                </div>
+                <p>
+                    <h3 v-if = "organizacije.length == 0">
+                       Trenutno nema organizacija 
+                    </h3>
+                    <table class="table" v-else>
+                        <tr>
+                            <thead class="thead-light">
+                                <th>
+                                    Ime
+                                </th>  
+                                <th>
+                                    Opis
+                                </th>
+                                <th>
+                                    Logo
+                                </th>
+
+                            </thead>
+                        </tr>
+
+                        <tr v-for = "o in organizacije" v-bind:data-href = "'/korisnici/' + o.ime" class="clickable-table-row">
+                            <td>
+                                {{o.ime}}
+                            </td>
+                            <td>
+                                {{o.opis}}
+                            </td>
+                            <td>
+                                <img v-bind:src="o.imgPath">
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <a v-if = "korisnikType=='SUPER_ADMIN'" href="orgAdd.html">
+                        <button type="button" class="btn btn-success">Dodaj organizaciju</button>
+                    </a>
+                </p>
+            </div>
+    
+        </div>
+        
+        
+        <script src="js/jquery.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/Vue.js"></script>
+        <script src="js/axios.js"></script>
+        <script src="js/toast.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="app/header.js"></script>
+        <script src="app/organizacije.js"></script>
+
+    </body>
+</html>

@@ -2,12 +2,17 @@ package models;
 
 import models.enums.Uloga;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Korisnik {
-    private String email, ime, prezime, organizacija;
+    private String email;
+    private String ime;
+    private String prezime;
+    private String organizacija;
     private Uloga uloga;
-    private List<Aktivnost> aktivnosti;
+    private List<Aktivnost> aktivnosti = new ArrayList<>();
+
 
     public Korisnik(Uloga uloga) {
         this.uloga = uloga;
@@ -18,6 +23,11 @@ public class Korisnik {
         this.ime = ime;
         this.prezime = prezime;
         this.organizacija = organizacija;
+        this.uloga = uloga;
+    }
+
+    public Korisnik(String email, Uloga uloga) {
+        this.email = email;
         this.uloga = uloga;
     }
 
@@ -68,4 +78,5 @@ public class Korisnik {
     public void setAktivnosti(List<Aktivnost> aktivnosti) {
         this.aktivnosti = aktivnosti;
     }
+
 }

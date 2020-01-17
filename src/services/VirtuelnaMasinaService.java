@@ -4,107 +4,122 @@ import com.google.gson.Gson;
 import dao.DiskDAO;
 import dao.VMKategorijaDAO;
 import dao.VirtuelnaMasinaDAO;
-import dao.model.PoljeZaPretragu;
+import dto.DiskDTO;
 import dto.VirtuelnaMasinaDTO;
-import dto.VirtuelnaMasinaDTO.Builder;
 import exceptions.BadRequestException;
+import javaxt.utils.Array;
+import jdk.jshell.spi.ExecutionControl;
+import models.Aktivnost;
+import models.Disk;
+import models.VirtuelnaMasina;
+import spark.Request;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import models.Disk;
-import models.VMKategorija;
-import models.VirtualMachine;
 
 public class VirtuelnaMasinaService implements Service<String, String> {
-
     private Gson g = new Gson();
     private VirtuelnaMasinaDAO virtuelnaMasinaDAO = new VirtuelnaMasinaDAO();
-    private DiskDAO diskDTO = new DiskDAO();
     private VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
+    private DiskDAO diskDTO = new DiskDAO();
 
     @Override
-    public List<String> fetchAll() {
-        return virtuelnaMasinaDAO.fetchAll().stream().map((vm) -> g.toJson(mapToVirtuelnaMasinaDAO(vm))).collect(Collectors.toList());
+    public List<String> fetchAll() throws FileNotFoundException {
+        return virtuelnaMasinaDAO.fetchAll().stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
     }
 
-    @Override
-    public String fetchById(String id) {
-        return g.toJson(mapToVirtuelnaMasinaDAO(virtuelnaMasinaDAO.fetchById(id)));
-    }
+    private String mapToVirtuelnaMasinaDTOString(VirtuelnaMasina virtuelnaMasina) {
+        List<Disk> diskovi = new ArrayList<>();
+        List<Aktivnost> aktivnosti = new ArrayList<>();
+        DiskDAO korisnikDAO = new DiskDAO();
 
-    @Override
-    public String create(String req) throws IOException {
-        VirtualMachine virtualnaMasina = g.fromJson(req, VirtualMachine.class);
-        if (virtuelnaMasinaDAO.fetchByIme(virtualnaMasina.getIme()).isPresent()) {
-            throw new BadRequestException("Organizacija sa imenom: " + virtualnaMasina.getIme() + " posotji");
+        List<String> diskoviID = virtuelnaMasina.getDiskovi();
+
+        if (diskoviID != null) {
+            diskoviID.forEach(diskID -> {
+                diskovi.add(korisnikDAO.fetchById(diskID));
+
+            });
         }
-        return g.toJson(mapToVirtuelnaMasinaDAO(virtuelnaMasinaDAO.create(virtualnaMasina)));
+        VirtuelnaMasinaDTO virtuelnaMasinaDTO = new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(),
+                vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()),
+                diskovi,
+                virtuelnaMasina.getAktivnosti()==null? aktivnosti : virtuelnaMasina.getAktivnosti());
+        virtuelnaMasinaDTO.setIsActiv();
+        return g.toJson(virtuelnaMasinaDTO);
     }
 
     @Override
-    public String update(String organizacija, String id) throws IOException {
-        return g.toJson(mapToVirtuelnaMasinaDAO(virtuelnaMasinaDAO.update(g.fromJson(organizacija, VirtualMachine.class), id)));
+    public String fetchById(String id) throws IOException {
+        return mapToVirtuelnaMasinaDTOString(virtuelnaMasinaDAO.fetchById(id));
+    }
+
+    public boolean fetchByKatgegorijaId(String kategoriajId) throws IOException {
+        return virtuelnaMasinaDAO.fetchByKategorijaID(kategoriajId).isPresent();
+    }
+
+    @Override
+    public String create(String s) throws IOException, ExecutionControl.NotImplementedException {
+        VirtuelnaMasina virtuelnaMasina = g.fromJson(s, VirtuelnaMasina.class);
+        virtuelnaMasina.setDiskovi(new ArrayList<>());
+        virtuelnaMasina.setAktivnosti(new ArrayList<>());
+        if(virtuelnaMasina.getKategorija().equalsIgnoreCase("")){
+            throw new BadRequestException("Izaberi kategoriju");
+        }
+        virtuelnaMasina.setKategorija(vmKategorijaDAO.fetchByIme(virtuelnaMasina.getKategorija()).get().getId());
+        if (virtuelnaMasinaDAO.fetchByIme(virtuelnaMasina.getIme()).isPresent() ) {
+            throw new BadRequestException("Kategorija VM sa imenom: " + virtuelnaMasina.getIme() +" posotji");
+        }
+        return g.toJson(virtuelnaMasinaDAO.create(virtuelnaMasina));
+    }
+
+    @Override
+    public String update(String body, String id) throws IOException {
+        VirtuelnaMasina virtuelnaMasina = g.fromJson(body, VirtuelnaMasina.class);
+        String ime = virtuelnaMasina.getIme();
+        if(virtuelnaMasina.getKategorija()==null){
+            throw new BadRequestException("Izaberi kategoriju");
+        }
+        virtuelnaMasina.setKategorija(vmKategorijaDAO.fetchByIme(virtuelnaMasina.getKategorija()).get().getId());
+        if (virtuelnaMasinaDAO.fetchByIme(virtuelnaMasina.getIme()).isPresent() && !virtuelnaMasinaDAO.fetchById(id).getIme().equalsIgnoreCase(ime)) {
+            throw new BadRequestException("Kategorija VM sa imenom: " + virtuelnaMasina.getIme() +" posotji");
+        }
+        return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
     }
 
     @Override
     public void delete(String id) throws IOException {
+        if(!virtuelnaMasinaDAO.fetchById(id).getDiskovi().isEmpty()){
+            throw new BadRequestException("Izabrana virtuelna masina ne moze da se obrise, poseduje diskove.");
+        }
         virtuelnaMasinaDAO.delete(id);
     }
 
-    public List<String> search(Map<String, String[]> params) {
+    public Object fetchFiltred(Request req) {
+        return null;//fetchAll().stream().filter()
+    }
 
-        return virtuelnaMasinaDAO.fetchAll().stream().filter(vm -> {
-            boolean toReturn = true;
-            for (Map.Entry<String, String[]> param : params.entrySet()) {
-                if (!filter(mapToVirtuelnaMasinaDAO(vm), param)) {
-                    toReturn = false;
-                }
+    public String updateActivnost(String body, String id) throws IOException {
+        VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(id);
+        VirtuelnaMasinaDTO virtuelnaMasinaDTO = g.fromJson(body, VirtuelnaMasinaDTO.class);
+        virtuelnaMasinaDTO.setAktivnosti(virtuelnaMasina.getAktivnosti());
+
+        boolean aktivnost = virtuelnaMasinaDTO.getIsActiv();
+        if(aktivnost==true){
+            virtuelnaMasina.getAktivnosti().get(virtuelnaMasina.getAktivnosti().size()-1).setZavrsetak(LocalDateTime.now());
+        }
+        else{
+            if(virtuelnaMasina.getAktivnosti()== null) {
+                virtuelnaMasina.setAktivnosti(new ArrayList<>());
             }
-            return toReturn;
-        }).map((vm -> g.toJson(mapToVirtuelnaMasinaDAO(vm))))
-            .collect(Collectors.toList());
-    }
-
-
-    private VirtuelnaMasinaDTO mapToVirtuelnaMasinaDAO(VirtualMachine virtuelnaMasina) {
-        List<Disk> diskovi = new ArrayList<>();
-
-        List<String> diskoviId = virtuelnaMasina.getDiskovi();
-
-        if (diskoviId != null) {
-            virtuelnaMasina.getDiskovi().forEach(diskId -> {
-                diskovi.add(diskDTO.fetchById(diskId));
-            });
+            virtuelnaMasina.getAktivnosti().add(new Aktivnost(LocalDateTime.now(), null));
         }
-
-        VMKategorija vmKategorija = vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()).orElseGet(() -> new VMKategorija(null,
-            null, null, null, null));
-
-        return
-            new Builder().withId(virtuelnaMasina.getId()).withIme(virtuelnaMasina.getIme()).withDiskovi(diskovi)
-                .withKategorija(vmKategorija).build();
-    }
-
-    private boolean filter(VirtuelnaMasinaDTO vm, Map.Entry<String, String[]> param) {
-        switch (PoljeZaPretragu.toEnum(param.getKey())) {
-            case IME:
-                return vm.getIme().equalsIgnoreCase(param.getValue()[0]);
-            case RAM_OD:
-                return Double.parseDouble(param.getValue()[0]) <= vm.getKategorija().getRAM();
-            case RAM_DO:
-                return Double.parseDouble(param.getValue()[0]) >= vm.getKategorija().getRAM();
-            case CPU_JEZGRA_OD:
-                return Integer.parseInt(param.getValue()[0]) <= vm.getKategorija().getBrJezgra();
-            case CPU_JEZGRA_DO:
-                return Integer.parseInt(param.getValue()[0]) >= vm.getKategorija().getBrJezgra();
-            case GPU_JEZGRA_OD:
-                return Integer.parseInt(param.getValue()[0]) <= vm.getKategorija().getBrGPU();
-            case GPU_JEZGRA_DO:
-                return Integer.parseInt(param.getValue()[0]) >= vm.getKategorija().getBrGPU();
-            default:
-                return true;
-        }
+        virtuelnaMasinaDTO.setIsActiv(!aktivnost);
+        System.out.println( virtuelnaMasina.getAktivnosti().get(0).getPocetak());
+        return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
     }
 }

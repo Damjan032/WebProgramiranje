@@ -20,10 +20,10 @@
             <h2>Organizacije</h2>
         </div>
         <p>
-        <h3 v-if = "organizacije.length == 0">
+        <h3 >
             Trenutno nema organizacija
         </h3>
-        <table class="table" v-else>
+        <table class="table">
             <tr>
                 <th>
                     Logo
@@ -34,18 +34,42 @@
                 <th>
                     Opis
                 </th>
+                <th>
+                    Pregled korisnika
+                </th>
+                <th>
+                    Pregled resursa
+                </th>
+                <th>
+                    Izmena
+                </th>
+                <th>
+                    Brisanje
+                </th>
             </tr>
 
             <tr v-for = "o in organizacije" >
                     <td>
-                     <img width="100" height="100" v-bind:src="o.imgPath" class="rounded" >
+                     <img width="50" height="50" v-bind:src="o.imgPath" class="rounded" >
                    </td>
-                   <td>
-                       {{o.ime}}
+                   <td text-align="center">
+                       <p>{{o.ime}}</p>
                    </td>
-                   <td>
+                   <td text-align="center">
                        {{o.opis}}
                    </td>
+                <td>
+                    <button type="button" @click= "pregledKorisnika(o.id)" class="btn btn-secondary">Pregled korisnika</button>
+                </td>
+                <td>
+                    <button type="button" @click= "pregledResursa(o.id)" class="btn btn-secondary">Pregled resursa</button>
+                </td>
+                    <td>
+                        <button type="button" class="btn btn-secondary" @click= "izmeni(o.id)">Izmeni</button>
+                    </td>
+                <td>
+                    <button @click= "obrisi(o.id)" type="button" class="btn btn-secondary">Obriši</button>
+                </td>
                </tr>
            </table>
            </p>

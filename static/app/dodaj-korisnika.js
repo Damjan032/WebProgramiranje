@@ -1,7 +1,7 @@
 let loginapp = new Vue({
     el:"#korisnici",
     data: {
-        tip : "",
+        korisnik : null,
         email: null,
        ime: null,
        prezime: null,
@@ -10,46 +10,40 @@ let loginapp = new Vue({
        organizacija: null,
        organizacije : null
     },
-    mounted : function() {
-        axios.get('/getOrganizacije').then(response => {
+    mounted() {
+        axios.get('/organizacije').then(response => {
             this.organizacije = response.data;
-        }); 
-        axios.get('/getUserType').then(response => {
-            this.tip = response.data;
-        });
-        if(this.tip == "admin"){
-            axios.get('/getUserOrg').then(response => {
-                let org;
-                org = response.data;
+        });  
+        axios.get('/korisnik').then(response => {
+                this.korisnik = response.data;
+                let org = response.data.uloga;
                 $("#org").prop("disabled", true).prop("value", org);
-                
-            });
-        }   
+            });   
     },
     
     methods:{
         checkParams: checkFormParams
         ,
-
         dodajKorisnika:function() {
             if(!this.checkParams()){
                 return;
             }
-            let promise = axios.post("/dodajKorisnika",{
+            let promise = axios.post("/korisnici",{
                 email: this.email,
                 ime: this.ime,
                 prezime: this.prezime,
                 sifra: this.sifra,
-                organizacija: this.organizacija
+                organizacija: this.organizacija,
+                uloga:this.tipKorisnika
               }
             )
             promise.then(response=>{
                     
-                    if (response.data.status) {
+                    if (response.status) {
                         window.location.replace("/korisnici.html");
                     }else{
                         new Toast({
-                            message:response.data.poruka,
+                            message:response.statusText,
                             type: 'danger'
                         });
                     }

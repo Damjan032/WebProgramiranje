@@ -1,0 +1,114 @@
+<html>
+<head>
+    <title>
+        Virtuelne masine
+    </title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap/css/slider.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="shortcut icon" href="">
+
+</head>
+<body >
+<div id="virtuelnaMasinaPegled">
+    <site-header>
+    </site-header>
+
+    <div class="jumbotron"><h1>Pregled korisnika</h1></div>
+    <div class="container">
+        <div class="page-header">
+            <h2>Virtuelne masine</h2>
+        </div>
+        <br><br>
+
+        Pretrazi po nazivu:  <input type="text" v-model="filterIme" @change="filter($event)">
+        &nbsp&nbsp&nbsp
+        Pretraga po broju jezgara:  <select v-model="filterCPU" @change="filter($event)" >
+                                    <option v-for = "brCPU in kategorijeBrJezgara" v-bind:value="brCPU">{{brCPU}}</option>
+                                    </select>
+        &nbsp&nbsp&nbsp
+        &nbsp Pretraga po ramu: <select v-model="filterRAM" @change="filter($event)" >
+        <option v-for = "ram in kategorijeRAM" v-bind:value="ram">{{ram}}</option>
+        </select>
+        &nbsp&nbsp&nbsp
+        &nbsp Pretraga po broju GPU: <select v-model="filterGPU" @change="filter($event)" >
+        <option v-for = "gpu in kategorijeGPU" v-bind:value="gpu">{{gpu}}</option>
+    </select>
+        <br><br>
+        <p>
+        <table class="table">
+            <tr>
+                <th>
+                    Naziv
+                </th>
+                <th>
+                    Kategorija
+                </th>
+                <th>
+                    Pregled diskova
+                </th>
+                <th>
+                    Pregled aktivnosti
+                </th>
+                <th>
+                    Izmena
+                </th>
+                <th>
+                    Brisanje
+                </th>
+                <th>
+                    Ukljucen
+                </th>
+            </tr>
+
+            <tr v-for = "vm in virtuelneMasine" >
+                <td text-align="center">
+                    <p>{{vm.ime}}</p>
+                </td>
+                <td text-align="center">
+                    {{vm.kategorija.ime}}
+                </td>
+                <td>
+                    <button type="button" @click= "pregledDiskova(vm.id)" class="btn btn-secondary">Pregled diskova</button>
+                </td>
+                 <td>
+                    <button type="button" @click= "pregledAktivnosti(vm.id)" class="btn btn-secondary">Pregled aktivnosti</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-secondary" @click= "izmeni(vm.id)">Izmeni</button>
+                </td>
+                <td>
+                    <button @click= "obrisi(vm.id)" type="button" class="btn btn-secondary">Obriši</button>
+                </td>
+                <td>
+                    <label class="switch">
+                        <!-- <input type="checkbox" v-model="module.checked" v-bind:id="module.id"> !-->
+                        <input type="checkbox" v-bind:checked="vm.isActiv" v-on:click="activnost(vm)">
+                        <span class="slider round"></span>
+                    </label>
+                </td>
+            </tr>
+        </table>
+        </p>
+    </div>
+
+</div>
+
+
+<div id="footer">
+
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/Vue.js"></script>
+<script src="js/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
+<script src="js/toast.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="app/header.js"></script>
+<script src="app/virtuelnaMasinaPregled.js"></script>
+
+</body>
+</html>

@@ -5,6 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import exceptions.InternalServerErrorException;
 import exceptions.NotFoundException;
+import models.VirtuelnaMasina;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,67 +16,66 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import models.VirtualMachine;
 
 public class VirtuelnaMasinaDAO {
-
     private Gson g = new Gson();
-    private static String FILE_PATH = "./data/vm.json";
+    private static String FILE_PATH = "./data/virtuelneMasine.json";
 
-    public List<VirtualMachine> fetchAll() {
+    public List<VirtuelnaMasina> fetchAll() {
         try {
             JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
-            return g.fromJson(reader, new TypeToken<List<VirtualMachine>>() {
+            return g.fromJson(reader, new TypeToken<List<VirtuelnaMasina>>() {
             }.getType());
         } catch (FileNotFoundException e) {
             throw new InternalServerErrorException("File " + FILE_PATH + " ne postoji.");
         }
     }
 
-    public VirtualMachine fetchById(String id) {
-        return fetchAll().stream().filter(virtuelnaMasina -> virtuelnaMasina.getId().equals(id)).findFirst()
-            .orElseThrow(NotFoundException::new);
+    public VirtuelnaMasina fetchById(String id) {
+        return fetchAll().stream().filter(virtuelnaMasina -> virtuelnaMasina.getId().equals(id)).findFirst().orElseThrow(NotFoundException::new);
     }
 
+    public Optional<VirtuelnaMasina> fetchByKategorijaID(String kategorijaId) {
+        return fetchAll().stream().filter(virtuelnaMasina -> virtuelnaMasina.getKategorija().equals(kategorijaId)).findFirst();
+    }
 
-
-    public Optional<VirtualMachine> fetchByIme(String ime) {
+    public Optional<VirtuelnaMasina> fetchByIme(String ime) {
         return fetchAll().stream().filter(virtuelnaMasina -> virtuelnaMasina.getIme().equals(ime)).findFirst();
     }
 
-    public VirtualMachine create(VirtualMachine virtuelnaMasina) throws IOException {
-        List<VirtualMachine> list = fetchAll();
+    public VirtuelnaMasina create(VirtuelnaMasina virtuelnaMasina) throws IOException {
+        List<VirtuelnaMasina> list = fetchAll();
         virtuelnaMasina.setId(UUID.randomUUID().toString());
         list.add(virtuelnaMasina);
         upisListeUFile(list);
         return virtuelnaMasina;
     }
 
-    public VirtualMachine update(VirtualMachine virtuelnaMasina, String id) throws IOException {
-        List<VirtualMachine> virtuelneMasine = fetchAll();
-        virtuelneMasine.forEach(
-            oldVM -> {
-                if (oldVM.getId().equals(id)) {
-                    oldVM.setIme(virtuelnaMasina.getIme());
-                    oldVM.setDiskovi(virtuelnaMasina.getDiskovi());
-                    oldVM.setKategorija(virtuelnaMasina.getKategorija());
-                }
-            });
+    public VirtuelnaMasina update(VirtuelnaMasina virtuelnaMasina, String id) throws IOException {
+        List<VirtuelnaMasina> virtuelnaMasine= fetchAll();
+        virtuelnaMasine.forEach(
+                oldVM -> {
+                    if (oldVM.getId().equals(id)) {
+                        oldVM.setIme(virtuelnaMasina.getIme());
+                        oldVM.setDiskovi(virtuelnaMasina.getDiskovi());
+                        oldVM.setKategorija(virtuelnaMasina.getKategorija());
+                        oldVM.setAktivnosti(virtuelnaMasina.getAktivnosti());
+                    }
+                });
 
-        upisListeUFile(virtuelneMasine);
+        upisListeUFile(virtuelnaMasine);
         return virtuelnaMasina;
     }
 
     public void delete(String id) throws IOException {
         upisListeUFile(
-            fetchAll().stream()
-                .filter((element) -> !element.getId().equals(id))
-                .collect(Collectors.toList()));
+                fetchAll().stream()
+                        .filter((element) -> !element.getId().equals(id))
+                        .collect(Collectors.toList()));
     }
 
-    private void upisListeUFile(List<VirtualMachine> virtuelneMasine) throws IOException {
-        Files.write(Paths.get(FILE_PATH), g.toJson(virtuelneMasine).getBytes());
+    private void upisListeUFile(List<VirtuelnaMasina> vmKategorije) throws IOException {
+        Files.write(Paths.get(FILE_PATH), g.toJson(vmKategorije).getBytes());
+
     }
-
-
 }

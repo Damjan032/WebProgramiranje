@@ -1,0 +1,67 @@
+<html>
+<head>
+    <title>
+        Virtuelne masine
+    </title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap/css/slider.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="shortcut icon" href="">
+
+</head>
+<body >
+<div id="virtuelneMasineAktivnosti">
+    <site-header>
+    </site-header>
+
+    <div class="jumbotron"><h1>Pregled korisnika</h1></div>
+    <div class="container">
+        <div class="page-header">
+            <h2>Pregled aktivnosti virtuelnih masine {{virtuelnaMasina.ime}}</h2>
+        </div>
+        <br><br>
+
+        <br><br>
+        <p>
+            <table class="table">
+                <tr>
+                    <th>
+                        Pocetak aktivnosti
+                    </th>
+                    <th>
+                        Kraj aktivnosti
+                    </th>
+                </tr>
+
+                <tr v-for = "a in aktivnosti" >
+                    <td>
+                         <p>{{a.pocetak}}</p>
+                    </td>
+                    <td text-align="center">
+                        {{a.zavrsetak}}
+                    </td>
+                </tr>
+        </table>
+        </p>
+    </div>
+
+</div>
+
+
+<div id="footer">
+
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/Vue.js"></script>
+<script src="js/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
+<script src="js/toast.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="app/header.js"></script>
+<script src="app/virtuelneMasineAktinvosti.js"></script>
+
+</body>
+</html>

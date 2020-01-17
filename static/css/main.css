@@ -1,0 +1,14 @@
+a.block-link{
+    display: block;
+    text-decoration: none;
+    color: black;
+}
+
+a.block-link:hover{
+    display: block;
+    text-decoration: none;
+}
+
+tr.clickable-table-row{
+    cursor: pointer;
+}

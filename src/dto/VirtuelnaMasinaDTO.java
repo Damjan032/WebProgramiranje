@@ -1,19 +1,22 @@
 package dto;
 
-import java.util.List;
+import models.Aktivnost;
 import models.Disk;
-import models.Resurs;
 import models.VMKategorija;
 
-public class VirtuelnaMasinaDTO extends Resurs {
+import java.util.List;
 
+public class VirtuelnaMasinaDTO extends ResursDTO {
     private VMKategorija kategorija;
     private List<Disk> diskovi;
+    private List<Aktivnost> aktivnosti;
+    private boolean isActiv;
 
-    public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi) {
+    public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi, List<Aktivnost> aktivnosti) {
         super(id, ime);
         this.kategorija = kategorija;
         this.diskovi = diskovi;
+        this.aktivnosti = aktivnosti;
     }
 
     public VMKategorija getKategorija() {
@@ -32,39 +35,33 @@ public class VirtuelnaMasinaDTO extends Resurs {
         this.diskovi = diskovi;
     }
 
+    public List<Aktivnost> getAktivnosti() {
+        return aktivnosti;
+    }
 
-    public static final class Builder {
+    public void setAktivnosti(List<Aktivnost> aktivnosti) {
+        this.aktivnosti = aktivnosti;
+    }
 
-        private String id;
-        private String ime;
-        private VMKategorija kategorija;
-        private List<Disk> diskovi;
-
-        public Builder() {
+    public void setIsActiv(){
+        if(aktivnosti == null){
+            this.isActiv= false;
         }
-
-        public Builder withId(String id) {
-            this.id = id;
-            return this;
+        else if(aktivnosti.isEmpty()){
+            this.isActiv= false;
         }
-
-        public Builder withIme(String ime) {
-            this.ime = ime;
-            return this;
+        else if (aktivnosti.get(aktivnosti.size()-1).getZavrsetak()==null){
+            this.isActiv= true;
         }
+        else this.isActiv= false;
+    }
 
-        public Builder withKategorija(VMKategorija kategorija) {
-            this.kategorija = kategorija;
-            return this;
-        }
+    public void setIsActiv(boolean isActiv){
+        this.isActiv = isActiv;
+    }
 
-        public Builder withDiskovi(List<Disk> diskovi) {
-            this.diskovi = diskovi;
-            return this;
-        }
-
-        public VirtuelnaMasinaDTO build() {
-            return new VirtuelnaMasinaDTO(id, ime, kategorija, diskovi);
-        }
+    public boolean getIsActiv(){
+        setIsActiv();
+        return this.isActiv;
     }
 }

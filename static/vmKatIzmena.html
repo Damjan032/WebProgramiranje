@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>
+        Prijavite se
+    </title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="shortcut icon" href="">
+</head>
+<body >
+<div id="vmKatIzmena">
+    <div class="jumbotron"><h1>Prijava korisnika</h1></div>
+    <div  class="container">
+        Naziv kategorije: <input  type="text" v-bind:placeholder="kategorija.ime" v-model="ime"/>
+        <p  class="alert alert-danger d-none">
+            Ovo polje je obavezno!
+        </p>
+        <br><br>
+        Broj jezgara:  <input onkeypress="return event.charCode != 45" type="number" name="quantity" min="1"  v-model="brJezgara">
+        <p  class="alert alert-danger d-none">
+            Ovo polje je obavezno!
+        </p>
+        <br><br>
+        RAM (u GB):  <input onkeypress="return event.charCode != 45" type="number" name="quantity" min="0.01" v-model="ram">
+        <p  class="alert alert-danger d-none">
+            Ovo polje je obavezno!
+        </p>
+        <br><br>
+        GPU jezgra:  <input onkeypress="return event.charCode != 45" type="number" name="quantity" min="0" v-model="gpuJezgara">
+        <br><br>
+        <button @click = "izmenaKat()">Izmeni kategorije</button>
+    </div>
+</div>
+
+
+<div id="footer">
+
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/Vue.js"></script>
+<script src="js/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.10/vue-resource.min.js"></script>
+<script src="js/toast.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="app/header.js"></script>
+<script src="app/vmKatIzmena.js"></script>
+
+</body>
+</html>

@@ -1,19 +1,14 @@
 package controllers;
 
-import static spark.Spark.delete;
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.put;
-
 import com.google.gson.Gson;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import services.VirtuelnaMasinaService;
-import spark.QueryParamsMap;
+
+import java.util.Optional;
+
+import static spark.Spark.*;
+import static spark.Spark.delete;
 
 public class VirtuelnaMasinaController implements Controller {
-
     private static Gson g = new Gson();
     VirtuelnaMasinaService virtuelnaMasinaService = new VirtuelnaMasinaService();
 
@@ -25,20 +20,22 @@ public class VirtuelnaMasinaController implements Controller {
 
     @Override
     public void init() {
-//        before("/virtuelneMasine",
-//            (req, res) -> Optional.ofNullable(req.session().attribute("user")).orElseThrow(UnauthorizedException::new));
-
         get("/virtuelneMasine", (req, res) -> {
             res.type("application/json");
-            Map<String, String[]> queryMap = req.queryMap().toMap();
-            if (queryMap.isEmpty()) {
+            if (req.queryParams() == null || req.queryParams().size() == 0) {
                 return virtuelnaMasinaService.fetchAll();
-            } else {
-                return virtuelnaMasinaService.search(queryMap);
             }
+            return virtuelnaMasinaService.fetchFiltred(req);
+
         });
 
         get("/virtuelneMasine/:id", (req, res) -> {
+            res.type("application/json");
+            String id = req.params("id");
+            return virtuelnaMasinaService.fetchById(id);
+        });
+
+        get("/filtred", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
             return virtuelnaMasinaService.fetchById(id);
@@ -53,6 +50,12 @@ public class VirtuelnaMasinaController implements Controller {
             res.type("application/json");
             String id = req.params("id");
             return virtuelnaMasinaService.update(req.body(), id);
+        });
+
+        put("/virtuelneMasine/activnost/:id", (req, res) -> {
+            res.type("application/json");
+            String id = req.params("id");
+            return virtuelnaMasinaService.updateActivnost(req.body(), id);
         });
 
         delete("/virtuelneMasine/:id", (req, res) -> {

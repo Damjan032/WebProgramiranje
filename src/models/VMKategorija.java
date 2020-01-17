@@ -1,46 +1,27 @@
 package models;
 
-public class VMKategorija {
+public class VMKategorija
+{
     private String id;
     private String ime;
-    private Integer brJezgra;
-    private Double RAM; //gb
-    private Integer brGPU;
+    private int brJezgra;
+    private double RAM; //gb
+    private int brGPU;
 
-    public VMKategorija(String id, String ime, Integer brJezgra, Double RAM, Integer brGPU) {
+    public VMKategorija(String id, String ime, int brJezgra, double ram, int brGPU) {
         this.id = id;
         this.ime = ime;
         this.brJezgra = brJezgra;
-        this.RAM = RAM;
+        RAM = ram;
         this.brGPU = brGPU;
     }
 
-    public VMKategorija() {
-        super();
+    public int getBrGPU() {
+        return brGPU;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getIme() {
-        return ime;
-    }
-
-    public void setIme(String ime) {
-        this.ime = ime;
-    }
-
-    public int getBrJezgra() {
-        return brJezgra;
-    }
-
-    public void setBrJezgra(int brJezgra) {
-        this.brJezgra = brJezgra;
+    public void setBrGPU(int brGPU) {
+        this.brGPU = brGPU;
     }
 
     public double getRAM() {
@@ -51,11 +32,27 @@ public class VMKategorija {
         this.RAM = RAM;
     }
 
-    public int getBrGPU() {
-        return brGPU;
+    public int getBrJezgra() {
+        return brJezgra;
     }
 
-    public void setBrGPU(int brGPU) {
-        this.brGPU = brGPU;
+    public void setBrJezgra(int brJezgra) {
+        this.brJezgra = brJezgra;
+    }
+
+    public String getIme() {
+        return ime;
+    }
+
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
