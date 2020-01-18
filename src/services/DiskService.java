@@ -2,25 +2,21 @@ package services;
 
 import com.google.gson.Gson;
 import dao.DiskDAO;
-import dao.KorisnikDAO;
 import dao.OrganizacijaDAO;
-import dao.VirtuelnaMasinaDAO;
 import dto.DiskDTO;
-import dto.KorisnikDTO;
 import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
 import komunikacija.DiskTrans;
-import komunikacija.KorisnikTrans;
 import models.*;
 import models.enums.TipDiska;
-import models.enums.TipResursa;
 import models.enums.Uloga;
 import spark.Request;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class DiskService{
@@ -60,11 +56,13 @@ public class DiskService{
         String body = req.body();
         DiskTrans d = g.fromJson(body, DiskTrans.class);
         try{
-            diskDAO.fetchById(d.getId());
-        }catch (NotFoundException nfe){
+            diskDAO.fetchByName(d.getIme());
+        } catch (NotFoundException nfe){
             return g.toJson(diskDAO.create(mapDiskTransToDisk(d)));
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        throw new BadRequestException("Disk sa tim id-jem vec postoji!");
+        throw new BadRequestException("Disk sa tim imenom vec postoji!");
     }
 
     public String update(Request req) throws IOException {
@@ -103,14 +101,14 @@ public class DiskService{
     }
     private Disk mapDiskTransToDisk(DiskTrans dt){
         //  return null;
-        return new Disk(dt.getId(), dt.getIme(), TipDiska.fromString(dt.getTip()), dt.getKapacitet(), dt.getVm());
+        return new Disk(UUID.randomUUID().toString(), dt.getIme(), TipDiska.fromString(dt.getTip()), dt.getKapacitet(), dt.getVm());
     }
     private String mapToDiskDTOString(Disk d){
         return g.toJson(new DiskDTO.Builder().
                 withId(d.getId()).
                 withIme(d.getIme()).
                 withKapacitet(d.getKapacitet()).
-                withTip(d.getTip()).
+                withTip(d.getTipDiska()).
                 withVm(d.getVm()).
                 build());
     }

@@ -4,25 +4,25 @@ import models.enums.TipDiska;
 
 
 public class Disk extends Resurs {
-    private TipDiska tip;
+    private TipDiska tipDiska;
     private double kapacitet;
     private String vm;
 
 
     public Disk(String id, String ime, TipDiska tip, double kapacitet, String vm) {
         super(id, ime);
-        this.tip = tip;
+        this.tipDiska = tip;
         this.kapacitet = kapacitet;
         this.vm = vm;
     }
 
 
-    public TipDiska getTip() {
-        return tip;
+    public TipDiska getTipDiska() {
+        return tipDiska;
     }
 
-    public void setTip(TipDiska tip) {
-        this.tip = tip;
+    public void setTipDiska(TipDiska tipDiska) {
+        this.tipDiska = tipDiska;
     }
 
     public double getKapacitet() {

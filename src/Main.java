@@ -33,9 +33,10 @@ public class Main {
 
             KorisnikController korisnikController = new KorisnikController();
             LoginController loginController = new LoginController();
-
+            DiskController diskController = new DiskController();
 
             OrganizacijaController.getInstance().init();
+            diskController.init();
             korisnikController.init();
             loginController.init();
             VMKategorijaController.getInstance().init();

@@ -21,9 +21,7 @@ import javax.servlet.ServletException;
 import exceptions.NotFoundException;
 import jdk.jshell.spi.ExecutionControl;
 import models.*;
-import models.Organizacija.Resurs;
 import models.enums.TipResursa;
-import models.enums.Uloga;
 import spark.Request;
 
 public class OrganizacijaService implements Service<String, String> {
@@ -89,12 +87,20 @@ public class OrganizacijaService implements Service<String, String> {
 
     private String mapToOrganizacijaDTOString(Organizacija organizacija) {
         List<KorisnikNalog> korisnici = new ArrayList<>();
-        List<ResursDTO> resursi = new ArrayList<>();
+        List<ResursDTO> resursiDTO = new ArrayList<>();
         KorisnikDAO korisnikDAO = new KorisnikDAO();
 
         List<String> korisniciId = organizacija.getKorisnici();
         List<Resurs> resursiId = organizacija.getResursi();
-
+        var resursi = new ArrayList<Resurs>();
+        resursiId.forEach(resurs->{
+            String id = resurs.getId();
+            if(resurs.getTip()==TipResursa.DISK){
+                resursi.add(diskDAO.fetchById(id));
+            }else{
+                resursi.add(virtuelnaMasinaDAO.fetchById(id));
+            }
+        });
         if (korisniciId != null) {
             organizacija.getKorisnici().forEach(korisnikId -> {
                 KorisnikNalog k = null;
@@ -110,13 +116,13 @@ public class OrganizacijaService implements Service<String, String> {
 
         if (resursiId != null) {
             organizacija.getResursi().forEach(resurs -> {
-                resursi.add(mapToResursDTO(resurs));
+                resursiDTO.add(mapToResursDTO(resurs));
             });
         }
         return
                 g.toJson(new OrganizacijaDTO.Builder().withId(organizacija.getId()).withIme(organizacija.getIme())
                         .withImgPath(organizacija.getImgPath())
-                        .withOpis(organizacija.getOpis()).withKorisnici(korisnici).withResursi(resursi).build());
+                        .withOpis(organizacija.getOpis()).withKorisnici(korisnici).withResursi(resursiDTO).build());
     }
 
     private String dodajSliku(Request req) throws IOException, ServletException {
@@ -141,7 +147,7 @@ public class OrganizacijaService implements Service<String, String> {
             case DISK:
                 Disk disk = diskDAO.fetchById(resurs.getId());
                 return new DiskDTO.Builder().withId(disk.getId()).withIme(disk.getIme()).withKapacitet(disk.getKapacitet())
-                        .withTip(disk.getTip()).withTipResursa(resurs.getTip()).withVm(disk.getVm()).build();
+                        .withTip(disk.getTipDiska()).withTipResursa(resurs.getTip()).withVm(disk.getVm()).build();
           case VM:
                //public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi, List<Aktivnost> aktivnosti)
               VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(resurs.getId());

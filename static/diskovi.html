@@ -9,14 +9,52 @@
         <link rel="stylesheet" href="css/toast.css">
     </head>
     <body >
-        <div id="kor">
+        <div id="diskapp">
             <site-header>
             </site-header>
     
-            <div class="jumbotron"><h1>Pregled korisnika</h1></div>
-
+            <div class="jumbotron"><h1>Pregled diskova</h1></div>
+            
             <div class="container">
-                <router-view :selektovani-korisnik="selKorisnik"></router-view>
+                <div class="page-header">
+                    <h2>Diskovi</h2>
+                </div>
+    
+                <table class="table">
+                    <tr class="thead-light">
+                        <th>
+                            Ime
+                        </th>
+                        <th>
+                            Kapacitet
+                        </th>
+                        <th>
+                            Virtuelna mašina
+                        </th>
+                    </tr>
+                    <tr v-for="disk in diskovi">
+                        <td>
+                            {{disk.ime}}
+                        </td>
+                        <td>
+                            {{disk.kapacitet}}
+                        </td>
+                        <td>
+                            {{disk.vm}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a v-if = "korisnikType!='KORISNIK'" href="dodajDisk.html">
+                                <button type="button" class="btn btn-success">
+                                    Dodaj disk
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
             </div>
     
         </div>
@@ -30,12 +68,7 @@
         <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="app/header.js"></script>
-        <script src="app/form-logic.js"></script>
-
-        <script src="app/test.js"></script>
-        <script src="app/pregledKorisnika.js"></script>
-        <script src="app/detaljiKorisnika.js"></script>
-        <script src="app/korisnici.js"></script>
+        <script src="app/diskovi.js"></script>
 
     </body>
 </html>

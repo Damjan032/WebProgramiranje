@@ -83,5 +83,10 @@ public class DiskDTO extends ResursDTO {
             diskDTO.tipResursa = this.tipResursa;
             return diskDTO;
         }
+
+        public Builder withTipResursa(TipResursa tip) {
+            this.tipResursa = tip;
+            return this;
+        }
     }
 }

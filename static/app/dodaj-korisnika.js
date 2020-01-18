@@ -28,7 +28,7 @@ let loginapp = new Vue({
             if(!this.checkParams()){
                 return;
             }
-            let promise = axios.post("/korisnici",{
+            axios.post("/korisnici",{
                 email: this.email,
                 ime: this.ime,
                 prezime: this.prezime,
@@ -36,8 +36,7 @@ let loginapp = new Vue({
                 organizacija: this.organizacija,
                 uloga:this.tipKorisnika
               }
-            )
-            promise.then(response=>{
+            ).then(response=>{
                     
                     if (response.status) {
                         window.location.replace("/korisnici.html");
@@ -48,6 +47,11 @@ let loginapp = new Vue({
                         });
                     }
 
+            }).catch(error=>{
+                new Toast({
+                    message:error.response.data.ErrorMessage,
+                    type: 'danger'
+                });
             });
         }
     }
