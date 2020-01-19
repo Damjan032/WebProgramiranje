@@ -9,7 +9,7 @@ Vue.component("detalji-korisnika", {
             organizacija:null
         }
 	},
-    template: ` 
+    template: `
 <div>
 
     <h1>Korisnik: {{$route.params.korisnik.email}}</h1>
@@ -19,7 +19,7 @@ Vue.component("detalji-korisnika", {
                 Ime 
             </td>
             <td>
-                <input type="text" v-model = "ime">
+                <input class="required" type="text" v-model = "ime">
             </td>
             <td >
                 <p  class="alert alert-danger d-none">
@@ -32,7 +32,7 @@ Vue.component("detalji-korisnika", {
                 Prezime
             </td>
             <td>
-                <input type="text" v-model = "prezime">
+                <input class="required" type="text" v-model = "prezime">
             </td>
             <td >
                 <p  class="alert alert-danger d-none">
@@ -45,7 +45,7 @@ Vue.component("detalji-korisnika", {
                 Uloga 
             </td>
             <td>
-                <select name="org" v-model="uloga">
+                <select class="required" name="org" v-model="uloga">
                     <option value="admin">Admin</option>
                     <option value="korisnik">Korisnik</option>
                 </select> 

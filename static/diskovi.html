@@ -12,51 +12,7 @@
         <div id="diskapp">
             <site-header>
             </site-header>
-    
-            <div class="jumbotron"><h1>Pregled diskova</h1></div>
-            
-            <div class="container">
-                <div class="page-header">
-                    <h2>Diskovi</h2>
-                </div>
-    
-                <table class="table">
-                    <tr class="thead-light">
-                        <th>
-                            Ime
-                        </th>
-                        <th>
-                            Kapacitet
-                        </th>
-                        <th>
-                            Virtuelna mašina
-                        </th>
-                    </tr>
-                    <tr v-for="disk in diskovi">
-                        <td>
-                            {{disk.ime}}
-                        </td>
-                        <td>
-                            {{disk.kapacitet}}
-                        </td>
-                        <td>
-                            {{disk.vm}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a v-if = "korisnikType!='KORISNIK'" href="dodajDisk.html">
-                                <button type="button" class="btn btn-success">
-                                    Dodaj disk
-                                </button>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-    
+            <router-view :selektovani-disk="selDisk"></router-view>
         </div>
         
         
@@ -68,6 +24,11 @@
         <script src="js/toast.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="app/header.js"></script>
+        <script src="app/form-logic.js"></script>
+
+
+        <script src="app/detaljiDiska.js"></script>
+        <script src="app/pregledDiskova.js"></script>
         <script src="app/diskovi.js"></script>
 
     </body>
