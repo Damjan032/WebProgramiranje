@@ -1,7 +1,7 @@
 checkFormParams = function(){
-    let inputs = $("input, select");
+    let inputs = $(".required");
+    let messages = $(".alert");
     // let inputs = document.getElementsByTagName("input");
-    let messages = document.getElementsByClassName("alert");
     let flag = true;
     for(let i = 0;i<inputs.length;i++){
         let inp = inputs[i];

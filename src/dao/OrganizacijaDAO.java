@@ -14,20 +14,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import models.Disk;
+import models.KorisnikNalog;
 import models.Organizacija;
 
-public class OrganizacijaDAO {
+public class OrganizacijaDAO extends Initializer{
 
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/org.json";
     public List<Organizacija> fetchAll() {
-        try {
-            JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
-            return g.fromJson(reader, new TypeToken<List<Organizacija>>() {
-            }.getType());
-        } catch (FileNotFoundException e) {
-            throw new InternalServerErrorException("File " + FILE_PATH + " ne postoji.");
-        }
+        return (List<Organizacija>) load(FILE_PATH);
     }
 
     public Organizacija fetchById(String id) {
@@ -83,6 +80,12 @@ public class OrganizacijaDAO {
 
     private void upisListeUFile(List<Organizacija> organizacijas) throws IOException {
         Files.write(Paths.get(FILE_PATH), g.toJson(organizacijas).getBytes());
+
+    }
+
+    @Override
+    protected List<Object> readData() throws FileNotFoundException {
+        return g.fromJson(new JsonReader(new FileReader(FILE_PATH)),new TypeToken<List<Organizacija>>() {}.getType());
 
     }
 }

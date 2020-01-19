@@ -10,10 +10,10 @@ public class Organizacija {
     private String opis;
     private String imgPath; //ne znam da l je bolje samo putanju da cuvamo zbog fronta, a ne celu sliku
     private List<String> korisnici;
-    private List<String> resursi; // object privremeno dok ne provalim sta su resursi njemu
+    private List<Resurs> resursi; // object privremeno dok ne provalim sta su resursi njemu
 
 
-    public Organizacija(String id, String ime, String opis, String imgPath, List<String> korisnici, List<String> resursi) {
+    public Organizacija(String id, String ime, String opis, String imgPath, List<String> korisnici, List<Resurs> resursi) {
         this.id = id;
         this.ime = ime;
         this.opis = opis;
@@ -62,37 +62,11 @@ public class Organizacija {
         this.korisnici = korisnici;
     }
 
-    public List<String> getResursi() {
+    public List<Resurs> getResursi() {
         return resursi;
     }
 
-    public void setResursi(List<String> resursi) {
+    public void setResursi(List<Resurs> resursi) {
         this.resursi = resursi;
-    }
-
-    public static class Resurs {
-        private String id;
-        private TipResursa tip;
-
-        public Resurs(String id, TipResursa tip) {
-            this.id = id;
-            this.tip = tip;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public TipResursa getTip() {
-            return tip;
-        }
-
-        public void setTip(TipResursa tip) {
-            this.tip = tip;
-        }
     }
 }

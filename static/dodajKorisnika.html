@@ -23,14 +23,14 @@
                     <div class="page-header">
                         <h2>Novi korisnik</h2>
                     </div>
-                    <p id="login" v-on:keyup.enter = "login(kime, sifra)">
+                    <p>
                         <table>
                             <tr>
                                 <td>
                                     Ime
                                 </td>
                                 <td>
-                                    <input type="text" v-model="ime"/>
+                                    <input class="required" type="text" v-model="ime"/>
                                 </td>
                                 <td >
                                     <p  class="alert alert-danger d-none">
@@ -43,7 +43,7 @@
                                     Prezime
                                 </td>
                                 <td>
-                                    <input type="text" v-model="prezime"/>
+                                    <input class="required" type="text" v-model="prezime"/>
                                 </td>
                                 <td >
                                     <p  class="alert alert-danger d-none">
@@ -56,7 +56,7 @@
                                     Email
                                 </td>
                                 <td>
-                                    <input type="text" v-model="email"/>
+                                    <input class="required" type="text" v-model="email"/>
                                 </td>
                     
                                 <td>
@@ -70,7 +70,7 @@
                                     Šifra
                                 </td>
                                 <td>
-                                    <input type="password" v-model="sifra"/>
+                                    <input class="required" type="password" v-model="sifra"/>
                                 </td>
                                 <td>
                                     <p  class="alert alert-danger d-none">
@@ -84,10 +84,10 @@
                                 </td>
                                 <td>
                                     
-                                    <select name="org" v-model="tipKorisnika">
+                                    <select class="required" name="org" v-model="tipKorisnika">
                                         <option value="admin">Admin</option>
                                         <option value="korisnik">Korisnik</option>
-                                    </select>
+                                    </select class="required">
                                 </td>
                                 <td >
                                     <p  class="alert alert-danger d-none">
@@ -100,9 +100,9 @@
                                     Organizacija
                                 </td>
                                 <td>
-                                    <select name="org" v-model="organizacija">
+                                    <select class="required" name="org" v-model="organizacija">
                                         <option v-for = "o in organizacije">{{o.ime}}</option>
-                                    </select>
+                                    </select class="required">
                                 </td>
                                 <td >
                                     <p  class="alert alert-danger d-none">

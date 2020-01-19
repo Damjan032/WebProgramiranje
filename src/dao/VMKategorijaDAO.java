@@ -5,7 +5,10 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import exceptions.InternalServerErrorException;
 import exceptions.NotFoundException;
+import models.Disk;
+import models.KorisnikNalog;
 import models.VMKategorija;
+import models.VirtuelnaMasina;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,19 +20,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class VMKategorijaDAO {
+public class VMKategorijaDAO extends Initializer{
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/vmKategorija.json";
 
     public List<VMKategorija> fetchAll() {
-        try {
-            JsonReader reader = new JsonReader(new FileReader(FILE_PATH));
-            List<VMKategorija> vmKategorijas = g.fromJson(reader, new TypeToken<List<VMKategorija>>() {
-            }.getType());
-            return vmKategorijas;
-        } catch (FileNotFoundException e) {
-            throw new InternalServerErrorException("File " + FILE_PATH + " ne postoji.");
-        }
+        return (List<VMKategorija>) load(FILE_PATH);
     }
 
     public VMKategorija fetchById(String id) {
@@ -73,6 +69,12 @@ public class VMKategorijaDAO {
 
     private void upisListeUFile(List<VMKategorija> vmKategorije) throws IOException {
         Files.write(Paths.get(FILE_PATH), g.toJson(vmKategorije).getBytes());
+
+    }
+
+    @Override
+    protected List<Object> readData() throws FileNotFoundException {
+        return g.fromJson(new JsonReader(new FileReader(FILE_PATH)),new TypeToken<List<VMKategorija>>() {}.getType());
 
     }
 }

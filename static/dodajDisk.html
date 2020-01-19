@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <title>
+            Prijavite se
+        </title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/toast.css">
+    </head>
+    <body >
+        <div id="dodajdiskapp">
+            <site-header>
+            </site-header>
+    
+            <div class="jumbotron"><h1>Dodavanje diska</h1></div>
+            <div class="container">
+                <div class="page-header">
+                    <h2>Novi korisnik</h2>
+                </div>
+                <p>
+                    <table>
+                        <tr>
+                            <td>
+                                Ime
+                            </td>
+                            <td>
+                                <input class="required" type="text" v-model="ime"/>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                Tip diska
+                            </td>
+                            <td>
+                                
+                                <select class="required" name="org" v-model="tip">
+                                    <option value="SSD">SSD</option>
+                                    <option value="HDD">HDD</option>
+                                </select>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Kapacitet
+                            </td>
+                            <td>
+                                <input class="required" type="number" v-model="kapacitet"/>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Virtuelna mašina
+                            </td>
+                            <td>
+                                <select name="vm" v-model="vm">
+                                    <option v-for = "vm in vmasine" :value="vm.ime">{{vm.ime}}</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-success" v-on:click = "dodajDisk()">Dodaj disk</button>
+                            </td>
+                        </tr> 
+                    </table>
+        
+                    
+                    
+                </p>
+            </div>
+
+    
+        </div>
+        
+
+        <div id="footer">
+
+        </div>
+        
+        <script src="js/jquery.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/Vue.js"></script>
+        <script src="js/axios.js"></script>
+        <script src="js/toast.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="app/header.js"></script>
+        <script src="app/form-logic.js"></script>
+        <script src="app/dodaj-disk.js"></script>
+
+    </body>
+</html>

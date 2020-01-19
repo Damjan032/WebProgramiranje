@@ -1,6 +1,5 @@
 
 Vue.use(VueRouter);
-const test = { template: '<test></test>' }
 const korisnici = { template: '<korisnici></korisnici>' }
 const detaljiKorisnika = { template: '<detalji-korisnika></detalji-korisnika>' }
 

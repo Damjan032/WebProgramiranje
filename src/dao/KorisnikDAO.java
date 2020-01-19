@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import exceptions.NotFoundException;
 import komunikacija.KorisnikTrans;
+import models.Disk;
 import models.Korisnik;
 import models.KorisnikNalog;
 import models.Organizacija;
@@ -19,11 +20,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class KorisnikDAO {
+public class KorisnikDAO extends Initializer{
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/korisnici.json";
 
-    private ArrayList<KorisnikNalog> kreirajPodatke(){
+
+    @Override
+    Object generateData() {
         var list = new ArrayList<KorisnikNalog>();
         list.add(new KorisnikNalog(new Korisnik("superadmin",Uloga.SUPER_ADMIN),"superadmin".hashCode()));
         try {
@@ -34,15 +37,17 @@ public class KorisnikDAO {
         return list;
     }
 
+    @Override
+    protected List<Object> readData() throws FileNotFoundException {
+        return g.fromJson(new JsonReader(new FileReader(FILE_PATH)),new TypeToken<List<KorisnikNalog>>() {}.getType());
+    }
 
     public List<KorisnikNalog> fetchAll() throws FileNotFoundException {
-        return ucitajIzFajla();
+        return (List<KorisnikNalog>) load(FILE_PATH);
     }
+
     public KorisnikNalog fetchByEmail(String ime) throws NotFoundException {
-        var res = ucitajIzFajla();
-        if(res.isEmpty()){
-            res = kreirajPodatke();
-        }
+        List<KorisnikNalog> res = (List<KorisnikNalog>) load(FILE_PATH);
         return res.stream().
                 filter(kn -> kn.getKorisnik().getEmail().equals(ime)).
                 findFirst().orElseThrow(NotFoundException::new);
@@ -100,31 +105,7 @@ public class KorisnikDAO {
         upisListeUFile(korisnici);
         return korisnici;
     }
-
     private void upisListeUFile(List<KorisnikNalog> korisnici) throws IOException {
         Files.write(Paths.get(FILE_PATH), g.toJson(korisnici).getBytes());
-    }
-    private List<KorisnikNalog> ucitajIzFajla(){
-        try {
-
-            File f = new File(FILE_PATH);
-            if (!f.exists()) {
-                if (!f.createNewFile()) {
-                    System.out.println("NEMOGUĆE JE KREIRATI  FILE: "+FILE_PATH);
-                } else {
-                    kreirajPodatke();
-                }
-            }
-            JsonReader reader = new JsonReader(new FileReader(f));
-            List<KorisnikNalog> res = g.fromJson(reader, new TypeToken<List<KorisnikNalog>>() {}.getType());
-            if (res == null || res.isEmpty()){
-                return kreirajPodatke();
-            }else{
-                return res;
-            }
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
     }
 }

@@ -1,5 +1,3 @@
-var bus = new Vue();
-
 Vue.component("korisnici", {
 	data: function () {
 		    return {

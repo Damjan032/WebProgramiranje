@@ -3,7 +3,6 @@ package komunikacija;
 import models.enums.TipDiska;
 
 public class DiskTrans {
-    private String id;
     private String ime;
     private String tip;
     private double kapacitet;
@@ -17,13 +16,6 @@ public class DiskTrans {
         this.ime = ime;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getTip() {
         return tip;

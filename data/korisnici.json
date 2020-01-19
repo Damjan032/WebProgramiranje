@@ -1,1 +1,1 @@
-[{"korisnik":{"email":"superadmin","uloga":"SUPER_ADMIN","aktivnosti":[]},"sifraHash":-1716778828},{"korisnik":{"email":"a","ime":"a","prezime":"a","organizacija":"asdasda","uloga":"ADMIN","aktivnosti":[]},"sifraHash":97}]
+[{"korisnik":{"email":"superadmin","uloga":"SUPER_ADMIN","aktivnosti":[]},"sifraHash":-1716778828},{"korisnik":{"email":"a","ime":"a","prezime":"a","organizacija":"asd","uloga":"KORISNIK","aktivnosti":[]},"sifraHash":97},{"korisnik":{"email":"b","ime":"b","prezime":"b","organizacija":"ozbiljna","uloga":"ADMIN","aktivnosti":[]},"sifraHash":98}]

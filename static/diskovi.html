@@ -9,16 +9,10 @@
         <link rel="stylesheet" href="css/toast.css">
     </head>
     <body >
-        <div id="kor">
+        <div id="diskapp">
             <site-header>
             </site-header>
-    
-            <div class="jumbotron"><h1>Pregled korisnika</h1></div>
-
-            <div class="container">
-                <router-view :selektovani-korisnik="selKorisnik"></router-view>
-            </div>
-    
+            <router-view :selektovani-disk="selDisk"></router-view>
         </div>
         
         
@@ -32,10 +26,10 @@
         <script src="app/header.js"></script>
         <script src="app/form-logic.js"></script>
 
-        <script src="app/test.js"></script>
-        <script src="app/pregledKorisnika.js"></script>
-        <script src="app/detaljiKorisnika.js"></script>
-        <script src="app/korisnici.js"></script>
+
+        <script src="app/detaljiDiska.js"></script>
+        <script src="app/pregledDiskova.js"></script>
+        <script src="app/diskovi.js"></script>
 
     </body>
 </html>
