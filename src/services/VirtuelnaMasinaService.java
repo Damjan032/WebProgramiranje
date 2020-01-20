@@ -10,6 +10,7 @@ import exceptions.BadRequestException;
 import javaxt.utils.Array;
 import models.Aktivnost;
 import models.Disk;
+import models.VMKategorija;
 import models.VirtuelnaMasina;
 import spark.Request;
 
@@ -164,5 +165,39 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             throw new BadRequestException("Datum zavrsetka mora biti pre datuma pocetka");
         }
         return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
+    }
+
+    public String filtered(Request req) {
+        VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
+        int ramOd = Integer.parseInt(req.params("ramOd"));
+        int ramDo = Integer.parseInt(req.params("ramDo"));
+
+        int gpuOd = Integer.parseInt(req.params("gpuOd"));
+        int gpuDo = Integer.parseInt(req.params("gpuDo"));
+
+        int cpuOd = Integer.parseInt(req.params("cpuOd"));
+        int cpuDo = Integer.parseInt(req.params("cpuDo"));
+
+        String naziv = req.params("naziv");
+
+        List<VirtuelnaMasina> filtriraneVm = new ArrayList<>();
+
+        if(naziv.trim().equalsIgnoreCase(""))
+            filtriraneVm = virtuelnaMasinaDAO.fetchAll();
+        else
+            filtriraneVm = virtuelnaMasinaDAO.fetchAll().stream().filter(vm -> vm.getIme().startsWith(naziv.trim())).collect(Collectors.toList());
+
+        filtriraneVm = filtriraneVm.stream().filter(vma ->{
+            VMKategorija kategorija = vmKategorijaDAO.fetchById(vma.getKategorija());
+            boolean s1 = kategorija.getRAM()<=ramDo && kategorija.getRAM()>=ramOd;
+            boolean s2 = kategorija.getBrGPU()<=gpuDo && kategorija.getBrGPU()>=gpuOd;
+            boolean s3 = kategorija.getBrJezgra()<=cpuDo && kategorija.getBrJezgra()>=cpuOd;
+            return (s1 && s2 && s3);
+        }).collect(Collectors.toList());
+        if(filtriraneVm.size()==0){
+            throw new BadRequestException("Nema adekvatne vm");
+        }
+        System.out.println(filtriraneVm.size());
+        return g.toJson(filtriraneVm);
     }
 }

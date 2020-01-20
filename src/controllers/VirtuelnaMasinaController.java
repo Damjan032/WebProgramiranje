@@ -79,5 +79,12 @@ public class VirtuelnaMasinaController implements Controller {
             System.out.println("Dje ba raja" + pocetakAktivnosti);
             return virtuelnaMasinaService.updateActivnostTime(req.body(), id, pocetakAktivnosti);
         });
+        get("/virtuelneMasine/filtriraj/:naziv/:ramOd/:ramDo/:gpuOd/:gpuDo/:cpuOd/:cpuDo", (req, res) -> {
+            res.type("application/json");
+            String naziv = req.params("naziv");
+            String ramOd = req.params("ramOd");
+            System.out.println(naziv);
+            return virtuelnaMasinaService.filtered(req);
+        });
     }
 }
