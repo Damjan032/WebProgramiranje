@@ -19,7 +19,6 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 
 import exceptions.NotFoundException;
-import jdk.jshell.spi.ExecutionControl;
 import models.*;
 import models.enums.TipResursa;
 import spark.Request;
@@ -41,8 +40,8 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     @Override
-    public String create(String req) throws ExecutionControl.NotImplementedException {
-        throw new ExecutionControl.NotImplementedException("Nema ovoga");
+    public String create(String s) throws IOException {
+        return null;
     }
 
     public String createWithImage(Request req) throws IOException, ServletException {

@@ -64,5 +64,20 @@ public class VirtuelnaMasinaController implements Controller {
             virtuelnaMasinaService.delete(id);
             return "";
         });
+        delete("/virtuelneMasine/:id/:pocetakAktivnosti", (req, res) -> {
+            res.type("application/json");
+            String id = req.params("id");
+            String pocetakAktivnosti = req.params("pocetakAktivnosti");
+            virtuelnaMasinaService.deleteAktivnost(id, pocetakAktivnosti);
+            //virtuelnaMasinaService.delete(id);
+            return "";
+        });
+        put("/virtuelneMasine/:id/:pocetakAktivnosti", (req, res) -> {
+            res.type("application/json");
+            String id = req.params("id");
+            String pocetakAktivnosti = req.params("pocetakAktivnosti");
+            System.out.println("Dje ba raja" + pocetakAktivnosti);
+            return virtuelnaMasinaService.updateActivnostTime(req.body(), id, pocetakAktivnosti);
+        });
     }
 }

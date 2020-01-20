@@ -12,17 +12,7 @@ let virtuelnaMasinaPegled = new Vue({
         filterGPU : "",
     },
     mounted () {
-        axios.get('/virtuelneMasine').then(response => {
-            this.virtuelneMasine = response.data;
-            for (let vm of this.virtuelneMasine) {
-              this.kategorijeBrJezgara.push(vm.kategorija.brJezgra);
-              this.kategorijeRAM.push(vm.kategorija.RAM);
-              this.kategorijeGPU.push(vm.kategorija.brGPU);
-            }
-            this.kategorijeGPU = [...new Set(this.kategorijeGPU)];
-            this.kategorijeBrJezgara = [...new Set(this.kategorijeBrJezgara)];
-            this.kategorijeRAM = [...new Set(this.kategorijeRAM)];
-        });
+       this.init();
         axios.get('/korisnik').then(response => {
             this.korisnikType = response.data.uloga;
         });
@@ -30,6 +20,22 @@ let virtuelnaMasinaPegled = new Vue({
 
     },
     methods:{
+        init:function(){
+            axios.get('/virtuelneMasine').then(response => {
+                this.virtuelneMasine = response.data;
+                this.kategorijeBrJezgara = [];
+                this.kategorijeRAM = [];
+                this.kategorijeGPU = [];
+                for (let vm of this.virtuelneMasine) {
+                    this.kategorijeBrJezgara.push(vm.kategorija.brJezgra);
+                    this.kategorijeRAM.push(vm.kategorija.RAM);
+                    this.kategorijeGPU.push(vm.kategorija.brGPU);
+                }
+                this.kategorijeGPU = [...new Set(this.kategorijeGPU)];
+                this.kategorijeBrJezgara = [...new Set(this.kategorijeBrJezgara)];
+                this.kategorijeRAM = [...new Set(this.kategorijeRAM)];
+            });
+        },
         pregledAktivnosti:function(id){
              window.location.href="/virtuelneMasineAktinvosti.html?id="+id;
         },
@@ -44,7 +50,7 @@ let virtuelnaMasinaPegled = new Vue({
         },
         obrisi:function(id){
            axios.delete('/virtuelneMasine/'+id).then(response => {
-                      window.location.reload();
+              this.init();
             });
         },
 

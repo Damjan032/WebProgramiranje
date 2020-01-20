@@ -16,7 +16,6 @@ public class OrganizacijaDTO {
 
     public static final class Builder {
         private String id;
-
         private String ime;
         private String opis;
         private String imgPath;
