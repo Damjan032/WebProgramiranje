@@ -3,13 +3,12 @@ package services;
 import com.google.gson.Gson;
 import dao.DiskDAO;
 import dao.OrganizacijaDAO;
+import dao.VirtuelnaMasinaDAO;
 import dto.DiskDTO;
 import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
-import komunikacija.DiskTrans;
 import models.*;
-import models.enums.TipDiska;
 import models.enums.Uloga;
 import spark.Request;
 
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 public class DiskService{
     private Gson g = new Gson();
     private DiskDAO diskDAO = new DiskDAO();
+    private VirtuelnaMasinaDAO vmDAO = new VirtuelnaMasinaDAO();
 
 
     public List<String> fetchAll(Request req) throws FileNotFoundException {
@@ -54,11 +54,11 @@ public class DiskService{
             throw new UnauthorizedException();
         }
         String body = req.body();
-        DiskTrans d = g.fromJson(body, DiskTrans.class);
+        DiskDTO d = g.fromJson(body, DiskDTO.class);
         try{
             diskDAO.fetchByName(d.getIme());
         } catch (NotFoundException nfe){
-            return g.toJson(diskDAO.create(mapDiskTransToDisk(d)));
+            return g.toJson(diskDAO.create(mapDiskDTOToDisk(d)));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -71,45 +71,43 @@ public class DiskService{
             throw new UnauthorizedException();
         }
         String body = req.body();
-        DiskTrans d = g.fromJson(body, DiskTrans.class);
-        Disk noviDisk = mapDiskTransToDisk(d);
+        DiskDTO d = g.fromJson(body, DiskDTO.class);
+        Disk noviDisk = mapDiskDTOToDisk(d);
         if (k.getUloga() == Uloga.SUPER_ADMIN) {
-            return g.toJson(diskDAO.update(noviDisk, noviDisk.getId()));
+            return g.toJson(diskDAO.update(noviDisk, d.getId()));
         }
         var resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi();
         if (!resursiIDs.contains(noviDisk.getId())) {
             throw new UnauthorizedException();
         }
-        return g.toJson(diskDAO.update(noviDisk, noviDisk.getId()));
+        return g.toJson(diskDAO.update(noviDisk, d.getId()));
     }
 
     public List<String> delete(Request req) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
         String id = req.params("id");
 
-        if (k.getUloga() == Uloga.KORISNIK) {
+        if (k.getUloga() != Uloga.SUPER_ADMIN) {
             throw new UnauthorizedException();
         }
-        if (k.getUloga() == Uloga.SUPER_ADMIN) {
-            diskDAO.delete(id);
-        }
-        var resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi();
-        if (!resursiIDs.contains(id)){
-            throw new UnauthorizedException();
-        }
+        diskDAO.delete(id);
         return diskDAO.fetchAll().stream().map(this::mapToDiskDTOString).collect(Collectors.toList());
     }
-    private Disk mapDiskTransToDisk(DiskTrans dt){
+    private Disk mapDiskDTOToDisk(DiskDTO dt){
         //  return null;
-        return new Disk(UUID.randomUUID().toString(), dt.getIme(), TipDiska.fromString(dt.getTip()), dt.getKapacitet(), dt.getVm());
+        return new Disk(dt.getId(), dt.getIme(), dt.getTip(), dt.getKapacitet(), dt.getVm().getId());
     }
     private String mapToDiskDTOString(Disk d){
+        VirtuelnaMasina vm = null;
+        if (d.getVm()!=null){
+            vm = vmDAO.fetchById(d.getVm());
+        }
         return g.toJson(new DiskDTO.Builder().
                 withId(d.getId()).
                 withIme(d.getIme()).
                 withKapacitet(d.getKapacitet()).
                 withTip(d.getTipDiska()).
-                withVm(d.getVm()).
+                withVm(vm).
                 build());
     }
 }

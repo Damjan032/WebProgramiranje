@@ -19,8 +19,11 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 
 import exceptions.NotFoundException;
+import exceptions.UnauthorizedException;
+import jdk.jshell.spi.ExecutionControl;
 import models.*;
 import models.enums.TipResursa;
+import models.enums.Uloga;
 import spark.Request;
 
 public class OrganizacijaService implements Service<String, String> {
@@ -30,21 +33,32 @@ public class OrganizacijaService implements Service<String, String> {
     private DiskDAO diskDAO = new DiskDAO();
     private VirtuelnaMasinaDAO virtuelnaMasinaDAO = new VirtuelnaMasinaDAO();
     @Override
-    public List<String> fetchAll() throws FileNotFoundException {
+    public List<String> fetchAll(Request req) throws FileNotFoundException {
+        Korisnik k = req.session().attribute("korisnik");
+        if (k.getUloga()!= Uloga.SUPER_ADMIN){
+            throw new UnauthorizedException();
+        }
         return organizacijaDAO.fetchAll().stream().map(this::mapToOrganizacijaDTOString).collect(Collectors.toList());
     }
 
     @Override
-    public String fetchById(String id) throws FileNotFoundException {
+    public String fetchById(Request req, String id) throws FileNotFoundException {
+
         return mapToOrganizacijaDTOString(organizacijaDAO.fetchById(id));
     }
 
     @Override
-    public String create(String s) throws IOException {
+    public String create(Request req) throws ExecutionControl.NotImplementedException {
+
+        Korisnik k = req.session().attribute("korisnik");
+        if (k.getUloga() != Uloga.SUPER_ADMIN) {
+            throw new UnauthorizedException();
+        }
         return null;
     }
 
-    public String createWithImage(Request req) throws IOException, ServletException {
+    public String createWithImage(Request req) throws IOException, ServletException, ExecutionControl.NotImplementedException {
+        create(req);
         req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
         String ime = req.queryParams("oIme");
         String opis = req.queryParams("oOpis");
@@ -57,6 +71,15 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     public String updateWithImage(Request req, String id) throws IOException, ServletException {
+        Korisnik k = req.session().attribute("korisnik");
+        Uloga u = k.getUloga();
+        if (u==Uloga.KORISNIK){
+            throw new UnauthorizedException();
+        }else if (u== Uloga.ADMIN){
+            if (!organizacijaDAO.fetchById(id).getKorisnici().contains(k.getId())){
+                throw new UnauthorizedException();
+            }
+        }
         req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
         String ime = req.queryParams("oIme");
         String opis = req.queryParams("oOpis");
@@ -64,7 +87,7 @@ public class OrganizacijaService implements Service<String, String> {
             throw new BadRequestException("Sva polja moraju biti popunjena");
         }
         if (organizacijaDAO.fetchByIme(ime).isPresent() && !organizacijaDAO.fetchById(id).getIme().equalsIgnoreCase(ime)) {
-            throw new BadRequestException("Organizacija sa imenom: " + ime +" posotji");
+            throw new BadRequestException("Organizacija sa imenom: " + ime +" postoji");
         }
         Organizacija organizacija = organizacijaDAO.fetchById(id);
         organizacija.setOpis(opis);
@@ -75,12 +98,16 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     @Override
+    public String update(Request req, String s) throws IOException {
+        return null;
+    }
+
     public String update(String organizacija, String id) throws IOException {
         return mapToOrganizacijaDTOString(organizacijaDAO.update(g.fromJson(organizacija, Organizacija.class), id));
     }
 
     @Override
-    public void delete(String id) throws IOException {
+    public void delete(Request r, String id) throws IOException {
         organizacijaDAO.delete(id);
     }
 
@@ -145,8 +172,9 @@ public class OrganizacijaService implements Service<String, String> {
         switch (resurs.getTip()) {
             case DISK:
                 Disk disk = diskDAO.fetchById(resurs.getId());
+                VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(disk.getVm());
                 return new DiskDTO.Builder().withId(disk.getId()).withIme(disk.getIme()).withKapacitet(disk.getKapacitet())
-                        .withTip(disk.getTipDiska()).withTipResursa(resurs.getTip()).withVm(disk.getVm()).build();
+                        .withTip(disk.getTipDiska()).withTipResursa(resurs.getTip()).withVm(vm).build();
           case VM:
                //public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi, List<Aktivnost> aktivnosti)
               VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(resurs.getId());

@@ -21,29 +21,29 @@ public class VMKategorijaController implements Controller {
     public void init() {
         get("/vmKategorije", (req, res) -> {
             res.type("application/json");
-            return vmKategorijaService.fetchAll();});
+            return vmKategorijaService.fetchAll(req);});
 
         get("/vmKategorije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return vmKategorijaService.fetchById(id);
+            return vmKategorijaService.fetchById(req,id);
         });
 
         post("/vmKategorije", (req, res) -> {
             res.type("application/json");
-            return vmKategorijaService.create(req.body());
+            return vmKategorijaService.create(req);
         });
 
         put("/vmKategorije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return vmKategorijaService.update(req.body(), id);
+            return vmKategorijaService.update(req, id);
         });
 
         delete("/vmKategorije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            vmKategorijaService.delete(id);
+            vmKategorijaService.delete(req,id);
             return "";
         });
     }

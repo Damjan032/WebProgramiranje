@@ -10,6 +10,7 @@ Vue.component("diskovi",{
         axios.get("/diskovi").then(response=>{
             this.diskovi = response.data;
         });
+        
         axios.get('/korisnik').then(response => {
             this.tipKorisnika = response.data.uloga;
         });
@@ -51,8 +52,8 @@ Vue.component("diskovi",{
                     </router-link>
                 </td>
                 <td>
-                    <router-link class = "block-link" :to="{name:'detaljiDiska', params:{disk:disk, tipKorisnika:tipKorisnika}}">
-                        {{disk.vm}}
+                    <router-link v-if="disk.vm" class = "block-link" :to="{name:'detaljiDiska', params:{disk:disk, tipKorisnika:tipKorisnika}}">
+                        {{disk.vm.ime}}
                     </router-link>
                 </td>
             </tr>

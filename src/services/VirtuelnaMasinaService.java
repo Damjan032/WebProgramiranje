@@ -2,18 +2,25 @@ package services;
 
 import com.google.gson.Gson;
 import dao.DiskDAO;
+import dao.OrganizacijaDAO;
 import dao.VMKategorijaDAO;
 import dao.VirtuelnaMasinaDAO;
 import dto.DiskDTO;
 import dto.VirtuelnaMasinaDTO;
 import exceptions.BadRequestException;
+import exceptions.UnauthorizedException;
 import javaxt.utils.Array;
+import jdk.jshell.spi.ExecutionControl;
+import models.*;
+import models.enums.TipResursa;
+import models.enums.Uloga;
 import models.Aktivnost;
 import models.Disk;
 import models.VMKategorija;
 import models.VirtuelnaMasina;
 import spark.Request;
 
+import java.awt.image.VolatileImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -28,10 +35,27 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     private VirtuelnaMasinaDAO virtuelnaMasinaDAO = new VirtuelnaMasinaDAO();
     private VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
     private DiskDAO diskDTO = new DiskDAO();
+    private OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
 
     @Override
-    public List<String> fetchAll() throws FileNotFoundException {
-        return virtuelnaMasinaDAO.fetchAll().stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
+    public List<String> fetchAll(Request req) throws FileNotFoundException {
+        Korisnik k = req.session().attribute("korisnik");
+        Uloga u = k.getUloga();
+        var vm = virtuelnaMasinaDAO.fetchAll();
+        if (u == Uloga.SUPER_ADMIN){
+            return vm.stream().map(vmasina -> g.toJson(vmasina, VirtuelnaMasina.class)).collect(Collectors.toList());
+        }
+        OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
+        Organizacija o = organizacijaDAO.
+                fetchAll().
+                stream().
+                filter(org->
+                        org.getKorisnici().contains(k.getId())
+                ).findFirst().get();
+
+        vm = vm.stream().filter(vms->orgContainsVm(o, vms)).collect(Collectors.toList());
+
+        return vm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
     }
 
     private String mapToVirtuelnaMasinaDTOString(VirtuelnaMasina virtuelnaMasina) {
@@ -56,8 +80,27 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     }
 
     @Override
-    public String fetchById(String id) throws IOException {
+    public String fetchById(Request req, String id) throws IOException {
+        Korisnik k = req.session().attribute("korisnik");
+        Uloga u = k.getUloga();
+        if (u!=Uloga.SUPER_ADMIN){
+            checkVMAccessPrivilege(k, id);
+        }
         return mapToVirtuelnaMasinaDTOString(virtuelnaMasinaDAO.fetchById(id));
+    }
+
+    private void checkVMAccessPrivilege(Korisnik k, String id) {
+        Organizacija o = organizacijaDAO.
+                fetchAll().
+
+                stream().
+                filter(org->
+                        org.getKorisnici().contains(k.getId())
+                ).findFirst().get();
+        VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(id);
+        if (!orgContainsVm(o,vm)){
+            throw new UnauthorizedException();
+        }
     }
 
     public boolean fetchByKatgegorijaId(String kategoriajId) throws IOException {
@@ -65,8 +108,17 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     }
 
     @Override
-    public String create(String s) throws IOException {
-        VirtuelnaMasina virtuelnaMasina = g.fromJson(s, VirtuelnaMasina.class);
+    public String create(Request req) throws IOException {
+        //TODO kako se dodaje id u org
+        Korisnik k = req.session().attribute("korisnik");
+        Uloga u = k.getUloga();
+        VirtuelnaMasina virtuelnaMasina = g.fromJson(req.body(), VirtuelnaMasina.class);
+        if (u==Uloga.KORISNIK){
+            throw new UnauthorizedException();
+        }else if(u==Uloga.ADMIN)
+        {
+            checkVMAccessPrivilege(k, virtuelnaMasina.getId());
+        }
         virtuelnaMasina.setDiskovi(new ArrayList<>());
         virtuelnaMasina.setAktivnosti(new ArrayList<>());
         if(virtuelnaMasina.getKategorija().equalsIgnoreCase("")){
@@ -80,7 +132,16 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     }
 
     @Override
-    public String update(String body, String id) throws IOException {
+    public String update(Request req, String id) throws IOException {
+        Korisnik k = req.session().attribute("korisnik");
+        Uloga u = k.getUloga();
+        if (u==Uloga.KORISNIK){
+            throw new UnauthorizedException();
+        }else if(u==Uloga.ADMIN)
+        {
+            checkVMAccessPrivilege(k, id);
+        }
+        String body = req.body();
         VirtuelnaMasina virtuelnaMasina = g.fromJson(body, VirtuelnaMasina.class);
         String ime = virtuelnaMasina.getIme();
         if(virtuelnaMasina.getKategorija()==null){
@@ -94,7 +155,15 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     }
 
     @Override
-    public void delete(String id) throws IOException {
+    public void delete(Request req,String id) throws IOException {
+        Korisnik k = req.session().attribute("korisnik");
+        Uloga u = k.getUloga();
+        if (u==Uloga.KORISNIK){
+            throw new UnauthorizedException();
+        }else if(u==Uloga.ADMIN)
+        {
+            checkVMAccessPrivilege(k, id);
+        }
         if(!virtuelnaMasinaDAO.fetchById(id).getDiskovi().isEmpty()){
             throw new BadRequestException("Izabrana virtuelna masina ne moze da se obrise, poseduje diskove.");
         }
@@ -124,6 +193,17 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         System.out.println( virtuelnaMasina.getAktivnosti().get(0).getPocetak());
         return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
     }
+
+    private boolean orgContainsVm(Organizacija o, VirtuelnaMasina vms){
+        for (Resurs r:
+                o.getResursi()) {
+            if (r.getTip()== TipResursa.VM && r.getId().equals(vms.getId())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public String deleteAktivnost(String id, String pocetakAktivnosti) throws IOException {
         VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(id);

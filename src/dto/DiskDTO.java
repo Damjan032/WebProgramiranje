@@ -1,15 +1,15 @@
 package dto;
 
-import models.Resurs;
+import models.VirtuelnaMasina;
 import models.enums.TipDiska;
 import models.enums.TipResursa;
 
 public class DiskDTO extends ResursDTO {
     private TipDiska tip;
     private double kapacitet;
-    private String vm;
+    private VirtuelnaMasina vm;
 
-    public DiskDTO(String id, String ime, TipDiska tip, double kapacitet, String vm) {
+    public DiskDTO(String id, String ime, TipDiska tip, double kapacitet, VirtuelnaMasina vm) {
         super(id, ime);
         this.tip = tip;
         this.kapacitet = kapacitet;
@@ -32,11 +32,11 @@ public class DiskDTO extends ResursDTO {
         this.kapacitet = kapacitet;
     }
 
-    public String getVm() {
+    public VirtuelnaMasina getVm() {
         return vm;
     }
 
-    public void setVm(String vm) {
+    public void setVm(VirtuelnaMasina vm) {
         this.vm = vm;
     }
 
@@ -48,7 +48,7 @@ public class DiskDTO extends ResursDTO {
         private TipResursa tipResursa;
         private TipDiska tip;
         private double kapacitet;
-        private String vm;
+        private VirtuelnaMasina vm;
 
         public Builder() {
         }
@@ -73,7 +73,7 @@ public class DiskDTO extends ResursDTO {
             return this;
         }
 
-        public Builder withVm(String vm) {
+        public Builder withVm(VirtuelnaMasina vm) {
             this.vm = vm;
             return this;
         }

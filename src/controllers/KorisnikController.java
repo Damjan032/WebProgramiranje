@@ -1,12 +1,7 @@
 package controllers;
 
 import com.google.gson.Gson;
-import komunikacija.KorisnikTrans;
-import komunikacija.Poruka;
-import models.Korisnik;
 import services.KorisnikService;
-import services.OrganizacijaService;
-import spark.Session;
 
 import static spark.Spark.*;
 
@@ -26,7 +21,7 @@ public class KorisnikController implements Controller{
 
         get("/korisnici/:id", (req, res) -> {
             res.type("application/json");
-            return korisnikService.fetchById(req, res);
+            return korisnikService.fetchById(req);
         });
 
         post("/korisnici", (req, res)->{
@@ -38,7 +33,7 @@ public class KorisnikController implements Controller{
             res.type("application/json");
             return g.toJson(korisnikService.update(req, res));
         });
-        delete("/korisnici/:email",(req, res)->{
+        delete("/korisnici/:id",(req, res)->{
             res.type("application/json");
             return korisnikService.delete(req, res);
         });

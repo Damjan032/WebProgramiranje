@@ -3,6 +3,7 @@ package dao;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import exceptions.BadRequestException;
 import exceptions.InternalServerErrorException;
 import exceptions.NotFoundException;
 
@@ -19,12 +20,14 @@ import java.util.stream.Collectors;
 import models.Disk;
 import models.Korisnik;
 import models.KorisnikNalog;
+import models.VirtuelnaMasina;
 import models.enums.Uloga;
 
 public class DiskDAO extends Initializer {
 
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/disk.json";
+    private VirtuelnaMasinaDAO virtuelnaMasinaDAO= new VirtuelnaMasinaDAO();
 
 
     public List<Disk> fetchAll() {
@@ -41,8 +44,14 @@ public class DiskDAO extends Initializer {
     }
 
     public Disk create(Disk disk) throws IOException {
-        List<Disk> list = fetchAll();
         disk.setId(UUID.randomUUID().toString());
+        if (disk.getVm()!=null) {
+            VirtuelnaMasinaDAO vmDAO = new VirtuelnaMasinaDAO();
+            VirtuelnaMasina vm = vmDAO.fetchById(disk.getVm());
+            vm.getDiskovi().add(disk.getId());
+            vmDAO.update(vm, vm.getId());
+        }
+        List<Disk> list = fetchAll();
         list.add(disk);
         upisListeUFile(list);
         return disk;
@@ -50,13 +59,26 @@ public class DiskDAO extends Initializer {
 
     public Disk update(Disk disk, String id) throws IOException {
         List<Disk> diskovi = fetchAll();
+        if (!disk.getIme().equals(disk.getIme())){
+            if(diskovi.stream().anyMatch(disk1 -> disk.getIme().equals(disk1.getIme()))){
+                throw new BadRequestException("Već postoji disk sa tim imenom");
+            }
+        }
         diskovi.forEach(
             oldDisk -> {
                 if (oldDisk.getId().equals(id)) {
-                    oldDisk.setIme(disk.getIme());
-                    oldDisk.setKapacitet(disk.getKapacitet());
-                    oldDisk.setTipDiska(disk.getTipDiska());
-                    oldDisk.setVm(oldDisk.getVm());
+                    if(KorisnikDAO.checkStringAttribute(disk.getIme())) {
+                        oldDisk.setIme(disk.getIme());
+                    }
+                    if (disk.getKapacitet()!=0) {
+                        oldDisk.setKapacitet(disk.getKapacitet());
+                    }
+                    if (disk.getTipDiska()!=null) {
+                        oldDisk.setTipDiska(disk.getTipDiska());
+                    }
+                    if (disk.getVm()!=null) {
+                        oldDisk.setVm(disk.getVm());
+                    }
                 }
             });
 
@@ -65,9 +87,13 @@ public class DiskDAO extends Initializer {
     }
 
     public void delete(String id) throws IOException {
+        Disk d = fetchById(id);
+        VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(d.getVm());
+        vm.getDiskovi().remove(id);
+        virtuelnaMasinaDAO.update(vm, vm.getId());
         upisListeUFile(
             fetchAll().stream()
-                .filter((element) -> !element.getId().equals(id))
+                .filter((element) -> !element.getIme().equals(id))
                 .collect(Collectors.toList()));
     }
 
