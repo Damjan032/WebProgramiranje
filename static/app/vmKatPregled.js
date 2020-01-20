@@ -2,12 +2,15 @@ let vmKatPregled = new Vue({
     el:"#vmKatPregled",
     data: {
         kategorije : null,
+        korisnikType:null
     },
     mounted () {
         axios.get('/vmKategorije').then(response => {
             this.kategorije = response.data;
             console.log(this.kategorije);
         });
+        axios.get('/korisnik').then(response => (
+            this.korisnikType = response.data.uloga));
     },
     methods:{
         obrisi:function(id){

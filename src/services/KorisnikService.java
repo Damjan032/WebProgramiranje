@@ -18,8 +18,6 @@ import spark.Response;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class KorisnikService{
@@ -43,29 +41,22 @@ public class KorisnikService{
         return korisnici.stream().map(this::mapToKorisnikDTOString).collect(Collectors.toList());
     }
 
-    public String fetchById(Request req, Response res) throws IOException {
+    public String fetchById(Request req) throws IOException {
 
         Korisnik k = req.session().attribute("korisnik");
         if (k == null){
             throw new UnauthorizedException();
         }
-        String email = req.params("email");
+        String id = req.params("id");
         if (k.getUloga() == Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
-        KorisnikNalog kn = korisnikDAO.fetchByEmail(email);
-        if (kn==null){
-            throw new NotFoundException();
-        }
+        KorisnikNalog kn = korisnikDAO.fetchById(id);
         Korisnik korisnik = kn.getKorisnik();
         if (k.getUloga() == Uloga.ADMIN && !korisnik.getOrganizacija().equals(k.getOrganizacija())) {
             throw new UnauthorizedException();
         }
-        KorisnikNalog k1 =korisnikDAO.fetchByEmail(email);
-        if (k1 == null){
-            throw new NotFoundException();
-        }
-        return mapToKorisnikDTOString(k1);
+        return mapToKorisnikDTOString(kn);
     }
 
     public String create(Request req, Response res) throws IOException {
@@ -126,12 +117,12 @@ public class KorisnikService{
     }
 
     public List<String> delete(Request req, Response res) throws IOException {
-        String email = req.params("email");
+        String id = req.params("id");
         Korisnik k = req.session().attribute("korisnik");
         if (k == null){
             throw new UnauthorizedException();
         }
-        Korisnik korisnikBrisani = korisnikDAO.fetchByEmail(email).getKorisnik();
+        Korisnik korisnikBrisani = korisnikDAO.fetchById(id).getKorisnik();
         if (korisnikBrisani.getUloga()==Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se brisati super admin!");
         }
@@ -141,7 +132,7 @@ public class KorisnikService{
         if (k.getUloga() == Uloga.ADMIN && !k.getOrganizacija().equals(korisnikBrisani.getOrganizacija())){
             throw new UnauthorizedException();
         }
-        return korisnikDAO.delete(email).stream().map(this::mapToKorisnikDTOString).collect(Collectors.toList());
+        return korisnikDAO.delete(id).stream().map(this::mapToKorisnikDTOString).collect(Collectors.toList());
     }
 
 
@@ -154,12 +145,14 @@ public class KorisnikService{
     private String mapToKorisnikDTOString(KorisnikNalog kn){
 
         Korisnik k = kn.getKorisnik();
+        Organizacija o = new OrganizacijaDAO().fetchById(k.getOrganizacija());
         return g.toJson(new KorisnikDTO.Builder().
+                withId(k.getId()).
                 withIme(k.getIme()).
                 withAktivnosti(k.getAktivnosti()).
                 withEmail(k.getEmail()).
                 withPrezime(k.getPrezime()).
-                withOrganizacija(k.getOrganizacija()).
+                withOrganizacija(o).
                 withUloga(k.getUloga()).
                 build());
     }

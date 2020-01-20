@@ -8,22 +8,28 @@ import java.util.List;
 
 public class KorisnikDTO {
 
+    private String id;
     private String email;
     private String ime;
     private String prezime;
-    private String organizacija;
+    private Organizacija organizacija;
     private Uloga uloga;
     private List<Aktivnost> aktivnosti;
 
     public static final class Builder {
+        private String id;
         private String email;
         private String ime;
         private String prezime;
-        private String organizacija;
+        private Organizacija organizacija;
         private Uloga uloga;
         private List<Aktivnost> aktivnosti;
 
         public  Builder() {
+        }
+        public KorisnikDTO.Builder withId(String id) {
+            this.id = id;
+            return this;
         }
         public KorisnikDTO.Builder withIme(String ime) {
             this.ime = ime;
@@ -45,7 +51,7 @@ public class KorisnikDTO {
             return this;
         }
 
-        public KorisnikDTO.Builder withOrganizacija(String organizacija) {
+        public KorisnikDTO.Builder withOrganizacija(Organizacija organizacija) {
             this.organizacija = organizacija;
             return this;
         }
@@ -58,6 +64,7 @@ public class KorisnikDTO {
 
         public KorisnikDTO build() {
             KorisnikDTO korisnikDTO = new KorisnikDTO();
+            korisnikDTO.id = this.id;
             korisnikDTO.ime = this.ime;
             korisnikDTO.prezime = this.prezime;
             korisnikDTO.email = this.email;

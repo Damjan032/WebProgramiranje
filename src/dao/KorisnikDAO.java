@@ -24,7 +24,6 @@ public class KorisnikDAO extends Initializer{
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/korisnici.json";
 
-
     @Override
     Object generateData() {
         var list = new ArrayList<KorisnikNalog>();
@@ -42,20 +41,27 @@ public class KorisnikDAO extends Initializer{
         return g.fromJson(new JsonReader(new FileReader(FILE_PATH)),new TypeToken<List<KorisnikNalog>>() {}.getType());
     }
 
-    public List<KorisnikNalog> fetchAll() throws FileNotFoundException {
+    public List<KorisnikNalog> fetchAll(){
         return (List<KorisnikNalog>) load(FILE_PATH);
     }
 
     public KorisnikNalog fetchByEmail(String ime) throws NotFoundException {
-        List<KorisnikNalog> res = (List<KorisnikNalog>) load(FILE_PATH);
+        List<KorisnikNalog> res = fetchAll();
         return res.stream().
                 filter(kn -> kn.getKorisnik().getEmail().equals(ime)).
+                findFirst().orElseThrow(NotFoundException::new);
+    }
+    public KorisnikNalog fetchById(String id) throws NotFoundException {
+        List<KorisnikNalog> res = fetchAll();
+        return res.stream().
+                filter(kn -> kn.getKorisnik().getId().equals(id)).
                 findFirst().orElseThrow(NotFoundException::new);
     }
 
 
     public KorisnikNalog create(KorisnikTrans korisnik) throws IOException {
         KorisnikNalog k = new KorisnikNalog(korisnik.getEmail(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getOrganizacija(), Uloga.fromString(korisnik.getUloga()), korisnik.getSifra());
+        k.getKorisnik().setId(UUID.randomUUID().toString());
         List<KorisnikNalog> list = fetchAll();
         list.add(k);
         upisListeUFile(list);
@@ -65,7 +71,7 @@ public class KorisnikDAO extends Initializer{
     public KorisnikNalog update(KorisnikNalog noviKorisnikNalog) throws IOException {
         List<KorisnikNalog> korisnici = fetchAll();
         Korisnik korisnik = noviKorisnikNalog.getKorisnik();
-        KorisnikNalog korisnikNalog = korisnici.stream().filter(kn-> kn.getKorisnik().getEmail().equals(korisnik.getEmail())).findFirst().orElse(null);
+        KorisnikNalog korisnikNalog = korisnici.stream().filter(kn-> kn.getKorisnik().getId().equals(korisnik.getId())).findFirst().orElseThrow(NotFoundException::new);
         if(korisnikNalog != null){
             Korisnik k = korisnikNalog.getKorisnik();
             if(checkStringAttribute(korisnik.getIme())){
@@ -90,17 +96,17 @@ public class KorisnikDAO extends Initializer{
     }
 
 
-    private boolean checkStringAttribute(String ime) {
+    public static boolean checkStringAttribute(String ime) {
         return ime!=null&& !ime.equals("");
     }
 
     public List<KorisnikNalog> delete(String id) throws IOException {
         OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
-        Organizacija o = organizacijaDAO.fetchById(fetchByEmail(id).getKorisnik().getOrganizacija());
+        Organizacija o = organizacijaDAO.fetchById(fetchById(id).getKorisnik().getOrganizacija());
         o.setKorisnici(o.getKorisnici().stream().filter(kid->!kid.equals(id)).collect(Collectors.toList()));
         organizacijaDAO.update(o, o.getId());
         List<KorisnikNalog> korisnici = fetchAll().stream()
-                .filter((element) -> !element.getKorisnik().getEmail().equals(id))
+                .filter((element) -> !element.getKorisnik().getId().equals(id))
                 .collect(Collectors.toList());
         upisListeUFile(korisnici);
         return korisnici;

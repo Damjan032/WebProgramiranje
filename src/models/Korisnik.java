@@ -4,8 +4,10 @@ import models.enums.Uloga;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Korisnik {
+    private String id;
     private String email;
     private String ime;
     private String prezime;
@@ -27,6 +29,7 @@ public class Korisnik {
     }
 
     public Korisnik(String email, Uloga uloga) {
+        this.id = UUID.randomUUID().toString();
         this.email = email;
         this.uloga = uloga;
     }
@@ -79,4 +82,11 @@ public class Korisnik {
         this.aktivnosti = aktivnosti;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

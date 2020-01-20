@@ -2,6 +2,7 @@
 Vue.component("detalji-korisnika", {
 	data: function () {
         return {
+            id:null,
             ime: null,
             prezime: null,
             uloga: null,
@@ -91,6 +92,7 @@ Vue.component("detalji-korisnika", {
                 return;
             }
             let promise = axios.put("/korisnici",{
+                id:this.id,
                 email: this.email,
                 ime: this.ime,
                 prezime: this.prezime,
@@ -118,7 +120,7 @@ Vue.component("detalji-korisnika", {
             })
         },
         obrisiKorisnika:function() {
-            let promise = axios.delete("/korisnici/"+this.email);
+            let promise = axios.delete("/korisnici/"+this.id);
             promise.then(response=>{
                     
                     if (response.status == 200) {
@@ -140,6 +142,7 @@ Vue.component("detalji-korisnika", {
         }
     },
 	mounted () {
+        this.id =  this.$route.params.korisnik.id;
         this.ime =  this.$route.params.korisnik.ime;
         this.prezime =  this.$route.params.korisnik.prezime;
         this.uloga = this.$route.params.korisnik.uloga;

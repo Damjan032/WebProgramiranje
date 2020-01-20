@@ -28,12 +28,12 @@ public class OrganizacijaController implements Controller {
 
         get("/organizacije", (req, res) -> {
             res.type("application/json");
-            return organizacijaService.fetchAll();});
+            return organizacijaService.fetchAll(req);});
 
         get("/organizacije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return organizacijaService.fetchById(id);
+            return organizacijaService.fetchById(req,id);
         });
 
         post("/organizacije", (req, res) -> {
@@ -57,7 +57,7 @@ public class OrganizacijaController implements Controller {
         delete("/organizacije/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            organizacijaService.delete(id);
+            organizacijaService.delete(req,id);
             return "";
         });
     }

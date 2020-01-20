@@ -23,7 +23,7 @@ public class VirtuelnaMasinaController implements Controller {
         get("/virtuelneMasine", (req, res) -> {
             res.type("application/json");
             if (req.queryParams() == null || req.queryParams().size() == 0) {
-                return virtuelnaMasinaService.fetchAll();
+                return virtuelnaMasinaService.fetchAll(req);
             }
             return virtuelnaMasinaService.fetchFiltred(req);
 
@@ -32,24 +32,24 @@ public class VirtuelnaMasinaController implements Controller {
         get("/virtuelneMasine/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return virtuelnaMasinaService.fetchById(id);
+            return virtuelnaMasinaService.fetchById(req,id);
         });
 
         get("/filtred", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return virtuelnaMasinaService.fetchById(id);
+            return virtuelnaMasinaService.fetchById(req,id);
         });
 
         post("/virtuelneMasine", (req, res) -> {
             res.type("application/json");
-            return virtuelnaMasinaService.create(req.body());
+            return virtuelnaMasinaService.create(req);
         });
 
         put("/virtuelneMasine/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            return virtuelnaMasinaService.update(req.body(), id);
+            return virtuelnaMasinaService.update(req, id);
         });
 
         put("/virtuelneMasine/activnost/:id", (req, res) -> {
@@ -61,7 +61,7 @@ public class VirtuelnaMasinaController implements Controller {
         delete("/virtuelneMasine/:id", (req, res) -> {
             res.type("application/json");
             String id = req.params("id");
-            virtuelnaMasinaService.delete(id);
+            virtuelnaMasinaService.delete(req, id);
             return "";
         });
     }

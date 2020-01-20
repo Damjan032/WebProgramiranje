@@ -101,7 +101,7 @@
                                 </td>
                                 <td>
                                     <select class="required" name="org" v-model="organizacija">
-                                        <option v-for = "o in organizacije">{{o.ime}}</option>
+                                        <option v-for = "o in organizacije" :value="o.id">{{o.ime}}</option>
                                     </select class="required">
                                 </td>
                                 <td >
@@ -130,10 +130,6 @@
     
         </div>
         
-
-        <div id="footer">
-
-        </div>
         
         <script src="js/jquery.js"></script>
         <script src="js/popper.js"></script>

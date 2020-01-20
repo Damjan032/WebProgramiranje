@@ -2,7 +2,7 @@
 Vue.component("detalji-diska", {
 	data: function () {
         return {
-            staroime:null,
+            id:null,
             ime: null,
             tip: null,
             kapacitet: null,
@@ -19,7 +19,7 @@ Vue.component("detalji-diska", {
                 return;
             }
             let promise = axios.put("/diskovi",{
-                staroIme:this.staroime,
+                id:this.id,
                 ime: this.ime,
                 tip: this.tip,
                 kapacitet: this.kapacitet,
@@ -46,7 +46,7 @@ Vue.component("detalji-diska", {
             })
         },
         obrisiDisk:function() {
-            let promise = axios.delete("/diskovi/"+this.staroime);
+            let promise = axios.delete("/diskovi/"+this.id);
             promise.then(response=>{
                     
                     if (response.status == 200) {
@@ -65,21 +65,31 @@ Vue.component("detalji-diska", {
                     type: 'danger'
                 });
             })
+        },
+        activnost:function (vm) {
+            let promise = axios.put("/virtuelneMasine/activnost/"+vm,{});
+            promise.catch(error=>{
+                new Toast({
+                    message:error.response.data.ErrorMessage,
+                    type: 'danger'
+                });
+            });
         }
     },
 	mounted () {
         this.ime =  this.$route.params.disk.ime;
-        this.staroime = this.ime;
+        this.id = this.$route.params.disk.id;
         this.kapacitet =  this.$route.params.disk.kapacitet;
         this.tip = this.$route.params.disk.tip;
         this.vm = this.$route.params.disk.vm;
+        this.vmime = this.$route.params.disk.vmime;
         this.tipKorisnika = this.$route.params.tipKorisnika;
         if(this.tipKorisnika=="KORISNIK"){
             $("select input").prop("readonly", true);
         }
     },
     template: ` 
-<div>
+<div class="container">
 
     <h1>Disk: {{$route.params.disk.ime}}</h1>
     <table class="table">                
@@ -100,7 +110,7 @@ Vue.component("detalji-diska", {
             <td>
                 Kapacitet
             </td>
-            <td>
+            <td colspan="2">
                 <input  class="required" type="number" v-model = "kapacitet">
             </td>
             <td >
@@ -113,8 +123,8 @@ Vue.component("detalji-diska", {
             <td>
                 Tip 
             </td>
-            <td>
-                <select class="required" name="org" v-model="uloga">
+            <td colspan="2">
+                <select class="required" name="org" v-model="tip">
                     <option value="SSD">SSD</option>
                     <option value="HDD">HDD</option>
                 </select> 
@@ -125,12 +135,18 @@ Vue.component("detalji-diska", {
                 </td>
             </td>                           
         </tr>
-        <tr>
+        <tr v-if="vm">
             <td>
                 Virtuelna mašina 
             </td>
             <td>
-                {{vm}}
+                {{vm.ime}}
+            </td>
+            <td>
+                <label class="switch" v-if="vm">
+                    <input type="checkbox" v-bind:checked="vm.isActiv" v-on:click="activnost(vm.id)">
+                    <span class="slider round"></span>
+                </label>
             </td>
         </tr>
         <tr>
