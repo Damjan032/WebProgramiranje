@@ -29,6 +29,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+            port(8080);
             staticFiles.externalLocation(new File("./static").getCanonicalPath());
 
             KorisnikController korisnikController = new KorisnikController();
