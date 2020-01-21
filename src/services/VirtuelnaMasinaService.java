@@ -43,7 +43,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         Uloga u = k.getUloga();
         var vm = virtuelnaMasinaDAO.fetchAll();
         if (u == Uloga.SUPER_ADMIN){
-            return vm.stream().map(vmasina -> g.toJson(vmasina, VirtuelnaMasina.class)).collect(Collectors.toList());
+            return vm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
         }
         OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
         Organizacija o = organizacijaDAO.
