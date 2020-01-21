@@ -7,6 +7,7 @@ Vue.component("detalji-diska", {
             tip: null,
             kapacitet: null,
             vm:null,
+            vmActiv:false,
             tipKorisnika:null
         }
     },
@@ -82,6 +83,13 @@ Vue.component("detalji-diska", {
         this.kapacitet =  this.$route.params.disk.kapacitet;
         this.tip = this.$route.params.disk.tip;
         this.vm = this.$route.params.disk.vm;
+        let vm = this.vm;
+        if(vm.aktivnosti){
+            if(vm.aktivnosti[vm.aktivnosti.length-1].zavrsetak==null){
+                this.vmActiv = true;
+            }
+        }
+        this.vmActiv;
         this.vmime = this.$route.params.disk.vmime;
         this.tipKorisnika = this.$route.params.tipKorisnika;
         if(this.tipKorisnika=="KORISNIK"){
@@ -144,7 +152,7 @@ Vue.component("detalji-diska", {
             </td>
             <td>
                 <label class="switch" v-if="vm">
-                    <input type="checkbox" v-bind:checked="vm.isActiv" v-on:click="activnost(vm.id)">
+                    <input type="checkbox" v-bind:checked="vmActiv" v-on:click="activnost(vm.id)">
                     <span class="slider round"></span>
                 </label>
             </td>
