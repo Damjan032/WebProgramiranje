@@ -20,7 +20,6 @@ import javax.servlet.ServletException;
 
 import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
-import jdk.jshell.spi.ExecutionControl;
 import models.*;
 import models.enums.TipResursa;
 import models.enums.Uloga;
@@ -48,7 +47,7 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     @Override
-    public String create(Request req) throws ExecutionControl.NotImplementedException {
+    public String create(Request req) {
 
         Korisnik k = req.session().attribute("korisnik");
         if (k.getUloga() != Uloga.SUPER_ADMIN) {
@@ -57,7 +56,7 @@ public class OrganizacijaService implements Service<String, String> {
         return null;
     }
 
-    public String createWithImage(Request req) throws IOException, ServletException, ExecutionControl.NotImplementedException {
+    public String createWithImage(Request req) throws IOException, ServletException {
         create(req);
         req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
         String ime = req.queryParams("oIme");
