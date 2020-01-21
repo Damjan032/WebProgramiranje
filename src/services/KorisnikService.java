@@ -92,7 +92,8 @@ public class KorisnikService{
         }
         String body = req.body();
         KorisnikNalog noviKorisnik = mapKorisnikTransToKorisnik(g.fromJson(body, KorisnikTrans.class));
-        if (korisnikDAO.fetchByEmail(noviKorisnik.getKorisnik().getEmail()).getKorisnik().getUloga()== Uloga.SUPER_ADMIN){
+        KorisnikNalog stariKorisnik = korisnikDAO.fetchById(noviKorisnik.getKorisnik().getId());
+        if (stariKorisnik.getKorisnik().getUloga()== Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se menjati super admin!");
         }
         if (noviKorisnik.getKorisnik().getUloga()==Uloga.SUPER_ADMIN){
@@ -105,7 +106,7 @@ public class KorisnikService{
                 }
             }
             if(korisnik.getUloga() == Uloga.ADMIN){
-                if (noviKorisnik.getKorisnik().getUloga()!= Uloga.KORISNIK){
+                if (stariKorisnik.getKorisnik().getUloga()!= Uloga.KORISNIK){
                     throw new BadRequestException("Možete menjati samo korisnike koji nisu admini!");
                 }
                 if(!korisnik.getOrganizacija().equals(noviKorisnik.getKorisnik().getOrganizacija())){

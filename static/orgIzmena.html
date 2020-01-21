@@ -11,7 +11,9 @@
 </head>
 <body >
 <div id="organizacije">
-    <div class="jumbotron"><h1>Prijava korisnika</h1></div>
+    <site-header>
+    </site-header>
+    <div class="jumbotron"><h1>Izmena organizacije {{oIme}}</h1></div>
     <div  class="container">
         Naziv organizacije: <input  type="text" v-model="oIme" v-bind:placeholder="organizacija.ime"/>
         <p  class="alert alert-danger d-none">

@@ -54,16 +54,18 @@ public class DiskService{
             throw new UnauthorizedException();
         }
         String body = req.body();
-        DiskDTO d = g.fromJson(body, DiskDTO.class);
+        Disk d = g.fromJson(body, Disk.class);
         try{
             diskDAO.fetchByName(d.getIme());
         } catch (NotFoundException nfe){
-            return g.toJson(diskDAO.create(mapDiskDTOToDisk(d)));
+            return g.toJson(diskDAO.create(d));
         } catch (Exception e){
             e.printStackTrace();
         }
         throw new BadRequestException("Disk sa tim imenom vec postoji!");
     }
+
+
 
     public String update(Request req) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
@@ -95,7 +97,11 @@ public class DiskService{
     }
     private Disk mapDiskDTOToDisk(DiskDTO dt){
         //  return null;
-        return new Disk(dt.getId(), dt.getIme(), dt.getTip(), dt.getKapacitet(), dt.getVm().getId());
+        String id=null;
+        if (dt.getVm()!=null){
+            id = dt.getVm().getId();
+        }
+        return new Disk(dt.getId(), dt.getIme(), dt.getTip(), dt.getKapacitet(), id);
     }
     private String mapToDiskDTOString(Disk d){
         VirtuelnaMasina vm = null;

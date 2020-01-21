@@ -88,12 +88,14 @@ public class DiskDAO extends Initializer {
 
     public void delete(String id) throws IOException {
         Disk d = fetchById(id);
-        VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(d.getVm());
-        vm.getDiskovi().remove(id);
-        virtuelnaMasinaDAO.update(vm, vm.getId());
+        if (d.getVm()!=null) {
+            VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(d.getVm());
+            vm.getDiskovi().remove(id);
+            virtuelnaMasinaDAO.update(vm, vm.getId());
+        }
         upisListeUFile(
             fetchAll().stream()
-                .filter((element) -> !element.getIme().equals(id))
+                .filter((element) -> !element.getId().equals(id))
                 .collect(Collectors.toList()));
     }
 

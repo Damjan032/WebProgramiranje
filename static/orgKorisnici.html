@@ -20,10 +20,10 @@
             <h2>Organizacije</h2>
         </div>
         <p>
-        <h3 >
-            Trenutno nema organizacija
+        <h3 v-if="korisnici">
+            Trenutno nema korisnika u datoj organizaciji
         </h3>
-        <table class="table">
+        <table v-else class="table">
             <tr>
                 <th>
                     Ime

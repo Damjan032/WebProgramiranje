@@ -1,7 +1,8 @@
 Vue.component("site-header", {
 	data: function () {
 		    return {
-		      type: ""
+              type: "",
+              orgid:null
 		    }
 	},
 	template: ` 
@@ -22,7 +23,7 @@ Vue.component("site-header", {
                     <a class="nav-link" href="diskovi.html">Diskovi <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" v-if = "type=='SUPER_ADMIN'">
-                    <a class="nav-link" href="organizacije.html">Organizacije <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="orgPregled.html">Organizacije <span class="sr-only">(current)</span></a>
                 </li>
             
                 <li class="nav-item">
@@ -35,7 +36,7 @@ Vue.component("site-header", {
         </div>
         <span v-if = "type" class="navbar-text">
             <a href = "/izmenaProfila.html"><button class = "dropdown-item">Izmeni nalog</button></a>
-            <a v-if="type=='ADMIN'" href = "/organizacije.html"><button class = "dropdown-item">Izmeni organizaciju</button></a>
+            <a v-if="type=='ADMIN'" v-bind:href = "'/orgIzmena.html?id='+orgid"><button class = "dropdown-item">Izmeni organizaciju</button></a>
             <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
         </span>
         
@@ -59,6 +60,7 @@ Vue.component("site-header", {
 	mounted () {
         axios.get('/korisnik').then(response => {
             this.type = response.data.uloga;
+            this.orgid =  response.data.organizacija;
         }); 
     }
 });

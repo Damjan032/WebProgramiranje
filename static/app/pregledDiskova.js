@@ -58,8 +58,6 @@ Vue.component("diskovi",{
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
                 <td>
                     <a v-if = "tipKorisnika!='KORISNIK'" href="dodajDisk.html">
                         <button type="button" class="btn btn-success">

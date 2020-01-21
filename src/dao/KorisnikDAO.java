@@ -3,6 +3,7 @@ package dao;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import komunikacija.KorisnikTrans;
 import models.Disk;
@@ -62,6 +63,14 @@ public class KorisnikDAO extends Initializer{
     public KorisnikNalog create(KorisnikTrans korisnik) throws IOException {
         KorisnikNalog k = new KorisnikNalog(korisnik.getEmail(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getOrganizacija(), Uloga.fromString(korisnik.getUloga()), korisnik.getSifra());
         k.getKorisnik().setId(UUID.randomUUID().toString());
+        OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
+        try {
+            Organizacija o = organizacijaDAO.fetchById(k.getKorisnik().getOrganizacija());
+            o.getKorisnici().add(k.getKorisnik().getId());
+            organizacijaDAO.update(o,o.getId());
+        }catch (NotFoundException nfe){
+            throw new BadRequestException("Ne postoji organizacija sa datim id-jem");
+        }
         List<KorisnikNalog> list = fetchAll();
         list.add(k);
         upisListeUFile(list);

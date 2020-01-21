@@ -84,9 +84,11 @@ Vue.component("detalji-diska", {
         this.tip = this.$route.params.disk.tip;
         this.vm = this.$route.params.disk.vm;
         let vm = this.vm;
-        if(vm.aktivnosti){
-            if(vm.aktivnosti[vm.aktivnosti.length-1].zavrsetak==null){
-                this.vmActiv = true;
+        if(vm){
+            if(vm.aktivnosti){
+                if(vm.aktivnosti[vm.aktivnosti.length-1].zavrsetak==null){
+                    this.vmActiv = true;
+                }
             }
         }
         this.vmActiv;

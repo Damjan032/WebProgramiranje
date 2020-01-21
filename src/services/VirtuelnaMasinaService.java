@@ -247,7 +247,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
     }
 
-    public String filtered(Request req) {
+    public List<String> filtered(Request req) {
         VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
         int ramOd = Integer.parseInt(req.params("ramOd"));
         int ramDo = Integer.parseInt(req.params("ramDo"));
@@ -260,7 +260,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
 
         String naziv = req.params("naziv");
 
-        List<VirtuelnaMasina> filtriraneVm = new ArrayList<>();
+        List<VirtuelnaMasina> filtriraneVm;
 
         if(naziv.trim().equalsIgnoreCase(""))
             filtriraneVm = virtuelnaMasinaDAO.fetchAll();
@@ -278,6 +278,6 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             throw new BadRequestException("Nema adekvatne vm");
         }
         System.out.println(filtriraneVm.size());
-        return g.toJson(filtriraneVm);
+        return filtriraneVm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
     }
 }

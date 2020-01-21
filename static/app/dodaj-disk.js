@@ -20,15 +20,16 @@ let loginapp = new Vue({
             if(!this.checkParams()){
                 return;
             }
-            let vmasina = axios.get("/virtualneMasine/"+this.vm);
-            if(!vmasina){
-                vmasina = {id:null};
+            if(!this.vm){
+                this.vm = {id:null};
+            }else{
+                
             }
             let promise = axios.post("/diskovi",{
                 ime: this.ime,
                 tip: this.tip,
                 kapacitet: this.kapacitet,
-                vm:vmasina
+                vm:this.vm
               }
             )
             promise.then(response=>{

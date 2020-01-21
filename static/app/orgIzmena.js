@@ -14,6 +14,8 @@ let orgIzmena = new Vue({
 
         axios.get('/organizacije/'+params.get("id")).then(response => {
             this.organizacija = response.data;
+            this.oIme = this.organizacija.ime;
+            this.oOpis = this.organizacija.opis;
             console.log(this.organizacija);
         });
 
