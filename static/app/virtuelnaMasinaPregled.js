@@ -11,10 +11,6 @@ let virtuelnaMasinaPegled = new Vue({
     },
     mounted () {
        this.init();
-        axios.get('/korisnik').then(response => {
-            this.korisnikType = response.data.uloga;
-
-        });
 
 
     },
