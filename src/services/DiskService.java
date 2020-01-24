@@ -76,11 +76,16 @@ public class DiskService{
         try{
             diskDAO.fetchByName(disk.getIme());
         } catch (NotFoundException nfe){
-            OrganizacijaDAO odao = new OrganizacijaDAO();
-            Organizacija o = odao.fetchById(diskTrans.getOrg());
+
             disk = diskDAO.create(disk);
-            o.getResursi().add(new Resurs(disk.getId(), TipResursa.DISK));
-            odao.update(o, o.getId());
+            try {
+                OrganizacijaDAO odao = new OrganizacijaDAO();
+                Organizacija o = odao.fetchById(diskTrans.getOrg());
+                o.getResursi().add(new Resurs(disk.getId(), TipResursa.DISK));
+                odao.update(o, o.getId());
+            }catch (NotFoundException e){
+                e.printStackTrace();
+            }
             return g.toJson(disk);
         } catch (Exception e){
             e.printStackTrace();

@@ -37,15 +37,10 @@ let loginapp = new Vue({
             if(!this.checkParams()){
                 return;
             }
-            if(!this.vm){
-                this.vm = {id:null};
-            }else{
-                
-            }
             let promise = axios.post("/diskovi",{
                 disk:{
                     ime: this.ime,
-                    tip: this.tip,
+                    tipDiska: this.tip,
                     kapacitet: this.kapacitet,
                     vm:this.vm
                 },

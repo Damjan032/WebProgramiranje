@@ -8,6 +8,7 @@ import dao.VirtuelnaMasinaDAO;
 import dto.DiskDTO;
 import dto.VirtuelnaMasinaDTO;
 import exceptions.BadRequestException;
+import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
 import javaxt.utils.Array;
 
@@ -137,9 +138,14 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             throw new BadRequestException("Kategorija VM sa imenom: " + virtuelnaMasina.getIme() +" posotji");
         }
         virtuelnaMasina = virtuelnaMasinaDAO.create(virtuelnaMasina);
-        Organizacija o = organizacijaDAO.fetchById(vmTrans.getOrg());
-        o.getResursi().add(new Resurs(virtuelnaMasina.getId(), TipResursa.VM));
-        organizacijaDAO.update(o, o.getId());
+
+        try {
+            Organizacija o = organizacijaDAO.fetchById(vmTrans.getOrg());
+            o.getResursi().add(new Resurs(virtuelnaMasina.getId(), TipResursa.VM));
+            organizacijaDAO.update(o, o.getId());
+        }catch (NotFoundException nfe) {
+            nfe.printStackTrace();
+        }
         return g.toJson(virtuelnaMasina);
     }
 
