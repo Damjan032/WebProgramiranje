@@ -16,7 +16,7 @@
             <div class="jumbotron"><h1>Dodavanje diska</h1></div>
             <div class="container">
                 <div class="page-header">
-                    <h2>Novi korisnik</h2>
+                    <h2>Novi disk</h2>
                 </div>
                 <p>
                     <table>
@@ -40,7 +40,7 @@
                             </td>
                             <td>
                                 
-                                <select class="required" name="org" v-model="tip">
+                                <select class="required" v-model="tip">
                                     <option value="SSD">SSD</option>
                                     <option value="HDD">HDD</option>
                                 </select>
@@ -72,6 +72,21 @@
                                 <select name="vm" v-model="vm">
                                     <option v-for = "vm in vmasine" :value="vm.id">{{vm.ime}}</option>
                                 </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Organizacija
+                            </td>
+                            <td>
+                                <select class="required" v-model="org">
+                                    <option v-for = "org in organizacije" :value="org.id">{{org.ime}}</option>
+                                </select>
+                            </td>
+                            <td >
+                                <p  class="alert alert-danger d-none">
+                                    Ovo polje je obavezno!
+                                </p>
                             </td>
                         </tr>
                         <tr>

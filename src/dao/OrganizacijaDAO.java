@@ -3,6 +3,7 @@ package dao;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import exceptions.BadRequestException;
 import exceptions.InternalServerErrorException;
 import exceptions.NotFoundException;
 import java.io.FileNotFoundException;

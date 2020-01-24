@@ -34,7 +34,7 @@ public class OrganizacijaService implements Service<String, String> {
     @Override
     public List<String> fetchAll(Request req) throws FileNotFoundException {
         Korisnik k = req.session().attribute("korisnik");
-        if (k.getUloga()!= Uloga.SUPER_ADMIN){
+        if (k==null||k.getUloga()!= Uloga.SUPER_ADMIN){
             throw new UnauthorizedException();
         }
         return organizacijaDAO.fetchAll().stream().map(this::mapToOrganizacijaDTOString).collect(Collectors.toList());
@@ -50,7 +50,7 @@ public class OrganizacijaService implements Service<String, String> {
     public String create(Request req) {
 
         Korisnik k = req.session().attribute("korisnik");
-        if (k.getUloga() != Uloga.SUPER_ADMIN) {
+        if (k==null||k.getUloga() != Uloga.SUPER_ADMIN) {
             throw new UnauthorizedException();
         }
         return null;
@@ -71,6 +71,9 @@ public class OrganizacijaService implements Service<String, String> {
 
     public String updateWithImage(Request req, String id) throws IOException, ServletException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
         if (u==Uloga.KORISNIK){
             throw new UnauthorizedException();

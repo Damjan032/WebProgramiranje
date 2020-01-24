@@ -54,6 +54,10 @@ public class VMKategorijaService implements Service<String, String> {
             throw new UnauthorizedException();
         }
         VMKategorija vmKategorija = g.fromJson(req.body(), VMKategorija.class);
+        if (vmKategorija.getIme()==null){
+            throw new BadRequestException("Niste uneli sve podatke.");
+        }
+
         if (vmKategorijaDAO.fetchByIme(vmKategorija.getIme()).isPresent() ) {
             throw new BadRequestException("Kategorija VM sa imenom: " + vmKategorija.getIme() +" posotji");
         }

@@ -4,12 +4,27 @@ let virtuelnaMasinaAdd = new Vue({
         vmKategorije : "",
         ime : "",
         kategorija : "",
+        org : null,
+        organizacije:null
     },
     mounted () {
-            axios.get('/vmKategorije').then(response => {
-                this.vmKategorije = response.data;
-                console.log(this.vmKategorije);
+        axios.get('/vmKategorije').then(response => {
+            this.vmKategorije = response.data;
+            console.log(this.vmKategorije);
+        }).catch(error=>{
+            new Toast({
+                message:error.response.data.ErrorMessage,
+                type: 'danger'
             });
+        });
+        axios.get('/organizacije').then(response => {
+            this.organizacije = response.data;
+        }).catch(error=>{
+            new Toast({
+                message:error.response.data.ErrorMessage,
+                type: 'danger'
+            });
+        });
      },
 
 
@@ -41,8 +56,11 @@ let virtuelnaMasinaAdd = new Vue({
             }
 
             let promise = axios.post("/virtuelneMasine",{
+                virtuelnaMasina:{
                 ime: this.ime,
                 kategorija: this.kategorija
+                },
+                org:org
               }
             )
             promise.then(response=>{

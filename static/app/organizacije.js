@@ -13,6 +13,12 @@ let orgapp = new Vue({
     mounted () {
         axios.get('/organizacije').then(response => {
             this.organizacije = response.data;
+        }).catch(error=> {
+            let msg = error.response.data.ErrorMessage;
+            new Toast({
+                message: msg,
+                type: 'danger'
+            });
         }); 
         axios.get('/korisnik').then(response => {
             this.korisnikType = response.data.uloga;

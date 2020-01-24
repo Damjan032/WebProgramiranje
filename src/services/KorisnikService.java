@@ -66,6 +66,9 @@ public class KorisnikService{
         }
         String body = req.body();
         KorisnikTrans korisnikTrans = g.fromJson(body, KorisnikTrans.class);
+        if (korisnikTrans.getEmail()==null||korisnikTrans.getIme()==null||korisnikTrans.getPrezime()==null||korisnikTrans.getOrganizacija()==null||korisnikTrans.getUloga()==null){
+            throw new BadRequestException("Niste uneli sve podatke!");
+        }
         try {
 
                 korisnikDAO.fetchByEmail(korisnikTrans.getEmail());

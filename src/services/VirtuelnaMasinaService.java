@@ -11,6 +11,7 @@ import exceptions.BadRequestException;
 import exceptions.UnauthorizedException;
 import javaxt.utils.Array;
 
+import komunikacija.VMTrans;
 import models.*;
 import models.enums.TipResursa;
 import models.enums.Uloga;
@@ -111,8 +112,15 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     public String create(Request req) throws IOException {
         //TODO kako se dodaje id u org
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
-        VirtuelnaMasina virtuelnaMasina = g.fromJson(req.body(), VirtuelnaMasina.class);
+        VMTrans vmTrans = g.fromJson(req.body(),VMTrans.class);
+        VirtuelnaMasina virtuelnaMasina = vmTrans.getVirtuelnaMasina();
+        if (virtuelnaMasina.getIme()==null||virtuelnaMasina.getKategorija()==null){
+            throw new BadRequestException("Niste uneli sve podatke!");
+        }
         if (u==Uloga.KORISNIK){
             throw new UnauthorizedException();
         }else if(u==Uloga.ADMIN)
@@ -128,12 +136,19 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         if (virtuelnaMasinaDAO.fetchByIme(virtuelnaMasina.getIme()).isPresent() ) {
             throw new BadRequestException("Kategorija VM sa imenom: " + virtuelnaMasina.getIme() +" posotji");
         }
-        return g.toJson(virtuelnaMasinaDAO.create(virtuelnaMasina));
+        virtuelnaMasina = virtuelnaMasinaDAO.create(virtuelnaMasina);
+        Organizacija o = organizacijaDAO.fetchById(vmTrans.getOrg());
+        o.getResursi().add(new Resurs(virtuelnaMasina.getId(), TipResursa.VM));
+        organizacijaDAO.update(o, o.getId());
+        return g.toJson(virtuelnaMasina);
     }
 
     @Override
     public String update(Request req, String id) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null) {
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
         if (u==Uloga.KORISNIK){
             throw new UnauthorizedException();
@@ -157,6 +172,9 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     @Override
     public void delete(Request req,String id) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
         if (u==Uloga.KORISNIK){
             throw new UnauthorizedException();
@@ -180,7 +198,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         virtuelnaMasinaDTO.setAktivnosti(virtuelnaMasina.getAktivnosti());
 
         boolean aktivnost = virtuelnaMasinaDTO.getIsActiv();
-        if(aktivnost==true){
+        if(aktivnost){
             virtuelnaMasina.getAktivnosti().get(virtuelnaMasina.getAktivnosti().size()-1).setZavrsetak(LocalDateTime.now());
         }
         else{

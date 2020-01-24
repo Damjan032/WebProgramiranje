@@ -5,11 +5,28 @@ let loginapp = new Vue({
        tip: null,
        kapacitet: null,
        vm: null,
+       org: null,
        vmasine: null,
+       organizacije: null
     },
     mounted() {
         axios.get('/virtuelneMasine').then(response => {
             this.vmasine = response.data;
+        }).catch(error=>{
+            let msg = error.response.data.ErrorMessage;
+            new Toast({
+                message:msg,
+                type: 'danger'
+            });
+        }); 
+        axios.get('/organizacije').then(response => {
+            this.organizacije = response.data;
+        }).catch(error=>{
+            let msg = error.response.data.ErrorMessage;
+            new Toast({
+                message:msg,
+                type: 'danger'
+            });
         });  
     },
     
@@ -26,10 +43,14 @@ let loginapp = new Vue({
                 
             }
             let promise = axios.post("/diskovi",{
-                ime: this.ime,
-                tip: this.tip,
-                kapacitet: this.kapacitet,
-                vm:this.vm
+                disk:{
+                    ime: this.ime,
+                    tip: this.tip,
+                    kapacitet: this.kapacitet,
+                    vm:this.vm
+                },
+                org:this.org
+
               }
             )
             promise.then(response=>{

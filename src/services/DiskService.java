@@ -8,7 +8,9 @@ import dto.DiskDTO;
 import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
+import komunikacija.DiskTrans;
 import models.*;
+import models.enums.TipResursa;
 import models.enums.Uloga;
 import spark.Request;
 
@@ -26,6 +28,9 @@ public class DiskService{
 
     public List<String> fetchAll(Request req) throws FileNotFoundException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         var diskovi = diskDAO.fetchAll();
         if(k.getUloga()== Uloga.SUPER_ADMIN){
             return diskovi.stream().map(this::mapToDiskDTOString).collect(Collectors.toList());
@@ -36,6 +41,9 @@ public class DiskService{
 
     public String fetchById(Request req) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         String id = req.params("id");
         Disk d = diskDAO.fetchById(id);
         if(k.getUloga()==Uloga.SUPER_ADMIN){
@@ -50,15 +58,30 @@ public class DiskService{
 
     public String create(Request req) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         if (k.getUloga()==Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
         String body = req.body();
-        Disk d = g.fromJson(body, Disk.class);
+        DiskTrans diskTrans = g.fromJson(body, DiskTrans.class);
+        Disk disk = diskTrans.getDisk();
+        if(disk.getIme()==null||disk.getTipDiska()==null) {
+            throw new BadRequestException("Nisu uneti svi podaci!");
+        }
+        if (disk.getKapacitet()<=0){
+            throw new BadRequestException("Kapacitet ne može biti negativan!");
+        }
         try{
-            diskDAO.fetchByName(d.getIme());
+            diskDAO.fetchByName(disk.getIme());
         } catch (NotFoundException nfe){
-            return g.toJson(diskDAO.create(d));
+            OrganizacijaDAO odao = new OrganizacijaDAO();
+            Organizacija o = odao.fetchById(diskTrans.getOrg());
+            disk = diskDAO.create(disk);
+            o.getResursi().add(new Resurs(disk.getId(), TipResursa.DISK));
+            odao.update(o, o.getId());
+            return g.toJson(disk);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -69,6 +92,9 @@ public class DiskService{
 
     public String update(Request req) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         if (k.getUloga() == Uloga.KORISNIK) {
             throw new UnauthorizedException();
         }
