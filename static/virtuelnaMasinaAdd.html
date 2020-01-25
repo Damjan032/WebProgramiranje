@@ -33,7 +33,7 @@
             </p>
             <br><br>
             Organizacija:
-            <select class="required" v-model="org" >
+            <select id="orginput" class="required" v-model="org" >
                 <option v-for = "org in organizacije" v-bind:value="org.id">{{org.ime}}</option>
             </select>
             <p  class="alert alert-danger d-none">

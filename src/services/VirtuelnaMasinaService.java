@@ -111,7 +111,6 @@ public class VirtuelnaMasinaService implements Service<String, String> {
 
     @Override
     public String create(Request req) throws IOException {
-        //TODO kako se dodaje id u org
         Korisnik k = req.session().attribute("korisnik");
         if (k==null){
             throw new UnauthorizedException();
@@ -133,7 +132,11 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         if(virtuelnaMasina.getKategorija().equalsIgnoreCase("")){
             throw new BadRequestException("Izaberi kategoriju");
         }
-        virtuelnaMasina.setKategorija(vmKategorijaDAO.fetchByIme(virtuelnaMasina.getKategorija()).get().getId());
+        VMKategorija vmKategorija = vmKategorijaDAO.fetchByIme(virtuelnaMasina.getKategorija()).get();
+        virtuelnaMasina.setKategorija(vmKategorija.getId());
+        virtuelnaMasina.setRAM(vmKategorija.getRAM());
+        virtuelnaMasina.setCORES(vmKategorija.getBrJezgra());
+        virtuelnaMasina.setGPUCORES(vmKategorija.getBrGPU());
         if (virtuelnaMasinaDAO.fetchByIme(virtuelnaMasina.getIme()).isPresent() ) {
             throw new BadRequestException("Kategorija VM sa imenom: " + virtuelnaMasina.getIme() +" posotji");
         }

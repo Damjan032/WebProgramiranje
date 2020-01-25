@@ -5,7 +5,8 @@ let virtuelnaMasinaAdd = new Vue({
         ime : "",
         kategorija : "",
         org : null,
-        organizacije:null
+        organizacije:null,
+        tipKorisnika:null
     },
     mounted () {
         axios.get('/vmKategorije').then(response => {
@@ -17,14 +18,32 @@ let virtuelnaMasinaAdd = new Vue({
                 type: 'danger'
             });
         });
-        axios.get('/organizacije').then(response => {
-            this.organizacije = response.data;
-        }).catch(error=>{
+        axios.get("/korisnik")
+        .then(res=>{
+            if(res.data){            
+                this.tipKorisnika = res.data.uloga;
+                if(this.tipKorisnika=="ADMIN"){
+                    this.org = res.data.organizacija;
+                    $("#orginput").prop("readonly", true);
+                }else{
+                    axios.get('/organizacije').then(response => {
+                        this.organizacije = response.data;
+                    }).catch(error=>{
+                        new Toast({
+                            message:error.response.data.ErrorMessage,
+                            type: 'danger'
+                        });
+                    });
+                }
+            }
+        })
+        .catch(error=>{
             new Toast({
                 message:error.response.data.ErrorMessage,
                 type: 'danger'
-            });
+            })
         });
+        
      },
 
 

@@ -95,7 +95,7 @@ public class KorisnikService{
         }
         String body = req.body();
         KorisnikNalog noviKorisnik = mapKorisnikTransToKorisnik(g.fromJson(body, KorisnikTrans.class));
-        KorisnikNalog stariKorisnik = korisnikDAO.fetchById(noviKorisnik.getKorisnik().getId());
+        KorisnikNalog stariKorisnik = korisnikDAO.fetchByEmail(noviKorisnik.getKorisnik().getEmail());
         if (stariKorisnik.getKorisnik().getUloga()== Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se menjati super admin!");
         }

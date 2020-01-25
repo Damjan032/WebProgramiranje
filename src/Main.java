@@ -35,7 +35,9 @@ public class Main {
             KorisnikController korisnikController = new KorisnikController();
             LoginController loginController = new LoginController();
             DiskController diskController = new DiskController();
+            RacunController racunController = new RacunController();
 
+            racunController.init();
             OrganizacijaController.getInstance().init();
             diskController.init();
             korisnikController.init();

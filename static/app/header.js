@@ -37,6 +37,7 @@ Vue.component("site-header", {
         <span v-if = "type" class="navbar-text">
             <a href = "/izmenaProfila.html"><button class = "dropdown-item">Izmeni nalog</button></a>
             <a v-if="type=='ADMIN'" v-bind:href = "'/orgIzmena.html?id='+orgid"><button class = "dropdown-item">Izmeni organizaciju</button></a>
+            <a v-if="type=='ADMIN'" href = "/racuni.html"><button class = "dropdown-item">Pregled računa</button></a>
             <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
         </span>
         

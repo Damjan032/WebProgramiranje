@@ -14,7 +14,16 @@ let vmKatAdd = new Vue({
 
         axios.get('/vmKategorije/'+params.get("id")).then(response => {
             this.kategorija = response.data;
+            this.ime = this.kategorija.ime;
+            this.ram = this.kategorija.RAM;
+            this.brJezgara = this.kategorija.brJezgra;
+            this.gpuJezgara = this.kategorija.brGPU;
             console.log(this.kategorija);
+        }).catch(error=>{
+            new Toast({
+                message:error.response.data.ErrorMessage,
+                type: 'danger'
+            });
         });
 
     },

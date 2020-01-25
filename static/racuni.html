@@ -1,0 +1,135 @@
+<html>
+    <head>
+        <title>
+            Računi
+        </title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/toast.css">
+        <link rel="stylesheet" href="bootstrap/css/slider.css">
+    </head>
+    <body >
+        <div id="racuniapp">
+            <site-header>
+            </site-header>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h3>
+                            Mesečni računi
+                        </h3>
+                        <table class="table-bordered">
+                            <tr>
+                                <th>
+                                    Organizacija
+                                </th>
+                                
+                                <th>
+                                    Početak
+                                </th>
+                                <th>
+                                    Kraj
+                                </th>
+                                <th>
+                                    Cena
+                                </th>
+                            </tr>
+                            <tr v-for="r in racuni">
+                                <td>
+                                    {{r.org.ime}}
+                                </td>
+                                <td>
+                                    <template v-if="r.pocetak">
+
+                                        {{r.pocetak.day}}-{{r.pocetak.month}}-{{r.pocetak.year}}
+                                    </template>
+                                </td>
+                                <td>
+                                    <template v-if="r.kraj">
+                                        {{r.kraj.day}}-{{r.kraj.month}}-{{r.kraj.year}}
+                                    </template>
+                                </td>
+                                <td>
+                                    {{r.cena}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <h3>
+                            Cena za određeni period
+                        </h3>
+                        <table>
+                            <tr>
+                                
+                                <th>
+                                    Početni datum
+                                </th>
+                                <th>
+                                    Krajnji datum
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="date" v-model="pocetniDatum">
+
+                                </td>
+                                <td>
+                                    <input type="date" v-model="krajnjiDatum">
+                                </td>
+                                <td>
+                                    <button @click= "pretrazi()" type="button" class="btn btn-success">Pretraži</button>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <table class="table-bordered" v-if="intervalniRacun">
+                            <tr>
+                                <th>
+                                    Ime
+                                </th>
+                                
+                                <th>
+                                    Tip
+                                </th>
+                                <th>
+                                    Cena za period
+                                </th>
+                            </tr>
+                            <tr v-for="racun in intervalniRacun.resursRacuni">
+                                <td>
+                                    {{racun.imeResursa}}
+                                </td>
+                                <td>
+                                    {{racun.tipResursa}}
+                                </td>
+                                <td>
+                                    {{racun.cena}}
+                                </td>
+                            </tr>
+                        </table>
+                        <table v-if="intervalniRacun">
+                            <tr>
+                                <tH>Ukupna cena: </tH>
+                                <td>{{intervalniRacun.ukupnaCena}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <script src="js/jquery.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/Vue.js"></script>
+        <script src="js/vue-router.js"></script>
+        <script src="js/axios.js"></script>
+        <script src="js/toast.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="app/header.js"></script>
+        <script src="app/racuni.js"></script>
+
+    </body>
+</html>

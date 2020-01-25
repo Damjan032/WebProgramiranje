@@ -9,10 +9,20 @@ Vue.component("diskovi",{
     mounted:function () {
         axios.get("/diskovi").then(response=>{
             this.diskovi = response.data;
+        }).catch(error=>{
+            new Toast({
+                message:error.response.data.ErrorMessage,
+                type: 'danger'
+            });
         });
         
         axios.get('/korisnik').then(response => {
             this.tipKorisnika = response.data.uloga;
+        }).catch(error=>{
+            new Toast({
+                message:error.response.data.ErrorMessage,
+                type: 'danger'
+            });
         });
     },
     methods:{
@@ -25,7 +35,7 @@ Vue.component("diskovi",{
         <div class="page-header">
             <h2>Diskovi</h2>
         </div>
-        <h4 v-if="!diskovi">
+        <h4 v-if="diskovi.length==0">
             Trenutno nema diskova za prikaz
         </h4>
         <table v-else class="table">

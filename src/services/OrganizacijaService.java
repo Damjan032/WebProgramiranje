@@ -114,7 +114,7 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     private String mapToOrganizacijaDTOString(Organizacija organizacija) {
-        List<KorisnikNalog> korisnici = new ArrayList<>();
+        List<Korisnik> korisnici = new ArrayList<>();
         List<ResursDTO> resursiDTO = new ArrayList<>();
         KorisnikDAO korisnikDAO = new KorisnikDAO();
 
@@ -133,11 +133,11 @@ public class OrganizacijaService implements Service<String, String> {
             organizacija.getKorisnici().forEach(korisnikId -> {
                 KorisnikNalog k = null;
                 try {
-                    k = korisnikDAO.fetchByEmail(korisnikId);
+                    k = korisnikDAO.fetchById(korisnikId);
                 }catch (NotFoundException nfe) {
                     nfe.printStackTrace();
                 }
-                korisnici.add(k);
+                korisnici.add(k.getKorisnik());
 
             });
         }
@@ -174,7 +174,10 @@ public class OrganizacijaService implements Service<String, String> {
         switch (resurs.getTip()) {
             case DISK:
                 Disk disk = diskDAO.fetchById(resurs.getId());
-                VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(disk.getVm());
+                VirtuelnaMasina vm = null;
+                if(disk.getVm()!=null) {
+                    vm = virtuelnaMasinaDAO.fetchById(disk.getVm());
+                }
                 return new DiskDTO.Builder().withId(disk.getId()).withIme(disk.getIme()).withKapacitet(disk.getKapacitet())
                         .withTip(disk.getTipDiska()).withTipResursa(resurs.getTip()).withVm(vm).build();
           case VM:

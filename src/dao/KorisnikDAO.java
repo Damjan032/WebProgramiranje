@@ -80,7 +80,7 @@ public class KorisnikDAO extends Initializer{
     public KorisnikNalog update(KorisnikNalog noviKorisnikNalog) throws IOException {
         Korisnik korisnik = noviKorisnikNalog.getKorisnik();
         List<KorisnikNalog> korisnici = fetchAll();
-        KorisnikNalog korisnikNalog = korisnici.stream().filter(kn-> kn.getKorisnik().getId().equals(korisnik.getId())).findFirst().orElseThrow(NotFoundException::new);
+        KorisnikNalog korisnikNalog = korisnici.stream().filter(kn-> kn.getKorisnik().getEmail().equals(korisnik.getEmail())).findFirst().orElseThrow(NotFoundException::new);
         if(korisnikNalog != null){
             Korisnik k = korisnikNalog.getKorisnik();
             if(checkStringAttribute(korisnik.getIme())){

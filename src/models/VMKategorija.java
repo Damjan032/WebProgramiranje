@@ -5,10 +5,10 @@ public class VMKategorija
     private String id;
     private String ime;
     private int brJezgra;
-    private double RAM; //gb
+    private int RAM; //gb
     private int brGPU;
 
-    public VMKategorija(String id, String ime, int brJezgra, double ram, int brGPU) {
+    public VMKategorija(String id, String ime, int brJezgra, int ram, int brGPU) {
         this.id = id;
         this.ime = ime;
         this.brJezgra = brJezgra;
@@ -24,11 +24,11 @@ public class VMKategorija
         this.brGPU = brGPU;
     }
 
-    public double getRAM() {
+    public int getRAM() {
         return RAM;
     }
 
-    public void setRAM(double RAM) {
+    public void setRAM(int RAM) {
         this.RAM = RAM;
     }
 

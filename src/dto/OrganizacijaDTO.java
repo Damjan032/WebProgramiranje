@@ -10,7 +10,7 @@ public class OrganizacijaDTO {
     private String ime;
     private String opis;
     private String imgPath;
-    private List<KorisnikNalog> korisnici;
+    private List<Korisnik> korisnici;
     private List<ResursDTO> resursi;
 
 
@@ -19,7 +19,7 @@ public class OrganizacijaDTO {
         private String ime;
         private String opis;
         private String imgPath;
-        private List<KorisnikNalog> korisnici;
+        private List<Korisnik> korisnici;
         private List<ResursDTO> resursi;
 
         public  Builder() {
@@ -44,7 +44,7 @@ public class OrganizacijaDTO {
             return this;
         }
 
-        public Builder withKorisnici(List<KorisnikNalog> korisnici) {
+        public Builder withKorisnici(List<Korisnik> korisnici) {
             this.korisnici = korisnici;
             return this;
         }

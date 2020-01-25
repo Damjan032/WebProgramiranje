@@ -37,6 +37,8 @@ new Vue({
     },
     methods:{
         izmeniProfil:function () {
+
+            checkFormParams();
             if(this.sifra1&&!this.sifra2){
                 new Toast({
                     message:"Niste ponovili šifru",

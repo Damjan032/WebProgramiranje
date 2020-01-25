@@ -20,7 +20,7 @@
             <h2>Organizacije</h2>
         </div>
         <p>
-        <h3 v-if="korisnici">
+        <h3 v-if="korisnici.length==0">
             Trenutno nema korisnika u datoj organizaciji
         </h3>
         <table v-else class="table">
@@ -48,6 +48,9 @@
                 </td>
                 <td text-align="center">
                     <p>{{k.email}}</p>
+                </td>
+                <td text-align="center">
+                    <p>{{k.uloga}}</p>
                 </td>
             </tr>
         </table>
