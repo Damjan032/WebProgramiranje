@@ -51,7 +51,7 @@ Vue.component("dodaj-disk",{
             promise.then(response=>{
                     
                     if (response.status) {
-                        window.location.replace("/diskovi.html");
+                        this.$router.push("/");
                     }else{
                         new Toast({
                             message:response.statusText,

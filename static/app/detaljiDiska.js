@@ -30,7 +30,7 @@ Vue.component("detalji-diska", {
             promise.then(response=>{
                     
                     if (response.status == 200) {
-                        window.location.replace("/diskovi.html");
+                        this.$router.push("/");
                     }else{
                         new Toast({
                             message:response.statusText,
@@ -51,7 +51,7 @@ Vue.component("detalji-diska", {
             promise.then(response=>{
                     
                     if (response.status == 200) {
-                        window.location.replace("/diskovi.html");
+                        this.$router.push("/");
                     }else{
                         new Toast({
                             message:response.statusText,

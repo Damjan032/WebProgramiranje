@@ -2,10 +2,7 @@
 let orgIzmena = new Vue({
     el:"#organizacije",
     data: {
-        organizacija : "",
-         oIme : "",
-         oOpis : "",
-         slika : ""
+        
     },
     mounted () {
         let uri = window.location.search.substring(1);
