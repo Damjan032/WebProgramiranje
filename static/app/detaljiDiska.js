@@ -85,7 +85,7 @@ Vue.component("detalji-diska", {
         this.vm = this.$route.params.disk.vm;
         let vm = this.vm;
         if(vm){
-            if(vm.aktivnosti){
+            if(vm.aktivnosti.length>0){
                 if(vm.aktivnosti[vm.aktivnosti.length-1].zavrsetak==null){
                     this.vmActiv = true;
                 }
@@ -100,8 +100,16 @@ Vue.component("detalji-diska", {
     },
     template: ` 
 <div class="container">
-
-    <h1>Disk: {{$route.params.disk.ime}}</h1>
+    <div class="row">
+        <div class="page-header col-8">
+            <h1>Disk: {{$route.params.disk.ime}}</h1>
+        </div>
+        <div>
+            <router-link to="/">
+                <button type="button" class="btn btn-primary">Nazad</button>
+            </router-link>
+        </div>
+    </div>
     <table class="table">                
         <tr>
             <td>

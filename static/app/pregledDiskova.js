@@ -30,10 +30,9 @@ Vue.component("diskovi",{
     },
     template:`
 <div>
-    <div class="jumbotron"><h1>Pregled diskova</h1></div>      
     <div class="container">
         <div class="page-header">
-            <h2>Diskovi</h2>
+            <h2>Pregled diskova</h2>
         </div>
         <h4 v-if="diskovi.length==0">
             Trenutno nema diskova za prikaz
@@ -69,11 +68,11 @@ Vue.component("diskovi",{
             </tr>
             <tr>
                 <td>
-                    <a v-if = "tipKorisnika!='KORISNIK'" href="dodajDisk.html">
+                    <router-link v-if = "tipKorisnika!='KORISNIK'" to="/dodajDisk">
                         <button type="button" class="btn btn-success">
                             Dodaj disk
                         </button>
-                    </a>
+                    </router-link>
                 </td>
             </tr >
         </table>

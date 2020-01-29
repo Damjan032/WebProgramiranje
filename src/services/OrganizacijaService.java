@@ -134,10 +134,10 @@ public class OrganizacijaService implements Service<String, String> {
                 KorisnikNalog k = null;
                 try {
                     k = korisnikDAO.fetchById(korisnikId);
+                    korisnici.add(k.getKorisnik());
                 }catch (NotFoundException nfe) {
                     nfe.printStackTrace();
                 }
-                korisnici.add(k.getKorisnik());
 
             });
         }

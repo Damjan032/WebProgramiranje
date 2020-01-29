@@ -149,7 +149,12 @@ public class KorisnikService{
     private String mapToKorisnikDTOString(KorisnikNalog kn){
 
         Korisnik k = kn.getKorisnik();
-        Organizacija o = new OrganizacijaDAO().fetchById(k.getOrganizacija());
+        Organizacija o = null;
+        try{
+            o = new OrganizacijaDAO().fetchById(k.getOrganizacija());
+        }catch (NotFoundException e){
+            e.printStackTrace();
+        }
         return g.toJson(new KorisnikDTO.Builder().
                 withId(k.getId()).
                 withIme(k.getIme()).

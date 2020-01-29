@@ -5,11 +5,22 @@ Vue.component("korisnici", {
 				korisnici : null,
 		        korisnikType : null	        		    
 		    }
+	}, 
+	methods : {
+		select:function (korisnik) {
+            this.selektKorisnik = korisnik;
+        }
 	},
+	mounted () {
+        axios.get('/korisnici').then(response => (
+            this.korisnici = response.data));
+        axios.get('/korisnik').then(response => (
+            this.korisnikType = response.data.uloga));
+    },
     template: `
 <div>
     <div class="page-header">
-        <h2>Korisnici</h2>
+        <h2>Pregled korisnika</h2>
     </div>
     <h3 v-if = "korisnici.length == 0">
         Trenutno nema korisnika 
@@ -48,35 +59,19 @@ Vue.component("korisnici", {
             </td>
             <td v-if = "korisnikType=='SUPER_ADMIN'">
                 <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
-                    {{ k.organizacija.ime }} 
+                    <template v-if="k.organizacija!=null">
+                        {{ k.organizacija.ime }} 
+                    </template>    
+                
                 </router-link>
             </td>
         </tr>
     </table>
 
-    <a v-if = "korisnikType=='SUPER_ADMIN'||korisnikType=='ADMIN'" href="dodajKorisnika.html">
+    <router-link v-if = "korisnikType=='SUPER_ADMIN'||korisnikType=='ADMIN'" to="/dodajKorisnika">
         <button type="button" class="btn btn-success">Dodaj korisnika</button>
-    </a>
+    </router-link>
 </div>	  
 `
-	, 
-	methods : {
-		select:function (korisnik) {
-            this.selektKorisnik = korisnik;
-            // bus.$emit('selektovani-korisnik', korisnik);
-            // setTimeout(function(){            
-                // window.location = "#/detaljiKorisnika";
-                // },
-                // 1000
-            // )
-            // console.log("Selektovan je korisnik: "+korisnik);
-            // this.selektovaniKorisnik = korisnik;
-        }
-	},
-	mounted () {
-        axios.get('/korisnici').then(response => (
-            this.korisnici = response.data));
-        axios.get('/korisnik').then(response => (
-            this.korisnikType = response.data.uloga));
-    },
+	
 });

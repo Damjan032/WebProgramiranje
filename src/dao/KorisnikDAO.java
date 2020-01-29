@@ -111,9 +111,13 @@ public class KorisnikDAO extends Initializer{
 
     public List<KorisnikNalog> delete(String id) throws IOException {
         OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
-        Organizacija o = organizacijaDAO.fetchById(fetchById(id).getKorisnik().getOrganizacija());
-        o.setKorisnici(o.getKorisnici().stream().filter(kid->!kid.equals(id)).collect(Collectors.toList()));
-        organizacijaDAO.update(o, o.getId());
+        try {
+            Organizacija o = organizacijaDAO.fetchById(fetchById(id).getKorisnik().getOrganizacija());
+            o.setKorisnici(o.getKorisnici().stream().filter(kid -> !kid.equals(id)).collect(Collectors.toList()));
+            organizacijaDAO.update(o, o.getId());
+        }catch (NotFoundException e){
+            e.printStackTrace();
+        }
         List<KorisnikNalog> korisnici = fetchAll().stream()
                 .filter((element) -> !element.getKorisnik().getId().equals(id))
                 .collect(Collectors.toList());

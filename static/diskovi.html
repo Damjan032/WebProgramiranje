@@ -13,7 +13,10 @@
         <div id="diskapp">
             <site-header>
             </site-header>
-            <router-view :selektovani-disk="selDisk"></router-view>
+            <div class="jumbotron"><h1>Diskovi</h1></div>  
+            <div class="container">
+                <router-view :selektovani-disk="selDisk"></router-view>
+            </div>    
         </div>
         
         
@@ -29,6 +32,7 @@
 
         <script src="app/detaljiDiska.js"></script>
         <script src="app/pregledDiskova.js"></script>
+        <script src="app/dodajDisk.js"></script>
         <script src="app/diskovi.js"></script>
 
     </body>
