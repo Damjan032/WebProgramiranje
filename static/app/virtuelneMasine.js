@@ -1,15 +1,18 @@
 Vue.use(VueRouter);
-const vm = { template: '<vm></vm>' }
+const virtuelneMasine = { template: '<virtuelne-masine></virtuelne-masine>' }
 const detaljiVM = { template: '<detalji-vm></detalji-vm>' }
 const dodajVM = { template: '<dodaj-vm></dodaj-vm>' }
-
+const virtuelneMasineAktinvosti  = { template: '<vm-aktivnosti></vm-aktivnosti>' }
 const router = new VueRouter({
     routes: [
         { path: '/',
-            component: vm
+            component: virtuelneMasine
         },
         { path: '/dodajVM',
             component: dodajVM
+        },
+        { path: '/aktinvosti/:id',
+            component: virtuelneMasineAktinvosti
         },
         { path: '/detaljiVM/:disk/:tipKorisnika',
             name:"detaljiVM",
@@ -21,11 +24,12 @@ const router = new VueRouter({
 
 let vmapp = new Vue({
     router,
-    el:"#vmapp",
-    data:{
-        selVM:null
+    el:"#vmApp",
+    data: {
+        selVM:null,
     },
-
+    mounted() {
+    },
     methods:{
 
     }

@@ -1,4 +1,4 @@
-Vue.component("vm",{
+Vue.component("virtuelne-masine",{
     data:function () {
         return{
             virtuelneMasine : null,
@@ -49,7 +49,7 @@ Vue.component("vm",{
 
             pregledAktivnosti:function(id){
 
-                 window.location.href="/virtuelneMasineAktinvosti.html?id="+id;
+                 this.$router.push("/aktinvosti/"+id);
             },
             activnost(vm){
              let promise = axios.put("/virtuelneMasine/activnost/"+vm.id,{});
@@ -111,8 +111,7 @@ Vue.component("vm",{
             }
     },
     template:`
-<div class="jumbotron"><h1>Pregled virtuelnih mašina</h1></div>
-    <div class="container">
+<div class="container">
         <div class="page-header">
             <h2>Virtuelne masine</h2>
         </div>
@@ -233,18 +232,6 @@ Vue.component("vm",{
             </tr>
         </table>
     </div>
-
-
-</div>
-
-<div id="main">
-    <br>
-    <div id="slider"></div>
-    <br>
-</div>
-<div id="footer">
-<!-- <p id="sliderValsliderVal" v-model="vrednostSlidera">EVE MEEEEE</p> -->
-</div>
     `
 
 
