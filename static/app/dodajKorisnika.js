@@ -96,6 +96,7 @@ Vue.component("dodaj-korisnika", {
                         <p  class="alert alert-danger d-none">
                             Ovo polje je obavezno!
                         </p>
+                       
                     </td>
                 </tr>
                 <tr>
@@ -116,12 +117,15 @@ Vue.component("dodaj-korisnika", {
                         Email
                     </td>
                     <td>
-                        <input class="required" type="text" v-model="email"/>
+                        <input class="required email"  type="text" v-model="email"/>
                     </td>
         
                     <td>
                         <p  class="alert alert-danger d-none">
                             Ovo polje je obavezno!
+                        </p>
+                        <p  class="alert email-message alert-danger d-none">
+                            Email nije odgovarajućeg formata ime@domen.org
                         </p>
                     </td>
                 </tr>

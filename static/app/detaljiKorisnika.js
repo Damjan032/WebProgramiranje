@@ -129,11 +129,12 @@ Vue.component("detalji-korisnika", {
                     <option value="admin">Admin</option>
                     <option value="korisnik">Korisnik</option>
                 </select> 
-                <td >
-                    <p  class="alert alert-danger d-none">
-                        Ovo polje je obavezno!
-                    </p>
-                </td>
+            </td>
+            <td >
+                <p  class="alert alert-danger d-none">
+                    Ovo polje je obavezno!
+                </p>
+            
             </td>                           
         </tr>
         <tr>
@@ -153,6 +154,11 @@ Vue.component("detalji-korisnika", {
                     {{$route.params.korisnik.organizacija.ime}}
                 </template>
             </td>
+            <td >
+                <p  class="alert alert-danger d-none">
+                    Ovo polje je obavezno!
+                </p>
+            </td> 
         </tr>
         <tr>
             <td>
