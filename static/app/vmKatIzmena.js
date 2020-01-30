@@ -49,35 +49,7 @@ let vmKatAdd = new Vue({
             return flag;
         },
 
-        izmenaKat:function(){
-            if(!this.checkParams()){
-                return;
-            }
-            console.log(this.ime);
-            console.log(this.brJezgara);
-            console.log(this.gpuJezgara);
-            if(this.gpuJezgara==""){
-                this.gpuJezgara=0;
-            }
-            console.log(this.gpuJezgara);
-            let promise = axios.put("/vmKategorije/"+this.kategorija.id,{
-                ime: this.ime,
-                brJezgra: this.brJezgara,
-                RAM: this.ram,
-                brGPU: this.gpuJezgara,
-              }
-            )
-            promise.then(response=>{
-                window.location.href="/vmKatPregled.html";
-
-            }).catch(error=>{
-                let msg = error.response.data.ErrorMessage;
-                new Toast({
-                    message:msg,
-                    type: 'danger'
-                });
-            });
-        }
+        
 
     }
 });

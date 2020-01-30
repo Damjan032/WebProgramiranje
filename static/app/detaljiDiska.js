@@ -129,7 +129,7 @@ Vue.component("detalji-diska", {
                 Kapacitet
             </td>
             <td colspan="2">
-                <input  class="required" type="number" v-model = "kapacitet">
+                <input  class="required" type="number" min="1" v-model = "kapacitet">
             </td>
             <td >
                 <p  class="alert alert-danger d-none">

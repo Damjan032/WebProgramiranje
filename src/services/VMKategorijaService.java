@@ -92,5 +92,6 @@ public class VMKategorijaService implements Service<String, String> {
             throw new BadRequestException("Kategorija VM ne sme biti obrisana jer postoje VM te kategorije");
         }
         vmKategorijaDAO.delete(id);
+
     }
 }

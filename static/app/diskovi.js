@@ -21,12 +21,5 @@ const router = new VueRouter({
 
 let diskapp = new Vue({
     router,
-    el:"#diskapp",
-    data:{
-        selDisk:null
-    },
-    
-    methods:{
-
-    }
+    el:"#diskapp"
 });

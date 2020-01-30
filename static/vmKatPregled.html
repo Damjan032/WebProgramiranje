@@ -16,61 +16,7 @@
 
     <div class="jumbotron"><h1>Pregled kategorija</h1></div>
     <div class="container">
-        <div class="page-header">
-            <h2>Kategorije virtuelnih masina</h2>
-        </div>
-        <p>
-        <table class="table">
-            <tr>
-                <th>
-                    Logo
-                </th>
-                <th>
-                    Broj jezgara
-                </th>
-                <th>
-                    RAM (u GB)
-                </th>
-                <th>
-                    Broj GPU jezgara
-                </th>
-                <th>
-                    Izmena
-                </th>
-                <th>
-                    Brisanje
-                </th>
-            </tr>
-
-            <tr v-for = "kat in kategorije" >
-                <td text-align="center">
-                    <p>{{kat.ime}}</p>
-                </td>
-                <td text-align="center">
-                    {{kat.brJezgra}}
-                </td>
-                <td text-align="center">
-                    {{kat.RAM}}
-                </td>
-                <td text-align="center">
-                    {{kat.brGPU}}
-                </td>
-                <td>
-                    <button type="button" class="btn btn-secondary" @click= "izmeni(kat.id)">Izmeni</button>
-                </td>
-                <td>
-                    <button @click= "obrisi(kat.id)" type="button" class="btn btn-secondary">Obriši</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a v-if = "korisnikType=='SUPER_ADMIN'" href="vmKatAdd.html">
-                        <button type="button" class="btn btn-success">Dodaj kategoriju virtuelne mašine</button>
-                    </a>
-                </td>
-            </tr>
-        </table>
-        </p>
+        
     </div>
 
 </div>

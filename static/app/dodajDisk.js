@@ -119,7 +119,7 @@ Vue.component("dodaj-disk",{
                     Kapacitet
                 </td>
                 <td>
-                    <input class="required" type="number" v-model="kapacitet"/>
+                    <input class="required" type="number" min="1" v-model="kapacitet"/>
                 </td>
                 <td >
                     <p  class="alert alert-danger d-none">
