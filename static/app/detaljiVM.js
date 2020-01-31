@@ -6,6 +6,7 @@ Vue.component("detalji-vm", {
             vmKategorije : "",
             ime : "",
             kategorija : "",
+            vmKategorija:"",
             virtuelnaMasina: "",
             tipKorisnika:null,
             aktivnosti:null
@@ -40,7 +41,7 @@ Vue.component("detalji-vm", {
             axios.get('/virtuelneMasine/'+this.id).then(response => {
                 this.virtuelnaMasina = response.data;
                 this.ime = response.data.ime;
-                this.kategorija = response.data.kategorija;
+                this.vmKategorija = response.data.kategorija;
                 this.aktivnosti = response.data.aktivnosti;
             }).catch(error=> {
                 let msg = error.response.data.ErrorMessage;
@@ -142,26 +143,57 @@ Vue.component("detalji-vm", {
                 </router-link>
             </div>
         </div>
-        Ime virtuelne masine: <input  type="text" v-model="ime" v-bind:placeholder="virtuelnaMasina.ime"/>
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        Kategorija:
-        <select v-model="kategorija" >
-            <option v-for = "kat in vmKategorije" v-bind:value="kat.ime">{{kat.ime}}</option>
-        </select>
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        Aktivnost:
-        <label class="switch">
-            <!-- <input type="checkbox" v-model="module.checked" v-bind:id="module.id"> !-->
-            <input type="checkbox" v-bind:checked="virtuelnaMasina.isActiv" v-on:click="activnost()">
-            <span class="slider round"></span>
-        </label>
-        <br><br>
+        <table class="table">
+            <tr>
+                <td>
+                    Ime virtuelne masine:
+                </td>
+                <td>
+                    <input class="required" type="text" v-model="ime" v-bind:placeholder="virtuelnaMasina.ime"/>
+                </td>
+                <td>
+                    <p  class="alert alert-danger d-none">
+                        Ovo polje je obavezno!
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Kategorija:
+                </td>
+                <td>
+                    {{vmKategorija.ime}}
+                </td>
+                
+            </tr>
+            <tr>
+                <td>
+                    Nova kategorija:
+                </td>
+                <td>
+                    <select class="required" v-model="kategorija" :value="kategorija.ime">
+                        <option :selected="kat==kategorija" v-for = "kat in vmKategorije" v-bind:value="kat.ime">{{kat.ime}}</option>
+                    </select>
+                </td>
+                <td>
+                    <p  class="alert alert-danger d-none">
+                        Ovo polje je obavezno!
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Aktivnost:
+                </td>
+                <td>
+                    <label class="switch">
+                        <!-- <input type="checkbox" v-model="module.checked" v-bind:id="module.id"> !-->
+                        <input type="checkbox" v-bind:checked="virtuelnaMasina.isActiv" v-on:click="activnost()">
+                        <span class="slider round"></span>
+                    </label>
+                </td>
+            </tr>
+        </table>
         <button v-if="tipKorisnika!='KORISNIK'" class="btn btn-success"  @click = "izmeni()">Izmeni vm</button>
         <button v-if="tipKorisnika!='KORISNIK'" class="btn btn-danger"  @click = "obrisi()">Obriši vm</button>
 

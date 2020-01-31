@@ -22,7 +22,7 @@ let loginapp = new Vue({
             promise.then(response=>{
                    
                     if (response.data.status) {
-                        window.location.replace("/virtuelnaMasinaPregled.html");
+                        window.location.replace("/virtuelneMasine.html");
                     }else{
                         new Toast({
                             message:response.data.poruka,

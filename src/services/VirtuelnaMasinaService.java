@@ -180,8 +180,11 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         {
             checkVMAccessPrivilege(k, id);
         }
-        if(!virtuelnaMasinaDAO.fetchById(id).getDiskovi().isEmpty()){
-            throw new BadRequestException("Izabrana virtuelna masina ne moze da se obrise, poseduje diskove.");
+        VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(id);
+        if (vm.getDiskovi()!=null) {
+            if (!virtuelnaMasinaDAO.fetchById(id).getDiskovi().isEmpty()) {
+                throw new BadRequestException("Izabrana virtuelna masina ne moze da se obrise, poseduje diskove.");
+            }
         }
         virtuelnaMasinaDAO.delete(id);
     }

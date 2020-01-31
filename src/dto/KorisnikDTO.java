@@ -70,6 +70,7 @@ public class KorisnikDTO {
             korisnikDTO.email = this.email;
             korisnikDTO.aktivnosti = this.aktivnosti;
             korisnikDTO.organizacija = this.organizacija;
+            korisnikDTO.uloga = this.uloga;
             return korisnikDTO;
         }
     }

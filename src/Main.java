@@ -53,7 +53,7 @@ public class Main {
                     res.redirect("/login.html");
                     return null;
                 }
-                res.redirect("/virtuelnaMasinaPregled.html");
+                res.redirect("/virtuelneMasine.html");
                 return null;
             });
 

@@ -2,6 +2,7 @@ package exceptions;
 
 import static spark.Spark.exception;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class ExceptionsHandler {
@@ -28,7 +29,7 @@ public class ExceptionsHandler {
         exception(InternalServerErrorException.class, (e, req, res) -> {
             res.status(500);
             res.type("application/json");
-            res.body("{ \"ErrorMessage\" : \"" + e.getMessage() + "\"}");
+            res.body("{ \"ErrorMessage\" : \"" + Arrays.toString(e.getStackTrace()) + "\"}");
         });
     }
 }

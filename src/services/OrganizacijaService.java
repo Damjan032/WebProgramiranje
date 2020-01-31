@@ -135,7 +135,10 @@ public class OrganizacijaService implements Service<String, String> {
 
         if (resursiId != null) {
             organizacija.getResursi().forEach(resurs -> {
-                resursiDTO.add(mapToResursDTO(resurs));
+                var res = mapToResursDTO(resurs);
+                if (res!=null) {
+                    resursiDTO.add(res);
+                }
             });
         }
         return
@@ -164,7 +167,7 @@ public class OrganizacijaService implements Service<String, String> {
     private ResursDTO mapToResursDTO(Resurs resurs) {
         switch (resurs.getTip()) {
             case DISK:
-                Disk disk = null;
+                Disk disk;
                 try {
                     disk = diskDAO.fetchById(resurs.getId());
                 }catch (NotFoundException nfe){
@@ -191,9 +194,11 @@ public class OrganizacijaService implements Service<String, String> {
                   return null;
               }
               List<Disk> diskovi = new ArrayList<>();
-              virtuelnaMasina.getDiskovi().forEach(diskId ->{
-                  diskovi.add(diskDAO.fetchById(diskId));
-              });
+              if (virtuelnaMasina.getDiskovi()!=null) {
+                  virtuelnaMasina.getDiskovi().forEach(diskId -> {
+                      diskovi.add(diskDAO.fetchById(diskId));
+                  });
+              }
               VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
               return new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(), vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()), diskovi, virtuelnaMasina.getAktivnosti(), o);
             default:

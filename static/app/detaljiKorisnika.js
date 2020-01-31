@@ -5,6 +5,7 @@ Vue.component("detalji-korisnika", {
             id:null,
             ime: null,
             prezime: null,
+            staraUloga:null,
             uloga: null,
             email:null,
             organizacija:null
@@ -73,7 +74,7 @@ Vue.component("detalji-korisnika", {
         this.id =  this.$route.params.korisnik.id;
         this.ime =  this.$route.params.korisnik.ime;
         this.prezime =  this.$route.params.korisnik.prezime;
-        this.uloga = this.$route.params.korisnik.uloga;
+        this.staraUloga = this.$route.params.korisnik.uloga;
         this.email = this.$route.params.korisnik.email;
         this.organizacija = this.$route.params.korisnik.organizacija.ime;
         // let email = this.selektovaniKorisnik.email;
@@ -125,6 +126,14 @@ Vue.component("detalji-korisnika", {
                 Uloga 
             </td>
             <td>
+                {{staraUloga}}
+            </td>                          
+        </tr>
+        <tr>
+            <td>
+                Nova uloga 
+            </td>
+            <td>
                 <select class="required" name="org" v-model="uloga">
                     <option value="admin">Admin</option>
                     <option value="korisnik">Korisnik</option>
@@ -155,18 +164,14 @@ Vue.component("detalji-korisnika", {
                 </template>
             </td>
             <td >
-                <p  class="alert alert-danger d-none">
+                <p  class="alert alert-dangers d-none">
                     Ovo polje je obavezno!
                 </p>
             </td> 
         </tr>
-        <tr>
-            <td>
-                <button v-on:click = "izmeniKorisnika()" type="button" class="btn btn-success">Izmeni korisnika</button>
-                <button v-on:click = "obrisiKorisnika()" type="button" class="btn btn-danger">Obriši korisnika</button>
-            </td>
-        </tr>
     </table>    
+    <button v-on:click = "izmeniKorisnika()" type="button" class="btn btn-success">Izmeni korisnika</button>
+    <button v-on:click = "obrisiKorisnika()" type="button" class="btn btn-danger">Obriši korisnika</button>
 </div>		  
 `
 });

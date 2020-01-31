@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class VirtuelnaMasina extends Resurs {
@@ -23,6 +24,9 @@ public class VirtuelnaMasina extends Resurs {
     }
 
     public List<String> getDiskovi() {
+        if (diskovi==null){
+            diskovi=new ArrayList<>();
+        }
         return diskovi;
     }
 
