@@ -34,7 +34,7 @@ public class OrganizacijaService implements Service<String, String> {
     @Override
     public List<String> fetchAll(Request req) throws FileNotFoundException {
         Korisnik k = req.session().attribute("korisnik");
-        if (k==null||k.getUloga()!= Uloga.SUPER_ADMIN){
+        if (k==null||k.getUloga()== Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
         return organizacijaDAO.fetchAll().stream().map(this::mapToOrganizacijaDTOString).collect(Collectors.toList());
@@ -120,15 +120,6 @@ public class OrganizacijaService implements Service<String, String> {
 
         List<String> korisniciId = organizacija.getKorisnici();
         List<Resurs> resursiId = organizacija.getResursi();
-        var resursi = new ArrayList<Resurs>();
-        resursiId.forEach(resurs->{
-            String id = resurs.getId();
-            if(resurs.getTip()==TipResursa.DISK){
-                resursi.add(diskDAO.fetchById(id));
-            }else{
-                resursi.add(virtuelnaMasinaDAO.fetchById(id));
-            }
-        });
         if (korisniciId != null) {
             organizacija.getKorisnici().forEach(korisnikId -> {
                 KorisnikNalog k = null;
@@ -173,7 +164,12 @@ public class OrganizacijaService implements Service<String, String> {
     private ResursDTO mapToResursDTO(Resurs resurs) {
         switch (resurs.getTip()) {
             case DISK:
-                Disk disk = diskDAO.fetchById(resurs.getId());
+                Disk disk = null;
+                try {
+                    disk = diskDAO.fetchById(resurs.getId());
+                }catch (NotFoundException nfe){
+                    return null;
+                }
                 VirtuelnaMasina vm = null;
                 if(disk.getVm()!=null) {
                     vm = virtuelnaMasinaDAO.fetchById(disk.getVm());
@@ -182,13 +178,24 @@ public class OrganizacijaService implements Service<String, String> {
                         .withTip(disk.getTipDiska()).withTipResursa(resurs.getTip()).withVm(vm).build();
           case VM:
                //public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi, List<Aktivnost> aktivnosti)
-              VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(resurs.getId());
+              VirtuelnaMasina virtuelnaMasina;
+              try {
+                  virtuelnaMasina = virtuelnaMasinaDAO.fetchById(resurs.getId());
+              }catch (NotFoundException nfe){
+                  return null;
+              }
+              Organizacija o;
+              try {
+                    o = organizacijaDAO.fetchById(virtuelnaMasina.getOrganizacija());
+              }catch (NotFoundException nfe){
+                  return null;
+              }
               List<Disk> diskovi = new ArrayList<>();
               virtuelnaMasina.getDiskovi().forEach(diskId ->{
                   diskovi.add(diskDAO.fetchById(diskId));
               });
               VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
-              return new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(), vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()), diskovi, virtuelnaMasina.getAktivnosti());
+              return new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(), vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()), diskovi, virtuelnaMasina.getAktivnosti(), o);
             default:
                 return null;
         }

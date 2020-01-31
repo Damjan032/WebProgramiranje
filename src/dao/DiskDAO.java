@@ -17,10 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import models.Disk;
-import models.Korisnik;
-import models.KorisnikNalog;
-import models.VirtuelnaMasina;
+
+import models.*;
+import models.enums.TipResursa;
 import models.enums.Uloga;
 
 public class DiskDAO extends Initializer {
@@ -28,6 +27,7 @@ public class DiskDAO extends Initializer {
     private Gson g = new Gson();
     private static String FILE_PATH = "./data/disk.json";
     private VirtuelnaMasinaDAO virtuelnaMasinaDAO= new VirtuelnaMasinaDAO();
+    private OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
 
 
     public List<Disk> fetchAll() {
@@ -44,12 +44,24 @@ public class DiskDAO extends Initializer {
     }
 
     public Disk create(Disk disk) throws IOException {
+        try {
+            fetchByName(disk.getIme());
+            throw new BadRequestException("Disk sa tim imenom vec postoji!");
+        }catch (NotFoundException ignored){
+        }
         disk.setId(UUID.randomUUID().toString());
         if (disk.getVm()!=null) {
             VirtuelnaMasinaDAO vmDAO = new VirtuelnaMasinaDAO();
             VirtuelnaMasina vm = vmDAO.fetchById(disk.getVm());
             vm.getDiskovi().add(disk.getId());
             vmDAO.update(vm, vm.getId());
+        }
+        try {
+            Organizacija o = organizacijaDAO.fetchById(disk.getOrganizacija());
+            o.getResursi().add(new Resurs(disk.getId(), TipResursa.DISK));
+            organizacijaDAO.update(o, o.getId());
+        }catch (Exception e){
+            e.printStackTrace();
         }
         List<Disk> list = fetchAll();
         list.add(disk);
@@ -92,6 +104,13 @@ public class DiskDAO extends Initializer {
             VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(d.getVm());
             vm.getDiskovi().remove(id);
             virtuelnaMasinaDAO.update(vm, vm.getId());
+        }
+        try {
+            Organizacija o = organizacijaDAO.fetchById(d.getOrganizacija());
+            o.setResursi(o.getResursi().stream().filter(resurs->resurs.getTip()== TipResursa.DISK&&resurs.getId().equals(id)).collect(Collectors.toList()));
+            organizacijaDAO.update(o, o.getId());
+        }catch (Exception e){
+            e.printStackTrace();
         }
         upisListeUFile(
             fetchAll().stream()

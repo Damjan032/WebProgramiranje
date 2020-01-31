@@ -53,19 +53,6 @@ public class VMKategorijaDAO extends Initializer{
                         oldVMkat.setBrGPU(vmKategorija.getBrGPU());
                         oldVMkat.setBrJezgra(vmKategorija.getBrJezgra());
                         oldVMkat.setRAM(vmKategorija.getRAM());
-                        VirtuelnaMasinaDAO vmDAO = new VirtuelnaMasinaDAO();
-                        var vmasine = vmDAO.fetchAll();
-                        vmasine.forEach(vmasina->{
-                            vmasina.setGPUCORES(vmKategorija.getBrGPU());
-                            vmasina.setCORES(vmKategorija.getBrJezgra());
-                            vmasina.setRAM(vmKategorija.getRAM());
-                            try {
-                                vmDAO.update(vmasina, vmasina.getId());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-
                     }
                 });
 

@@ -66,16 +66,12 @@ Vue.component("diskovi",{
                     </router-link>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <router-link v-if = "tipKorisnika!='KORISNIK'" to="/dodajDisk">
-                        <button type="button" class="btn btn-success">
-                            Dodaj disk
-                        </button>
-                    </router-link>
-                </td>
-            </tr >
         </table>
+        <router-link v-if = "tipKorisnika!='KORISNIK'" to="/dodajDisk">
+            <button type="button" class="btn btn-success">
+                Dodaj disk
+            </button>
+        </router-link>
     </div>
 </div>
     `

@@ -50,6 +50,11 @@ public class RacunDAO extends Initializer {
                     racun.setOrg(mesecniRacun.getOrg());
                 }
             }
+            try {
+                upisListeUFile(racuni);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return racun;
         }
         throw new NotFoundException();

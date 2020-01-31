@@ -1,5 +1,6 @@
 package dto;
 
+import models.Organizacija;
 import models.enums.TipResursa;
 
 public class ResursDTO {
@@ -8,7 +9,7 @@ public class ResursDTO {
     protected String ime;
 
     protected TipResursa tipResursa;
-
+    protected Organizacija organizacija;
     public ResursDTO(String id, String ime) {
         this.id = id;
         this.ime = ime;
@@ -18,6 +19,22 @@ public class ResursDTO {
         this.id = id;
         this.ime = ime;
         this.tipResursa = tipResursa;
+    }
+
+    public TipResursa getTipResursa() {
+        return tipResursa;
+    }
+
+    public void setTipResursa(TipResursa tipResursa) {
+        this.tipResursa = tipResursa;
+    }
+
+    public Organizacija getOrganizacija() {
+        return organizacija;
+    }
+
+    public void setOrganizacija(Organizacija organizacija) {
+        this.organizacija = organizacija;
     }
 
     public String getIme() {

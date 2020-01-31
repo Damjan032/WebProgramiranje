@@ -5,15 +5,24 @@ Vue.component("virtuelne-masine",{
            kategorijeBrJezgara : [],
            kategorijeRAM : [],
            kategorijeGPU : [],
-           korisnikType : null,
+           tipKorisnika : null,
            naziv : ""
         }
     },
+    
     mounted:function () {
        this.init();
     },
     methods:{
          init:function(){
+                axios.get('/korisnik').then(response => {
+                    this.tipKorisnika = response.data.uloga;
+                }).catch(error=>{
+                    new Toast({
+                        message:error.response.data.ErrorMessage,
+                        type: 'danger'
+                    });
+                });
                 axios.get('/virtuelneMasine').then(response => {
                     this.virtuelneMasine=response.data;
                     this.kategorijeBrJezgara = [];
@@ -29,18 +38,59 @@ Vue.component("virtuelne-masine",{
                     this.kategorijeRAM = [...new Set(this.kategorijeRAM)];
                     let minRam =  Math.min.apply(Math,this.kategorijeRAM);
                     let maxRam =  Math.max.apply(Math,this.kategorijeRAM);
+                    
+
+                    //RAM
+                    $( "#sliderRam" ).slider({
+                        range: true,
+                        min:minRam,
+                        max: maxRam,            
+                    });
+                    $( "#sliderRam" ).on( "slidechange", function( event, ui ) {
+                        var values = $( "#sliderRam" ).slider( "option", "values" );
+            
+                        $("#ramOd").text(values[0]);
+                        $("#ramDo").text(values[1]);
+                    } );
+                    
                     $( "#sliderRam" ).slider( "option", "max", maxRam);
                     $( "#sliderRam" ).slider( "option", "min", minRam);
                     $( "#sliderRam" ).slider( "option", "values",[minRam, maxRam ] );
 
+
+                    //JEZGRA
                     let minJezgra =  Math.min.apply(Math,this.kategorijeBrJezgara);
                     let maxJezgra =  Math.max.apply(Math,this.kategorijeBrJezgara);
+                    $( "#sliderJezgra" ).slider({
+                        range: true,
+                        min:minJezgra,
+                        max: maxJezgra
+                    });
+                    $( "#sliderJezgra" ).on( "slidechange", function( event, ui ) {
+                        var values2= $( "#sliderJezgra" ).slider( "option", "values" );
+                        $("#jezgraOd").text(values2[0]);
+                        $("#jezgraDo").text(values2[1]);
+                    } );
                     $( "#sliderJezgra" ).slider( "option", "max", maxJezgra);
                     $( "#sliderJezgra" ).slider( "option", "min", minJezgra);
                     $( "#sliderJezgra" ).slider( "option", "values",[minJezgra, maxJezgra] );
 
+
+                    //GPU
                     let minGPU =  Math.min.apply(Math,this.kategorijeGPU);
                     let maxGPU =  Math.max.apply(Math,this.kategorijeGPU);
+                    
+                    $( "#sliderGpu" ).slider({
+                        range: true,
+                        min:minGPU,
+                        max: maxGPU
+                    });
+                    $( "#sliderGpu" ).on( "slidechange", function( event, ui ) {
+                        var values3= $( "#sliderGpu" ).slider( "option", "values" );
+                        $("#gpuOd").text(values3[0]);
+                        $("#gpuDo").text(values3[1]);
+                    } );
+                    
                     $( "#sliderGpu" ).slider( "option", "max", maxGPU);
                     $( "#sliderGpu" ).slider( "option", "min", minGPU);
                     $( "#sliderGpu" ).slider( "option", "values",[minGPU, maxGPU] );
@@ -112,8 +162,9 @@ Vue.component("virtuelne-masine",{
     },
     template:`
 <div class="container">
+
         <div class="page-header">
-            <h2>Virtuelne masine</h2>
+            <h2>Pregled virtuelnih mašina</h2>
         </div>
         <p>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filtriraj" aria-expanded="false" aria-controls="multiCollapseExample2">Filtriraj</button>
@@ -177,62 +228,50 @@ Vue.component("virtuelne-masine",{
                     Naziv
                 </th>
                 <th>
-                    Kategorija
+                    Broj jezgara
                 </th>
                 <th>
-                    Pregled diskova
+                    RAM
                 </th>
                 <th>
-                    Pregled aktivnosti
+                    GPU jezgra
                 </th>
                 <th>
-                    Izmena
-                </th>
-                <th>
-                    Brisanje
-                </th>
-                <th>
-                    Ukljucen
+                    Organizacija
                 </th>
             </tr>
 
             <tr v-for = "vm in virtuelneMasine" >
                 <td text-align="center">
-                    <p>{{vm.ime}}</p>
+                    <router-link class = "block-link" :to="{name:'detaljiVM', params:{vm:vm.id, tipKorisnika:tipKorisnika}}">
+                        <p>{{vm.ime}}</p>
+                    </router-link>
                 </td>
                 <td text-align="center">
-                    {{vm.kategorija.ime}}
+                    <router-link class = "block-link" :to="{name:'detaljiVM', params:{vm:vm.id, tipKorisnika:tipKorisnika}}">
+                        {{vm.kategorija.brJezgra}}
+                    </router-link>
                 </td>
-                <td>
-                    <button type="button" @click= "pregledDiskova(vm.id)" class="btn btn-secondary">Pregled diskova</button>
+                <td text-align="center">
+                    <router-link class = "block-link" :to="{name:'detaljiVM', params:{vm:vm.id, tipKorisnika:tipKorisnika}}">
+                        {{vm.kategorija.RAM}}
+                    </router-link>
                 </td>
-                 <td>
-                    <button type="button" @click= "pregledAktivnosti(vm.id)" class="btn btn-secondary">Pregled aktivnosti</button>
+                <td text-align="center">
+                    <router-link class = "block-link" :to="{name:'detaljiVM', params:{vm:vm.id, tipKorisnika:tipKorisnika}}">
+                        {{vm.kategorija.brGPU}}
+                    </router-link>
                 </td>
-                <td>
-                    <button type="button" class="btn btn-secondary" @click= "izmeni(vm.id)">Izmeni</button>
-                </td>
-                <td>
-                    <button @click= "obrisi(vm.id)" type="button" class="btn btn-secondary">Obriši</button>
-                </td>
-                <td>
-                    <label class="switch">
-                        <!-- <input type="checkbox" v-model="module.checked" v-bind:id="module.id"> !-->
-                        <input type="checkbox" v-bind:checked="vm.isActiv" v-on:click="activnost(vm)">
-                        <span class="slider round"></span>
-                    </label>
+                <td text-align="center">
+                    <router-link class = "block-link" :to="{name:'detaljiVM', params:{vm:vm.id, tipKorisnika:tipKorisnika}}">
+                        <p>{{vm.organizacija.ime}}</p>
+                    </router-link>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <a v-if = "korisnikType!='KORISNIK'" href="virtuelnaMasinaAdd.html">
-                        <button type="button" class="btn btn-success">Dodaj virtuelnu mašinu</button>
-                    </a>
-                </td>
-            </tr>
+            <router-link v-if = "tipKorisnika!='KORISNIK'" to="/dodajVM">
+                <button type="button" class="btn btn-success">Dodaj virtuelnu mašinu</button>
+            </router-link>
         </table>
     </div>
     `
-
-
 });

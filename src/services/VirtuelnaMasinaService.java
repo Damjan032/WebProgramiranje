@@ -12,7 +12,6 @@ import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
 import javaxt.utils.Array;
 
-import komunikacija.VMTrans;
 import models.*;
 import models.enums.TipResursa;
 import models.enums.Uloga;
@@ -42,6 +41,9 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     @Override
     public List<String> fetchAll(Request req) throws FileNotFoundException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
         var vm = virtuelnaMasinaDAO.fetchAll();
         if (u == Uloga.SUPER_ADMIN){
@@ -73,10 +75,15 @@ public class VirtuelnaMasinaService implements Service<String, String> {
 
             });
         }
+        Organizacija o = null;
+        try{
+            o = organizacijaDAO.fetchById(virtuelnaMasina.getOrganizacija());
+        }catch (NotFoundException ignored){
+        }
         VirtuelnaMasinaDTO virtuelnaMasinaDTO = new VirtuelnaMasinaDTO(virtuelnaMasina.getId(), virtuelnaMasina.getIme(),
                 vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija()),
                 diskovi,
-                virtuelnaMasina.getAktivnosti()==null? aktivnosti : virtuelnaMasina.getAktivnosti());
+                virtuelnaMasina.getAktivnosti()==null? aktivnosti : virtuelnaMasina.getAktivnosti(), o);
         virtuelnaMasinaDTO.setIsActiv();
         return g.toJson(virtuelnaMasinaDTO);
     }
@@ -116,8 +123,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             throw new UnauthorizedException();
         }
         Uloga u = k.getUloga();
-        VMTrans vmTrans = g.fromJson(req.body(),VMTrans.class);
-        VirtuelnaMasina virtuelnaMasina = vmTrans.getVirtuelnaMasina();
+        VirtuelnaMasina virtuelnaMasina = g.fromJson(req.body(),VirtuelnaMasina.class);
         if (virtuelnaMasina.getIme()==null||virtuelnaMasina.getKategorija()==null){
             throw new BadRequestException("Niste uneli sve podatke!");
         }
@@ -134,21 +140,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         }
         VMKategorija vmKategorija = vmKategorijaDAO.fetchByIme(virtuelnaMasina.getKategorija()).get();
         virtuelnaMasina.setKategorija(vmKategorija.getId());
-        virtuelnaMasina.setRAM(vmKategorija.getRAM());
-        virtuelnaMasina.setCORES(vmKategorija.getBrJezgra());
-        virtuelnaMasina.setGPUCORES(vmKategorija.getBrGPU());
-        if (virtuelnaMasinaDAO.fetchByIme(virtuelnaMasina.getIme()).isPresent() ) {
-            throw new BadRequestException("Kategorija VM sa imenom: " + virtuelnaMasina.getIme() +" posotji");
-        }
         virtuelnaMasina = virtuelnaMasinaDAO.create(virtuelnaMasina);
-
-        try {
-            Organizacija o = organizacijaDAO.fetchById(vmTrans.getOrg());
-            o.getResursi().add(new Resurs(virtuelnaMasina.getId(), TipResursa.VM));
-            organizacijaDAO.update(o, o.getId());
-        }catch (NotFoundException nfe) {
-            nfe.printStackTrace();
-        }
         return g.toJson(virtuelnaMasina);
     }
 
@@ -172,9 +164,6 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             throw new BadRequestException("Izaberi kategoriju");
         }
         virtuelnaMasina.setKategorija(vmKategorijaDAO.fetchByIme(virtuelnaMasina.getKategorija()).get().getId());
-        if (virtuelnaMasinaDAO.fetchByIme(virtuelnaMasina.getIme()).isPresent() && !virtuelnaMasinaDAO.fetchById(id).getIme().equalsIgnoreCase(ime)) {
-            throw new BadRequestException("Kategorija VM sa imenom: " + virtuelnaMasina.getIme() +" posotji");
-        }
         return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
     }
 
@@ -232,20 +221,17 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     }
 
 
-    public String deleteAktivnost(String id, String pocetakAktivnosti) throws IOException {
-        VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(id);
-        Aktivnost a = virtuelnaMasina.getAktivnosti().stream().filter(aktivnost -> aktivnost.getPocetak().equalsIgnoreCase(pocetakAktivnosti)).findFirst().orElse(null);
-        System.out.println(pocetakAktivnosti);
-        if(a!=null){
-            virtuelnaMasina.getAktivnosti().remove(a);
-        }
-        return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
+    public String deleteAktivnost(String vmid, String aktid) throws IOException {
+        VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(vmid);
+        virtuelnaMasina.setAktivnosti(virtuelnaMasina.getAktivnosti().stream().filter(aktivnost -> !aktivnost.getId().equalsIgnoreCase(aktid)).collect(Collectors.toList()));
+        return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, vmid));
     }
 
-    public String updateActivnostTime(String body, String id, String pocetakAktivnosti) throws IOException {
-        VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(id);
+    public String updateActivnostTime(String body, String vmid, String id) throws IOException {
+        VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(vmid);
         Aktivnost aktivnostNova = g.fromJson(body.replace('T', ' '), Aktivnost.class); //Ima T ispred vrremena u stringu koji je poslat sa fornta
-        Aktivnost a = virtuelnaMasina.getAktivnosti().stream().filter(aktivnost -> aktivnost.getPocetak().equalsIgnoreCase(pocetakAktivnosti)).findFirst().orElse(null);
+        aktivnostNova.setId(id);
+        Aktivnost a = virtuelnaMasina.getAktivnosti().stream().filter(aktivnost -> aktivnost.getId().equalsIgnoreCase(id)).findFirst().orElseThrow(NotFoundException::new);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         boolean correctPocetak = false;
@@ -271,7 +257,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         }else{
             throw new BadRequestException("Datum zavrsetka mora biti pre datuma pocetka");
         }
-        return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
+        return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, vmid));
     }
 
     public List<String> filtered(Request req) {

@@ -14,7 +14,7 @@ const router = new VueRouter({
         { path: '/aktinvosti/:id',
             component: virtuelneMasineAktinvosti
         },
-        { path: '/detaljiVM/:disk/:tipKorisnika',
+        { path: '/detaljiVM/:vm/:tipKorisnika',
             name:"detaljiVM",
             component: detaljiVM,
             props: true
@@ -26,7 +26,6 @@ let vmapp = new Vue({
     router,
     el:"#vmApp",
     data: {
-        selVM:null,
     },
     mounted() {
     },

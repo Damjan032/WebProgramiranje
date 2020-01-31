@@ -14,7 +14,7 @@ Vue.component("site-header", {
         <div  class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li v-if = "type" class="nav-item">
-                    <a class="nav-link" href="virtuelnaMasinaPregled.html">Virtualne mašine <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="virtuelneMasine.html">Virtualne mašine <span class="sr-only">(current)</span></a>
                 </li>
                 <li v-if = "type == 'SUPER_ADMIN'" class="nav-item">
                     <a class="nav-link" href="vmKat.html">Kategorije v-mašina<span class="sr-only">(current)</span></a>

@@ -2,7 +2,9 @@ package dto;
 
 import models.Aktivnost;
 import models.Disk;
+import models.Organizacija;
 import models.VMKategorija;
+import models.enums.TipResursa;
 
 import java.util.List;
 
@@ -12,8 +14,9 @@ public class VirtuelnaMasinaDTO extends ResursDTO {
     private List<Aktivnost> aktivnosti;
     private boolean isActiv;
 
-    public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi, List<Aktivnost> aktivnosti) {
-        super(id, ime);
+    public VirtuelnaMasinaDTO(String id, String ime, VMKategorija kategorija, List<Disk> diskovi, List<Aktivnost> aktivnosti, Organizacija o) {
+        super(id, ime, TipResursa.VM);
+        setOrganizacija(o);
         this.kategorija = kategorija;
         this.diskovi = diskovi;
         this.aktivnosti = aktivnosti;

@@ -169,8 +169,8 @@ Vue.component("detalji-diska", {
         </tr>
         <tr>
             <td>
-                <button v-on:click = "izmeniDisk()" type="button" class="btn btn-success">Izmeni disk</button>
-                <button v-on:click = "obrisiDisk()" type="button" class="btn btn-danger">Obriši disk</button>
+                <button v-if="tipKorisnika!='KORISNIK'" v-on:click = "izmeniDisk()" type="button" class="btn btn-success">Izmeni disk</button>
+                <button v-if="tipKorisnika=='SUPER_ADMIN'" v-on:click = "obrisiDisk()" type="button" class="btn btn-danger">Obriši disk</button>
             </td>
         </tr>
     </table>    

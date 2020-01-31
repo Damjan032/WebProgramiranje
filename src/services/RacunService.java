@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -41,6 +43,7 @@ public class RacunService {
     private DiskDAO diskDAO = new DiskDAO();
     private Cenovnik cenovnik;
     Gson g = new Gson();
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public RacunService(){
         Thread t = new Thread(this::obracunajRacune);
@@ -72,7 +75,7 @@ public class RacunService {
             System.out.println("[RacuniThread] updating racuni "+LocalDate.now().toString());
             for (Organizacija o: orgDAO.fetchAll()){
                 List<MesecniRacun> racuni = racunDAO.fetchAll().stream().filter(racun->racun.getOrg().equals(o.getId())).collect(Collectors.toList());
-                LocalDate today = LocalDate.now();
+                LocalDateTime today = LocalDateTime.now();
                 if (racuni.isEmpty()){
                     MesecniRacun racun = new MesecniRacun(o.getId(), today,null, 0.0);
                     racunDAO.create(racun);
@@ -81,7 +84,7 @@ public class RacunService {
                     var mesecniRacun = racuni.get(racuni.size() - 1);
                     if (mesecniRacun.getZavrsetak() == null) {
                         if (DAYS.between(mesecniRacun.getPocetak(), today) >= 30) {
-                            LocalDate zavrsetak = mesecniRacun.getPocetak().plusDays(30);
+                            LocalDateTime zavrsetak = mesecniRacun.getPocetak().plusDays(30);
                             IntervalniRacun ir = calculatePriceForOrg(o, mesecniRacun.getPocetak(), zavrsetak);
                             mesecniRacun.setZavrsetak(zavrsetak);
                             mesecniRacun.setCena(ir.getUkupnaCena());
@@ -92,9 +95,9 @@ public class RacunService {
                         }
                         racunDAO.update(mesecniRacun, mesecniRacun.getId());
                     } else {
-                        LocalDate start = mesecniRacun.getZavrsetak();
+                        LocalDateTime start = mesecniRacun.getZavrsetak();
                         while (DAYS.between(start, today) > 30) {
-                            LocalDate zavrsetak = start.plusDays(30);
+                            LocalDateTime zavrsetak = start.plusDays(30);
                             IntervalniRacun ir = calculatePriceForOrg(o, start, zavrsetak);
                             MesecniRacun mesecniRacun1 = new MesecniRacun(o.getId(), start, zavrsetak, ir.getUkupnaCena());
                             racunDAO.create(mesecniRacun1);
@@ -143,8 +146,8 @@ public class RacunService {
         if (k.getUloga()!= Uloga.ADMIN) {
             throw new UnauthorizedException();
         }
-        LocalDate start = LocalDate.parse(pocetak);
-        LocalDate end = LocalDate.parse(kraj);
+        LocalDateTime start = LocalDateTime.from(dateFormatter.parse(pocetak));
+        LocalDateTime end = LocalDateTime.from(dateFormatter.parse(kraj));
         if (end.isBefore(start)){
             throw new BadRequestException("Datum kraja mora biti posle datuma početka.");
         }
@@ -152,7 +155,7 @@ public class RacunService {
         return g.toJson(calculatePriceForOrg(o, start ,end));
     }
 
-    private IntervalniRacun calculatePriceForOrg(Organizacija o, LocalDate start, LocalDate end){
+    private IntervalniRacun calculatePriceForOrg(Organizacija o, LocalDateTime start, LocalDateTime end){
         long days = DAYS.between(start, end);
         var diskovi = diskDAO.fetchAll().stream().filter(disk-> o.getResursi().stream().anyMatch(resurs -> resurs.getTip()== TipResursa.DISK&&resurs.getId().equals(disk.getId()))).collect(Collectors.toList());
         var virtuelnaMasine = virtuelnaMasinaDAO.fetchAll().stream().filter(virtuelnaMasina-> o.getResursi().stream().anyMatch(resurs -> resurs.getTip()== TipResursa.VM&&resurs.getId().equals(virtuelnaMasina.getId()))).collect(Collectors.toList());
@@ -170,16 +173,20 @@ public class RacunService {
             ukupnaCena+=cena;
             resursRacuni.add(new ResursRacun(vm.getIme(), TipResursa.VM, cena));
         }
-        IntervalniRacun ir = new IntervalniRacun(resursRacuni, start, end,ukupnaCena);
-        return ir;
+        return new IntervalniRacun(resursRacuni, start, end,ukupnaCena);
     }
 
 
-    private double calculateVMPrice(VirtuelnaMasina vm, LocalDate start, LocalDate end) {
+    private double calculateVMPrice(VirtuelnaMasina vm, LocalDateTime start, LocalDateTime end) {
+
+
         double cena = 0.0;
+        VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();
+        VMKategorija vmKategorija = vmKategorijaDAO.fetchById(vm.getKategorija());
         for (Aktivnost a:vm.getAktivnosti()){
-            LocalDate startAktivnosti = LocalDate.parse(a.getPocetak());
-            LocalDate krajAktivnosti = LocalDate.parse(a.getZavrsetak());
+//            LocalDate startAktivnosti = LocalDate.parse(a.getPocetak());
+            LocalDateTime startAktivnosti = LocalDateTime.from(dateFormatter.parse(a.getPocetak()));
+            LocalDateTime krajAktivnosti = LocalDateTime.from(dateFormatter.parse(a.getZavrsetak()));
             double hours;
             if (startAktivnosti.isAfter(start)){
                 if (krajAktivnosti.isBefore(end)){
@@ -192,7 +199,10 @@ public class RacunService {
             }else{
                 continue;
             }
-            cena+= (hours)*(cenovnik.getVmCore()*vm.getCORES()+cenovnik.getVmRAM()*vm.getRAM()+cenovnik.getVmCUDA()*vm.getGPUCORES())/30/24;
+            if (hours==0){
+                hours = 1;
+            }
+            cena+= (hours)*(cenovnik.getVmCore()*vmKategorija.getBrJezgra()+cenovnik.getVmRAM()*vmKategorija.getRAM()+cenovnik.getVmCUDA()*vmKategorija.getBrGPU())/30/24;
         }
         return cena;
     }

@@ -3,10 +3,10 @@ package models;
 import models.enums.TipResursa;
 
 public class Resurs {
-    private String id;
-    private String ime;
-    private TipResursa tip;
-
+    protected String id;
+    protected String ime;
+    protected TipResursa tip;
+    protected String organizacija;
 
     public Resurs(String id, String ime) {
         this.id = id;
@@ -40,5 +40,13 @@ public class Resurs {
 
     public void setTip(TipResursa tip) {
         this.tip = tip;
+    }
+
+    public String getOrganizacija() {
+        return organizacija;
+    }
+
+    public void setOrganizacija(String organizacija) {
+        this.organizacija = organizacija;
     }
 }

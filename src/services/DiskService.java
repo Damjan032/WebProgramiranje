@@ -73,24 +73,8 @@ public class DiskService{
         if (disk.getKapacitet()<=0){
             throw new BadRequestException("Kapacitet ne može biti negativan!");
         }
-        try{
-            diskDAO.fetchByName(disk.getIme());
-        } catch (NotFoundException nfe){
-
-            disk = diskDAO.create(disk);
-            try {
-                OrganizacijaDAO odao = new OrganizacijaDAO();
-                Organizacija o = odao.fetchById(diskTrans.getOrg());
-                o.getResursi().add(new Resurs(disk.getId(), TipResursa.DISK));
-                odao.update(o, o.getId());
-            }catch (NotFoundException e){
-                e.printStackTrace();
-            }
-            return g.toJson(disk);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        throw new BadRequestException("Disk sa tim imenom vec postoji!");
+        disk = diskDAO.create(disk);
+        return g.toJson(disk);
     }
 
 
@@ -139,12 +123,20 @@ public class DiskService{
         if (d.getVm()!=null){
             vm = vmDAO.fetchById(d.getVm());
         }
+        Organizacija o = null;
+        try{
+            OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
+            o = organizacijaDAO.fetchById(d.getOrganizacija());
+        }catch (NotFoundException nfe){
+
+        }
         return g.toJson(new DiskDTO.Builder().
                 withId(d.getId()).
                 withIme(d.getIme()).
                 withKapacitet(d.getKapacitet()).
                 withTip(d.getTipDiska()).
                 withVm(vm).
+                withOrg(o).
                 build());
     }
 }

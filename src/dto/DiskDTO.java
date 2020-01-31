@@ -1,5 +1,6 @@
 package dto;
 
+import models.Organizacija;
 import models.VirtuelnaMasina;
 import models.enums.TipDiska;
 import models.enums.TipResursa;
@@ -9,8 +10,9 @@ public class DiskDTO extends ResursDTO {
     private double kapacitet;
     private VirtuelnaMasina vm;
 
-    public DiskDTO(String id, String ime, TipDiska tip, double kapacitet, VirtuelnaMasina vm) {
-        super(id, ime);
+    public DiskDTO(String id, String ime, TipDiska tip, double kapacitet, VirtuelnaMasina vm, Organizacija org) {
+        super(id, ime, TipResursa.DISK);
+        setOrganizacija(org);
         this.tip = tip;
         this.kapacitet = kapacitet;
         this.vm = vm;
@@ -49,6 +51,7 @@ public class DiskDTO extends ResursDTO {
         private TipDiska tip;
         private double kapacitet;
         private VirtuelnaMasina vm;
+        private Organizacija org;
 
         public Builder() {
         }
@@ -77,9 +80,14 @@ public class DiskDTO extends ResursDTO {
             this.vm = vm;
             return this;
         }
+        
+        public Builder withOrg(Organizacija o){
+            this.org = o;
+            return this;
+        }
 
         public DiskDTO build() {
-            DiskDTO diskDTO = new DiskDTO(id, ime, tip, kapacitet, vm);
+            DiskDTO diskDTO = new DiskDTO(id, ime, tip, kapacitet, vm, org);
             diskDTO.tipResursa = this.tipResursa;
             return diskDTO;
         }

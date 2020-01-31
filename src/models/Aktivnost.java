@@ -2,8 +2,10 @@ package models;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class Aktivnost {
+    private String id;
     private String pocetak;
     private String zavrsetak;
     public Aktivnost(String pocetak, String zavrsetak) {
@@ -11,6 +13,7 @@ public class Aktivnost {
         this.zavrsetak = zavrsetak;
     }
     public Aktivnost(LocalDateTime pocetak, LocalDateTime zavrsetak) {
+        this.id = UUID.randomUUID().toString();
         DateTimeFormatter FORMATER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.pocetak = pocetak.format(FORMATER);
         if(zavrsetak!=null)
@@ -39,5 +42,13 @@ public class Aktivnost {
     public void setPocetak(LocalDateTime pocetak) {
         DateTimeFormatter FORMATER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.pocetak = pocetak.format(FORMATER);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
