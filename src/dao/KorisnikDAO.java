@@ -116,7 +116,6 @@ public class KorisnikDAO extends Initializer{
             o.setKorisnici(o.getKorisnici().stream().filter(kid -> !kid.equals(id)).collect(Collectors.toList()));
             organizacijaDAO.update(o, o.getId());
         }catch (NotFoundException e){
-            e.printStackTrace();
         }
         List<KorisnikNalog> korisnici = fetchAll().stream()
                 .filter((element) -> !element.getKorisnik().getId().equals(id))

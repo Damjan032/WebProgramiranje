@@ -35,6 +35,9 @@ public class VirtuelnaMasina extends Resurs {
     }
 
     public List<Aktivnost> getAktivnosti() {
+        if (aktivnosti==null){
+            aktivnosti = new ArrayList<>();
+        }
         return aktivnosti;
     }
 

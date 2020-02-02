@@ -61,7 +61,6 @@ public class DiskDAO extends Initializer {
             o.getResursi().add(new Resurs(disk.getId(), TipResursa.DISK));
             organizacijaDAO.update(o, o.getId());
         }catch (Exception e){
-            e.printStackTrace();
         }
         List<Disk> list = fetchAll();
         list.add(disk);
@@ -110,7 +109,6 @@ public class DiskDAO extends Initializer {
             o.setResursi(o.getResursi().stream().filter(resurs->resurs.getTip()== TipResursa.DISK&&resurs.getId().equals(id)).collect(Collectors.toList()));
             organizacijaDAO.update(o, o.getId());
         }catch (Exception e){
-            e.printStackTrace();
         }
         upisListeUFile(
             fetchAll().stream()

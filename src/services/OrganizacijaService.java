@@ -127,7 +127,6 @@ public class OrganizacijaService implements Service<String, String> {
                     k = korisnikDAO.fetchById(korisnikId);
                     korisnici.add(k.getKorisnik());
                 }catch (NotFoundException nfe) {
-                    nfe.printStackTrace();
                 }
 
             });
@@ -196,7 +195,11 @@ public class OrganizacijaService implements Service<String, String> {
               List<Disk> diskovi = new ArrayList<>();
               if (virtuelnaMasina.getDiskovi()!=null) {
                   virtuelnaMasina.getDiskovi().forEach(diskId -> {
-                      diskovi.add(diskDAO.fetchById(diskId));
+                      try {
+                          diskovi.add(diskDAO.fetchById(diskId));
+                      }catch (NotFoundException ignored){
+
+                      }
                   });
               }
               VMKategorijaDAO vmKategorijaDAO = new VMKategorijaDAO();

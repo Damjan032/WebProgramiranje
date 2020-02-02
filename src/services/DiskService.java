@@ -8,7 +8,6 @@ import dto.DiskDTO;
 import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import exceptions.UnauthorizedException;
-import komunikacija.DiskTrans;
 import models.*;
 import models.enums.TipResursa;
 import models.enums.Uloga;
@@ -35,8 +34,7 @@ public class DiskService{
         if(k.getUloga()== Uloga.SUPER_ADMIN){
             return diskovi.stream().map(this::mapToDiskDTOString).collect(Collectors.toList());
         }
-        var resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi();
-        return diskovi.stream().filter(d->resursiIDs.contains(d.getId())).map(this::mapToDiskDTOString).collect(Collectors.toList());
+        return diskovi.stream().filter(d->d.getOrganizacija().equals(k.getOrganizacija())).map(this::mapToDiskDTOString).collect(Collectors.toList());
     }
 
     public String fetchById(Request req) throws IOException {
@@ -65,8 +63,10 @@ public class DiskService{
             throw new UnauthorizedException();
         }
         String body = req.body();
-        DiskTrans diskTrans = g.fromJson(body, DiskTrans.class);
-        Disk disk = diskTrans.getDisk();
+        Disk disk = g.fromJson(body, Disk.class);
+        if (disk.getOrganizacija()==null){
+            throw new BadRequestException("Niste uneli organizaciju!");
+        }
         if(disk.getIme()==null||disk.getTipDiska()==null) {
             throw new BadRequestException("Nisu uneti svi podaci!");
         }

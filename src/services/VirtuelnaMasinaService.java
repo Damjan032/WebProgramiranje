@@ -71,8 +71,12 @@ public class VirtuelnaMasinaService implements Service<String, String> {
 
         if (diskoviID != null) {
             diskoviID.forEach(diskID -> {
-                diskovi.add(korisnikDAO.fetchById(diskID));
+                try {
 
+                    diskovi.add(korisnikDAO.fetchById(diskID));
+                }catch (NotFoundException ignored){
+
+                }
             });
         }
         Organizacija o = null;
@@ -124,14 +128,17 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         }
         Uloga u = k.getUloga();
         VirtuelnaMasina virtuelnaMasina = g.fromJson(req.body(),VirtuelnaMasina.class);
-        if (virtuelnaMasina.getIme()==null||virtuelnaMasina.getKategorija()==null){
-            throw new BadRequestException("Niste uneli sve podatke!");
-        }
         if (u==Uloga.KORISNIK){
             throw new UnauthorizedException();
         }else if(u==Uloga.ADMIN)
         {
             checkVMAccessPrivilege(k, virtuelnaMasina.getId());
+        }
+        if (virtuelnaMasina.getOrganizacija()==null){
+            throw new BadRequestException("Niste uneli organizaciju");
+        }
+        if (virtuelnaMasina.getIme()==null||virtuelnaMasina.getKategorija()==null){
+            throw new BadRequestException("Niste uneli sve podatke!");
         }
         virtuelnaMasina.setDiskovi(new ArrayList<>());
         virtuelnaMasina.setAktivnosti(new ArrayList<>());

@@ -38,14 +38,11 @@ Vue.component("dodaj-disk",{
                 return;
             }
             let promise = axios.post("/diskovi",{
-                disk:{
-                    ime: this.ime,
-                    tipDiska: this.tip,
-                    kapacitet: this.kapacitet,
-                    vm:this.vm
-                },
-                org:this.org
-
+                ime: this.ime,
+                tipDiska: this.tip,
+                kapacitet: this.kapacitet,
+                vm:this.vm,
+                organizacija:this.org
               }
             )
             promise.then(response=>{

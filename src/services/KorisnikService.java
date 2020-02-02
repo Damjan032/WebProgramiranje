@@ -157,7 +157,6 @@ public class KorisnikService{
         try{
             o = new OrganizacijaDAO().fetchById(k.getOrganizacija());
         }catch (NotFoundException e){
-            e.printStackTrace();
         }
         return g.toJson(new KorisnikDTO.Builder().
                 withId(k.getId()).

@@ -68,8 +68,7 @@ public class OrganizacijaDAO extends Initializer{
         o.getKorisnici().forEach(k->{
             try {
                 korisnikDAO.delete(k);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
         });
         upisListeUFile(

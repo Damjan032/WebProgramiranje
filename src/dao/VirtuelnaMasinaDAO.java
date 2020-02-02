@@ -51,7 +51,6 @@ public class VirtuelnaMasinaDAO extends Initializer{
             o.getResursi().add(new Resurs(virtuelnaMasina.getId(), TipResursa.VM));
             organizacijaDAO.update(o, o.getId());
         }catch (NotFoundException nfe) {
-            nfe.printStackTrace();
         }
         list.add(virtuelnaMasina);
         upisListeUFile(list);
