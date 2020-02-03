@@ -58,7 +58,7 @@ public class VirtuelnaMasinaDAO extends Initializer{
     }
 
     public VirtuelnaMasina update(VirtuelnaMasina virtuelnaMasina, String id) throws IOException {
-        var vm = fetchByIme(virtuelnaMasina.getIme());
+    	Optional<VirtuelnaMasina> vm = fetchByIme(virtuelnaMasina.getIme());
         if (vm.isPresent() && !vm.get().getId().equals(id)){
             throw new BadRequestException("VM sa imenom: " + virtuelnaMasina.getIme() +" ne postoji");
         }

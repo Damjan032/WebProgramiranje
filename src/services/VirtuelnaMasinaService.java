@@ -45,12 +45,12 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             throw new UnauthorizedException();
         }
         Uloga u = k.getUloga();
-        var vm = virtuelnaMasinaDAO.fetchAll();
+        List<VirtuelnaMasina> vm = virtuelnaMasinaDAO.fetchAll();
         if (u == Uloga.SUPER_ADMIN){
             return vm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
         }
         OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
-        var o = organizacijaDAO.
+        Optional<Organizacija> o = organizacijaDAO.
                 fetchAll().
                 stream().
                 filter(org->

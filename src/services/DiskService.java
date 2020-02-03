@@ -30,7 +30,7 @@ public class DiskService{
         if (k==null){
             throw new UnauthorizedException();
         }
-        var diskovi = diskDAO.fetchAll();
+        List<Disk> diskovi = diskDAO.fetchAll();
         if(k.getUloga()== Uloga.SUPER_ADMIN){
             return diskovi.stream().map(this::mapToDiskDTOString).collect(Collectors.toList());
         }
@@ -47,7 +47,7 @@ public class DiskService{
         if(k.getUloga()==Uloga.SUPER_ADMIN){
             return g.toJson(mapToDiskDTOString(d));
         }
-        var resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi();
+        List<Resurs> resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi();
         if (!resursiIDs.contains(d.getId())){
             throw new UnauthorizedException();
         }
@@ -106,7 +106,7 @@ public class DiskService{
         if (k.getUloga() == Uloga.SUPER_ADMIN) {
             return g.toJson(diskDAO.update(noviDisk, noviDisk.getId()));
         }
-        var resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi().stream().map(res->res.getId()).collect(Collectors.toList());
+        List<String> resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi().stream().map(res->res.getId()).collect(Collectors.toList());
         if (!resursiIDs.contains(noviDisk.getId())) {
             throw new UnauthorizedException();
         }

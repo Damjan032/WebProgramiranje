@@ -34,7 +34,7 @@ public class KorisnikService{
         if(korisnik.getUloga() == Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
-        var korisnici = korisnikDAO.fetchAll().stream().filter(k->k.getKorisnik().getUloga()!=Uloga.SUPER_ADMIN).collect(Collectors.toList());
+        List<KorisnikNalog> korisnici = korisnikDAO.fetchAll().stream().filter(k->k.getKorisnik().getUloga()!=Uloga.SUPER_ADMIN).collect(Collectors.toList());
         if(korisnik.getUloga() == Uloga.ADMIN){
             korisnici = korisnici.stream().filter(korisnikNalog -> korisnikNalog.getKorisnik().getOrganizacija().equals(korisnik.getOrganizacija())).collect(Collectors.toList());
         }

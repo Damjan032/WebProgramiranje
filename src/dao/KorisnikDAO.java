@@ -27,7 +27,7 @@ public class KorisnikDAO extends Initializer{
 
     @Override
     Object generateData() {
-        var list = new ArrayList<KorisnikNalog>();
+        List<KorisnikNalog> list = new ArrayList<KorisnikNalog>();
         list.add(new KorisnikNalog(new Korisnik("superadmin",Uloga.SUPER_ADMIN),"superadmin".hashCode()));
         try {
             upisListeUFile(list);

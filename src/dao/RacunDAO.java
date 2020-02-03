@@ -21,7 +21,7 @@ public class RacunDAO extends Initializer {
     private Gson g = new Gson();
 
     public List<MesecniRacun> create(MesecniRacun mesecniRacun){
-            var racuni = fetchAll();
+            List<MesecniRacun> racuni = fetchAll();
             mesecniRacun.setId(UUID.randomUUID().toString());
             racuni.add(mesecniRacun);
         try {
@@ -33,7 +33,7 @@ public class RacunDAO extends Initializer {
     }
 
     public MesecniRacun update(MesecniRacun mesecniRacun, String id){
-        var racuni = fetchAll();
+        List<MesecniRacun> racuni = fetchAll();
         for (MesecniRacun racun :
                 racuni) {
             if (racun.getId().equals(id)) {

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -145,7 +146,7 @@ public class OrganizacijaService implements Service<String, String> {
 
         if (resursiId != null) {
             organizacija.getResursi().forEach(resurs -> {
-                var res = mapToResursDTO(resurs);
+                ResursDTO res = mapToResursDTO(resurs);
                 if (res!=null) {
                     resursiDTO.add(res);
                 }
@@ -168,7 +169,9 @@ public class OrganizacijaService implements Service<String, String> {
         }
         String path = "data/img/" + ime.toLowerCase().trim();
 
-        BufferedImage img = ImageIO.read(new ByteArrayInputStream(file.readAllBytes()));
+        byte[] bytes = new byte[file.available()];
+        file.read(bytes);
+        BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
         File outputfile = new File(path);
         ImageIO.write(img, type, outputfile);
         return path;

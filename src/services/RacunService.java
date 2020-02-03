@@ -81,7 +81,7 @@ public class RacunService {
                     racunDAO.create(racun);
                 }else {
                     racuni = racuni.stream().sorted(Comparator.comparing(MesecniRacun::getPocetak)).collect(Collectors.toList());
-                    var mesecniRacun = racuni.get(racuni.size() - 1);
+                    MesecniRacun mesecniRacun = racuni.get(racuni.size() - 1);
                     if (mesecniRacun.getZavrsetak() == null) {
                         if (DAYS.between(mesecniRacun.getPocetak(), today) >= 30) {
                             LocalDateTime zavrsetak = mesecniRacun.getPocetak().plusDays(30);
@@ -124,7 +124,7 @@ public class RacunService {
             throw  new UnauthorizedException();
         }
         Organizacija o = orgDAO.fetchById(k.getOrganizacija());
-        var racuni = racunDAO.fetchAll();
+        List<MesecniRacun> racuni = racunDAO.fetchAll();
         return racuni.stream().filter(racun->racun.getOrg().equals(o.getId())).map(this::mapToRacunDTOString).collect(Collectors.toList());
     }
 
@@ -149,7 +149,7 @@ public class RacunService {
         LocalDateTime start = LocalDateTime.from(dateFormatter.parse(pocetak));
         LocalDateTime end = LocalDateTime.from(dateFormatter.parse(kraj));
         if (end.isBefore(start)){
-            throw new BadRequestException("Datum kraja mora biti posle datuma početka.");
+            throw new BadRequestException("Datum kraja mora biti posle datuma poÄ�etka.");
         }
         Organizacija o = orgDAO.fetchById(k.getOrganizacija());
         return g.toJson(calculatePriceForOrg(o, start ,end));
@@ -157,8 +157,8 @@ public class RacunService {
 
     private IntervalniRacun calculatePriceForOrg(Organizacija o, LocalDateTime start, LocalDateTime end){
         long days = DAYS.between(start, end);
-        var diskovi = diskDAO.fetchAll().stream().filter(disk-> o.getResursi().stream().anyMatch(resurs -> resurs.getTip()== TipResursa.DISK&&resurs.getId().equals(disk.getId()))).collect(Collectors.toList());
-        var virtuelnaMasine = virtuelnaMasinaDAO.fetchAll().stream().filter(virtuelnaMasina-> o.getResursi().stream().anyMatch(resurs -> resurs.getTip()== TipResursa.VM&&resurs.getId().equals(virtuelnaMasina.getId()))).collect(Collectors.toList());
+        List<Disk> diskovi = diskDAO.fetchAll().stream().filter(disk-> o.getResursi().stream().anyMatch(resurs -> resurs.getTip()== TipResursa.DISK&&resurs.getId().equals(disk.getId()))).collect(Collectors.toList());
+        List<VirtuelnaMasina> virtuelnaMasine = virtuelnaMasinaDAO.fetchAll().stream().filter(virtuelnaMasina-> o.getResursi().stream().anyMatch(resurs -> resurs.getTip()== TipResursa.VM&&resurs.getId().equals(virtuelnaMasina.getId()))).collect(Collectors.toList());
         List<ResursRacun> resursRacuni = new ArrayList<>();
         double ukupnaCena = 0.0;
         for (Disk disk:

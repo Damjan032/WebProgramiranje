@@ -33,7 +33,7 @@ public class VMKategorijaService implements Service<String, String> {
         if (u == Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
-        var vm = vmKategorijaDAO.fetchAll();
+        List<VMKategorija> vm = vmKategorijaDAO.fetchAll();
 
         return vm.stream().map(vmKategorija -> g.toJson(vmKategorija, VMKategorija.class)).collect(Collectors.toList());
     }
@@ -58,7 +58,7 @@ public class VMKategorijaService implements Service<String, String> {
             throw new UnauthorizedException();
         }
         Uloga u = k.getUloga();
-        var vm = vmKategorijaDAO.fetchAll();
+        List<VMKategorija> vm = vmKategorijaDAO.fetchAll();
         if (u != Uloga.SUPER_ADMIN){
             throw new UnauthorizedException();
         }
