@@ -186,6 +186,9 @@ public class RacunService {
         for (Aktivnost a:vm.getAktivnosti()){
 //            LocalDate startAktivnosti = LocalDate.parse(a.getPocetak());
             LocalDateTime startAktivnosti = LocalDateTime.from(dateFormatter.parse(a.getPocetak()));
+            if(a.getZavrsetak()==null) {
+            	continue;
+            }
             LocalDateTime krajAktivnosti = LocalDateTime.from(dateFormatter.parse(a.getZavrsetak()));
             double hours;
             if (startAktivnosti.isAfter(start)){

@@ -23,10 +23,6 @@ Vue.component("dodaj-vm",{
         .then(res=>{
             if(res.data){            
                 this.tipKorisnika = res.data.uloga;
-                if(this.tipKorisnika=="ADMIN"){
-                    this.org = res.data.organizacija;
-                    $("#orginput").prop("readonly", true);
-                }else{
                     axios.get('/organizacije').then(response => {
                         this.organizacije = response.data;
                     }).catch(error=>{
@@ -35,7 +31,6 @@ Vue.component("dodaj-vm",{
                             type: 'danger'
                         });
                     });
-                }
             }
         })
         .catch(error=>{

@@ -62,6 +62,9 @@ public class OrganizacijaDAO extends Initializer{
                         if (organizacija.getResursi()!=null){
                             oldOrg.setResursi(organizacija.getResursi());
                         }
+                        if (organizacija.getKorisnici()!=null){
+                            oldOrg.setKorisnici(organizacija.getKorisnici());
+                        }
                     }
                 });
 

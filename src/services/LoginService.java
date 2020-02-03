@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dao.KorisnikDAO;
+import exceptions.NotFoundException;
 import komunikacija.LoginPoruka;
 import komunikacija.Poruka;
 import models.Korisnik;
@@ -51,10 +52,12 @@ public class LoginService {
     }
 
     private LoginPoruka login(String kime, String sifra) throws IOException {
-        KorisnikNalog kn = korisnikDAO.fetchByEmail(kime);
-        if (kn==null){
+    	KorisnikNalog  kn;
+    	try {
+        kn = korisnikDAO.fetchByEmail(kime);
+    	}catch(NotFoundException nfe) {
             return new LoginPoruka("Ne postoji korisnik sa unetom email adresom!", false);
-        }
+    	}
         if(logovaniKorisnici.contains(kime)){
             return new LoginPoruka("Već ste prijavljeni!", false);
         }

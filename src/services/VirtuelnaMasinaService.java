@@ -54,13 +54,13 @@ public class VirtuelnaMasinaService implements Service<String, String> {
                 fetchAll().
                 stream().
                 filter(org->
-                        org.getKorisnici().contains(k.getId())
+                        org.getId().equals(k.getOrganizacija())
                 ).findFirst();
         if (o.isPresent()){
             vm = vm.stream().filter(vms->vms.getOrganizacija().equals(o.get().getId())).collect(Collectors.toList());
             return vm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
         }
-        throw new NotFoundException();
+        return null;
     }
 
     private String mapToVirtuelnaMasinaDTOString(VirtuelnaMasina virtuelnaMasina) {
@@ -114,10 +114,14 @@ public class VirtuelnaMasinaService implements Service<String, String> {
                 filter(org->
                         org.getKorisnici().contains(k.getId())
                 ).findFirst().get();
+        try {
         VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(id);
         if (!o.getId().equals(vm.getOrganizacija())){
             throw new UnauthorizedException();
         }
+        }catch(NotFoundException nfe) {
+        }
+        
     }
 
     public boolean fetchByKatgegorijaId(String kategoriajId) throws IOException {
