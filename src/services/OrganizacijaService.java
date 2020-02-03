@@ -34,15 +34,26 @@ public class OrganizacijaService implements Service<String, String> {
     @Override
     public List<String> fetchAll(Request req) throws FileNotFoundException {
         Korisnik k = req.session().attribute("korisnik");
-        if (k==null||k.getUloga()== Uloga.KORISNIK){
+        if (k==null){
             throw new UnauthorizedException();
+        }
+        if (k.getUloga()!=Uloga.SUPER_ADMIN){
+            return organizacijaDAO.fetchAll().stream().filter(org->org.getKorisnici().contains(k.getId())).map(this::mapToOrganizacijaDTOString).collect(Collectors.toList());
         }
         return organizacijaDAO.fetchAll().stream().map(this::mapToOrganizacijaDTOString).collect(Collectors.toList());
     }
 
     @Override
     public String fetchById(Request req, String id) throws FileNotFoundException {
-
+        Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
+        if (k.getUloga()!=Uloga.SUPER_ADMIN){
+            if (!k.getOrganizacija().equals(id)){
+                throw new UnauthorizedException();
+            }
+        }
         return mapToOrganizacijaDTOString(organizacijaDAO.fetchById(id));
     }
 

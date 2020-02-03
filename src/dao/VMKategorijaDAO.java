@@ -49,10 +49,18 @@ public class VMKategorijaDAO extends Initializer{
         vmKategorije.forEach(
                 oldVMkat -> {
                     if (oldVMkat.getId().equals(id)) {
-                        oldVMkat.setIme(vmKategorija.getIme());
-                        oldVMkat.setBrGPU(vmKategorija.getBrGPU());
-                        oldVMkat.setBrJezgra(vmKategorija.getBrJezgra());
-                        oldVMkat.setRAM(vmKategorija.getRAM());
+                        if (KorisnikDAO.checkStringAttribute(vmKategorija.getIme())) {
+                            oldVMkat.setIme(vmKategorija.getIme());
+                        }
+                        if (vmKategorija.getBrGPU()>0) {
+                            oldVMkat.setBrGPU(vmKategorija.getBrGPU());
+                        }
+                        if (vmKategorija.getBrJezgra()>0) {
+                            oldVMkat.setBrJezgra(vmKategorija.getBrJezgra());
+                        }
+                        if (vmKategorija.getRAM()>0) {
+                            oldVMkat.setRAM(vmKategorija.getRAM());
+                        }
                     }
                 });
 

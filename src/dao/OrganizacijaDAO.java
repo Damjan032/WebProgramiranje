@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import models.Disk;
+import models.Korisnik;
 import models.KorisnikNalog;
 import models.Organizacija;
 
@@ -49,11 +50,18 @@ public class OrganizacijaDAO extends Initializer{
         organizacije.forEach(
                 oldOrg -> {
                     if (oldOrg.getId().equals(id)) {
-                        oldOrg.setIme(organizacija.getIme());
-                        oldOrg.setImgPath(organizacija.getImgPath());
-                        oldOrg.setKorisnici(organizacija.getKorisnici());
-                        oldOrg.setOpis(organizacija.getOpis());
-                        oldOrg.setResursi(organizacija.getResursi());
+                        if (KorisnikDAO.checkStringAttribute(organizacija.getIme())) {
+                            oldOrg.setIme(organizacija.getIme());
+                        }
+                        if (KorisnikDAO.checkStringAttribute(organizacija.getImgPath())) {
+                            oldOrg.setImgPath(organizacija.getImgPath());
+                        }
+                        if (KorisnikDAO.checkStringAttribute(organizacija.getOpis())) {
+                            oldOrg.setOpis(organizacija.getOpis());
+                        }
+                        if (organizacija.getResursi()!=null){
+                            oldOrg.setResursi(organizacija.getResursi());
+                        }
                     }
                 });
 

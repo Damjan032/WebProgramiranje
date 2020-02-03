@@ -67,6 +67,9 @@ public class DiskService{
         if (disk.getOrganizacija()==null){
             throw new BadRequestException("Niste uneli organizaciju!");
         }
+        if (!disk.getOrganizacija().equals(k.getOrganizacija())){
+            throw new BadRequestException("Ne mozete dodati disk drugoj organizaciji!");
+        }
         if(disk.getIme()==null||disk.getTipDiska()==null) {
             throw new BadRequestException("Nisu uneti svi podaci!");
         }
@@ -88,24 +91,45 @@ public class DiskService{
             throw new UnauthorizedException();
         }
         String body = req.body();
-        DiskDTO d = g.fromJson(body, DiskDTO.class);
-        Disk noviDisk = mapDiskDTOToDisk(d);
-        if (k.getUloga() == Uloga.SUPER_ADMIN) {
-            return g.toJson(diskDAO.update(noviDisk, d.getId()));
+        Disk noviDisk = g.fromJson(body, Disk.class);
+        if (noviDisk.getId()==null){
+            throw new BadRequestException("Novi disk nema id starog pa se ne zna koji disk se menja!");
         }
-        var resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi();
+        try {
+            Disk stari = diskDAO.fetchById(noviDisk.getId());
+            if (!stari.getOrganizacija().equals(k.getOrganizacija())) {
+                throw new BadRequestException("Ne mozete da menjate disk druge organizacije!");
+            }
+        }catch (NotFoundException nfe){
+            throw new BadRequestException("Disk kojeg zelite da menjate ne postoji!");
+        }
+        if (k.getUloga() == Uloga.SUPER_ADMIN) {
+            return g.toJson(diskDAO.update(noviDisk, noviDisk.getId()));
+        }
+        var resursiIDs = new OrganizacijaDAO().fetchById(k.getOrganizacija()).getResursi().stream().map(res->res.getId()).collect(Collectors.toList());
         if (!resursiIDs.contains(noviDisk.getId())) {
             throw new UnauthorizedException();
         }
-        return g.toJson(diskDAO.update(noviDisk, d.getId()));
+        return g.toJson(diskDAO.update(noviDisk, noviDisk.getId()));
     }
 
     public List<String> delete(Request req) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         String id = req.params("id");
 
         if (k.getUloga() != Uloga.SUPER_ADMIN) {
             throw new UnauthorizedException();
+        }
+        try{
+            Disk disk = diskDAO.fetchById(id);
+            if (!k.getOrganizacija().equals(disk.getOrganizacija())){
+                throw new BadRequestException("Ne mozete da brisete disk druge organizacije!");
+            }
+        }catch (NotFoundException nfe){
+            throw new BadRequestException("Ne postoji disk sa tim id-jem");
         }
         diskDAO.delete(id);
         return diskDAO.fetchAll().stream().map(this::mapToDiskDTOString).collect(Collectors.toList());

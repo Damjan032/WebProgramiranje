@@ -81,7 +81,7 @@ public class DiskDAO extends Initializer {
                     if(KorisnikDAO.checkStringAttribute(disk.getIme())) {
                         oldDisk.setIme(disk.getIme());
                     }
-                    if (disk.getKapacitet()!=0) {
+                    if (disk.getKapacitet()>0) {
                         oldDisk.setKapacitet(disk.getKapacitet());
                     }
                     if (disk.getTipDiska()!=null) {
@@ -90,6 +90,7 @@ public class DiskDAO extends Initializer {
                     if (disk.getVm()!=null) {
                         oldDisk.setVm(disk.getVm());
                     }
+
                 }
             });
 

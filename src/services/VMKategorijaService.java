@@ -26,11 +26,14 @@ public class VMKategorijaService implements Service<String, String> {
     @Override
     public List<String> fetchAll(Request req) throws FileNotFoundException {
         Korisnik k = req.session().attribute("korisnik");
-        Uloga u = k.getUloga();
-        var vm = vmKategorijaDAO.fetchAll();
-        if (u != Uloga.SUPER_ADMIN){
+        if (k==null){
             throw new UnauthorizedException();
         }
+        Uloga u = k.getUloga();
+        if (u == Uloga.KORISNIK){
+            throw new UnauthorizedException();
+        }
+        var vm = vmKategorijaDAO.fetchAll();
 
         return vm.stream().map(vmKategorija -> g.toJson(vmKategorija, VMKategorija.class)).collect(Collectors.toList());
     }
@@ -38,8 +41,11 @@ public class VMKategorijaService implements Service<String, String> {
     @Override
     public String fetchById(Request req, String id) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
-        if (u != Uloga.SUPER_ADMIN){
+        if (u == Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
         return g.toJson(vmKategorijaDAO.fetchById(id));
@@ -48,6 +54,9 @@ public class VMKategorijaService implements Service<String, String> {
     @Override
     public String create(Request req) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null) {
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
         var vm = vmKategorijaDAO.fetchAll();
         if (u != Uloga.SUPER_ADMIN){
@@ -67,6 +76,9 @@ public class VMKategorijaService implements Service<String, String> {
     @Override
     public String update(Request req, String id) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
         if (u != Uloga.SUPER_ADMIN){
             throw new UnauthorizedException();
@@ -82,8 +94,10 @@ public class VMKategorijaService implements Service<String, String> {
     @Override
     public void delete(Request req, String id) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
-        var vm = vmKategorijaDAO.fetchAll();
         if (u != Uloga.SUPER_ADMIN){
             throw new UnauthorizedException();
         }

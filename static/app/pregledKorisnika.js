@@ -14,8 +14,12 @@ Vue.component("korisnici", {
 	mounted () {
         axios.get('/korisnici').then(response => (
             this.korisnici = response.data));
-        axios.get('/korisnik').then(response => (
-            this.korisnikType = response.data.uloga));
+        axios.get('/korisnik').then(response => {
+            if(response.data==null){
+                window.location.replace("/");
+            }
+            this.korisnikType = response.data.uloga
+        });
     },
     template: `
 <div>

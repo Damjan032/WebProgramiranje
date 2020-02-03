@@ -50,16 +50,17 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             return vm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
         }
         OrganizacijaDAO organizacijaDAO = new OrganizacijaDAO();
-        Organizacija o = organizacijaDAO.
+        var o = organizacijaDAO.
                 fetchAll().
                 stream().
                 filter(org->
                         org.getKorisnici().contains(k.getId())
-                ).findFirst().get();
-
-        vm = vm.stream().filter(vms->orgContainsVm(o, vms)).collect(Collectors.toList());
-
-        return vm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
+                ).findFirst();
+        if (o.isPresent()){
+            vm = vm.stream().filter(vms->vms.getOrganizacija().equals(o.get().getId())).collect(Collectors.toList());
+            return vm.stream().map(this::mapToVirtuelnaMasinaDTOString).collect(Collectors.toList());
+        }
+        throw new NotFoundException();
     }
 
     private String mapToVirtuelnaMasinaDTOString(VirtuelnaMasina virtuelnaMasina) {
@@ -95,6 +96,9 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     @Override
     public String fetchById(Request req, String id) throws IOException {
         Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
         Uloga u = k.getUloga();
         if (u!=Uloga.SUPER_ADMIN){
             checkVMAccessPrivilege(k, id);
@@ -111,7 +115,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
                         org.getKorisnici().contains(k.getId())
                 ).findFirst().get();
         VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(id);
-        if (!orgContainsVm(o,vm)){
+        if (!o.getId().equals(vm.getOrganizacija())){
             throw new UnauthorizedException();
         }
     }
@@ -200,7 +204,15 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         return null;//fetchAll().stream().filter()
     }
 
-    public String updateActivnost(String body, String id) throws IOException {
+    public String updateActivnost(Request req, String id) throws IOException {
+        Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
+        if (k.getUloga()==Uloga.KORISNIK){
+            throw new UnauthorizedException();
+        }
+        String body = req.body();
         VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(id);
         VirtuelnaMasinaDTO virtuelnaMasinaDTO = g.fromJson(body, VirtuelnaMasinaDTO.class);
         virtuelnaMasinaDTO.setAktivnosti(virtuelnaMasina.getAktivnosti());
@@ -231,13 +243,25 @@ public class VirtuelnaMasinaService implements Service<String, String> {
     }
 
 
-    public String deleteAktivnost(String vmid, String aktid) throws IOException {
+    public String deleteAktivnost(Request req, String vmid, String aktid) throws IOException {
+        Korisnik k = req.session().attribute("korisnik");
+        if (k==null){
+            throw new UnauthorizedException();
+        }
+        if (k.getUloga()==Uloga.KORISNIK){
+            throw new UnauthorizedException();
+        }
         VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(vmid);
         virtuelnaMasina.setAktivnosti(virtuelnaMasina.getAktivnosti().stream().filter(aktivnost -> !aktivnost.getId().equalsIgnoreCase(aktid)).collect(Collectors.toList()));
         return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, vmid));
     }
 
-    public String updateActivnostTime(String body, String vmid, String id) throws IOException {
+    public String updateActivnostTime(Request req, String vmid, String id) throws IOException {
+        String body = req.body();
+        Korisnik k = req.session().attribute("korisnik");
+        if (k==null||k.getUloga()!=Uloga.SUPER_ADMIN){
+            throw new UnauthorizedException();
+        }
         VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(vmid);
         Aktivnost aktivnostNova = g.fromJson(body.replace('T', ' '), Aktivnost.class); //Ima T ispred vrremena u stringu koji je poslat sa fornta
         aktivnostNova.setId(id);

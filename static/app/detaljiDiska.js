@@ -8,6 +8,7 @@ Vue.component("detalji-diska", {
             kapacitet: null,
             vm:null,
             vmActiv:false,
+            organizacija:null,
             tipKorisnika:null
         }
     },
@@ -83,6 +84,7 @@ Vue.component("detalji-diska", {
         this.kapacitet =  this.$route.params.disk.kapacitet;
         this.tip = this.$route.params.disk.tip;
         this.vm = this.$route.params.disk.vm;
+        this.organizacija = this.$route.params.disk.organizacija;
         let vm = this.vm;
         if(vm){
             if(vm.aktivnosti.length>0){

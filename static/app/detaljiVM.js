@@ -9,7 +9,7 @@ Vue.component("detalji-vm", {
             vmKategorija:"",
             virtuelnaMasina: "",
             tipKorisnika:null,
-            aktivnosti:null
+            diskovi:null
         }
     },
 	methods : {
@@ -40,9 +40,9 @@ Vue.component("detalji-vm", {
         reload:function name() {
             axios.get('/virtuelneMasine/'+this.id).then(response => {
                 this.virtuelnaMasina = response.data;
+                console.log(response.data);
                 this.ime = response.data.ime;
                 this.vmKategorija = response.data.kategorija;
-                this.aktivnosti = response.data.aktivnosti;
             }).catch(error=> {
                 let msg = error.response.data.ErrorMessage;
                 new Toast({
@@ -113,6 +113,35 @@ Vue.component("detalji-vm", {
                 });
             }
         },
+        
+        izmenaDiska:function (disk) { 
+            let ime = document.getElementById("ime"+disk.id).value;
+            let kapacitet = document.getElementById("kapacitet"+disk.id).value;
+            axios.put("/diskovi",{id:disk.id,ime:ime,kapacitet:kapacitet}).then(response=>{
+                new Toast({
+                    message: "Uspešno je izmenjen disk!",
+                    type: 'success'
+                });
+                this.reload();
+            }).catch(error => {
+                let msg = error.response.data.ErrorMessage;
+                new Toast({
+                    message: msg,
+                    type: 'danger'
+                });
+            });
+        },
+        brisanjeDiska:function (disk) {
+            axios.delete("/diskovi/"+disk.id).then(response=>{
+                this.reload();
+            }).catch(error => {
+                let msg = error.response.data.ErrorMessage;
+                new Toast({
+                    message: msg,
+                    type: 'danger'
+                });
+            });
+        }
     },
 	mounted () {
         this.id =  this.$route.params.vm;
@@ -187,7 +216,6 @@ Vue.component("detalji-vm", {
                 </td>
                 <td>
                     <label class="switch">
-                        <!-- <input type="checkbox" v-model="module.checked" v-bind:id="module.id"> !-->
                         <input type="checkbox" v-bind:checked="virtuelnaMasina.isActiv" v-on:click="activnost()">
                         <span class="slider round"></span>
                     </label>
@@ -199,7 +227,7 @@ Vue.component("detalji-vm", {
 
     </div>	
     <div class="col">
-    <div class="page-header">
+        <div class="page-header">
             <h2>Pregled aktivnosti</h2>
         </div>
         <p v-if="virtuelnaMasina.aktivnosti.length==0">Trenutno nema aktivnosti</p>
@@ -212,8 +240,11 @@ Vue.component("detalji-vm", {
                     Kraj aktivnosti
                 </th>
 
-                <th>
+                <th v-if="tipKorisnika=='SUPER_ADMIN'">
                     Izmeni aktivnost
+                </th>
+                <th v-if="tipKorisnika=='SUPER_ADMIN'">
+                    Obriši aktivnost
                 </th>
             </tr>
 
@@ -227,15 +258,52 @@ Vue.component("detalji-vm", {
                     {{a.zavrsetak}}
                     <input v-bind:id="'kraj'+a.id" type="datetime-local" v-bind:value="a.zavrsetak">
                 </td>
-                <td text-align="center">
-                <button type="button" class="btn btn-secondary" v-if="a.zavrsetak!=null" @click= "izmenaAktivnosti(a)" >Izmeni aktivnost</button>
+                <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
+                    <button type="button" class="btn btn-secondary" v-if="a.zavrsetak!=null" @click= "izmenaAktivnosti(a)" >Izmeni aktivnost</button>
                 </td>
-                <td text-align="center">
+                <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
                     <button type="button" class="btn btn-secondary" v-if="a.zavrsetak!=null" @click= "brisanjeAktivnosti(a)" >Obrisi aktivnost</button>
                 </td>
             </tr>
         </table>
-    </div>	  
+    </div>	
+    <div class="col">
+        <div class="page-header">
+            <h2>Pregled diskova</h2>
+        </div>
+        <p v-if="virtuelnaMasina.diskovi.length==0">Trenutno nema diskova</p>
+        <table class="table" v-else>
+            <tr>
+                <th>
+                    Naziv diska
+                </th>
+                <th>
+                    Kapacitet
+                </th>
+                <th v-if="tipKorisnika!='KORISNIK'">
+                    Izmeni disk
+                </th>
+                <th v-if="tipKorisnika=='SUPER_ADMIN'">
+                    Obriši disk
+                </th>
+            </tr>
+
+            <tr v-for = "disk in virtuelnaMasina.diskovi" >
+                <td>
+                    <input v-bind:id="'ime'+disk.id" type="text" v-bind:value="disk.ime">
+                </td>
+                <td text-align="center">
+                    <input v-bind:id="'kapacitet'+disk.id" type="number" v-bind:value="disk.kapacitet">
+                </td>
+                <td v-if="tipKorisnika!='KORISNIK'">
+                    <button type="button" class="btn btn-secondary" @click= "izmenaDiska(disk)" >Izmeni disk</button>
+                </td>
+                <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
+                    <button type="button" class="btn btn-secondary" @click= "brisanjeDiska(disk)" >Obriši disk</button>
+                </td>
+            </tr>
+        </table>
+    </div>	    
 </div>
 `
 	

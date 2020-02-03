@@ -60,16 +60,24 @@ public class VirtuelnaMasinaDAO extends Initializer{
     public VirtuelnaMasina update(VirtuelnaMasina virtuelnaMasina, String id) throws IOException {
         var vm = fetchByIme(virtuelnaMasina.getIme());
         if (vm.isPresent() && !vm.get().getId().equals(id)){
-            throw new BadRequestException("VM sa imenom: " + virtuelnaMasina.getIme() +" postoji");
+            throw new BadRequestException("VM sa imenom: " + virtuelnaMasina.getIme() +" ne postoji");
         }
         List<VirtuelnaMasina> virtuelnaMasine= fetchAll();
         virtuelnaMasine.forEach(
                 oldVM -> {
                     if (oldVM.getId().equals(id)) {
-                        oldVM.setIme(virtuelnaMasina.getIme());
-                        oldVM.setDiskovi(virtuelnaMasina.getDiskovi());
-                        oldVM.setKategorija(virtuelnaMasina.getKategorija());
-                        oldVM.setAktivnosti(virtuelnaMasina.getAktivnosti());
+                        if (KorisnikDAO.checkStringAttribute(virtuelnaMasina.getIme())) {
+                            oldVM.setIme(virtuelnaMasina.getIme());
+                        }
+                        if (KorisnikDAO.checkStringAttribute(virtuelnaMasina.getKategorija())){
+                            oldVM.setKategorija(virtuelnaMasina.getKategorija());
+                        }
+                        if (virtuelnaMasina.getAktivnosti()!=null){
+                            oldVM.setAktivnosti(virtuelnaMasina.getAktivnosti());
+                        }
+                        if (virtuelnaMasina.getDiskovi()!=null){
+                            oldVM.setDiskovi(virtuelnaMasina.getDiskovi());
+                        }
                     }
                 });
 

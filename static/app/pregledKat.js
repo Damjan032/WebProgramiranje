@@ -15,9 +15,12 @@ Vue.component("kat",{
                 type: 'danger'
             });
         });
-        axios.get('/korisnik').then(response => (
+        axios.get('/korisnik').then(response => {
+            if(response.data==null){
+                window.location.replace("/");
+            }
             this.korisnikType = response.data.uloga
-        )).catch(error=>{
+        }).catch(error=>{
             new Toast({
                 message:error.response.data.ErrorMessage,
                 type: 'danger'

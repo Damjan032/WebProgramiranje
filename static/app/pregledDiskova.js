@@ -17,6 +17,9 @@ Vue.component("diskovi",{
         });
         
         axios.get('/korisnik').then(response => {
+            if(response.data==null){
+                window.location.replace("/");
+            }
             this.tipKorisnika = response.data.uloga;
         }).catch(error=>{
             new Toast({

@@ -64,8 +64,16 @@ public class KorisnikService{
         if (k == null) {
             throw new UnauthorizedException();
         }
+        if (k.getUloga()==Uloga.KORISNIK){
+            throw new BadRequestException("Ne mozete da kreirate korisnike kao obican korisnik!");
+        }
         String body = req.body();
         KorisnikTrans korisnikTrans = g.fromJson(body, KorisnikTrans.class);
+        if (k.getUloga()==Uloga.ADMIN){
+            if (!korisnikTrans.getOrganizacija().equals(k.getOrganizacija())){
+                throw new BadRequestException("Ne mozete da kreirate korisnike koji nisu u vasoj organizaciji!");
+            }
+        }
         if (korisnikTrans.getEmail()==null||korisnikTrans.getIme()==null||korisnikTrans.getPrezime()==null||korisnikTrans.getOrganizacija()==null||korisnikTrans.getUloga()==null){
             throw new BadRequestException("Niste uneli sve podatke!");
         }

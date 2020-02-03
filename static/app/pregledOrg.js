@@ -16,6 +16,9 @@ Vue.component("org",{
             });
         }); 
         axios.get('/korisnik').then(response => {
+            if(response.data==null){
+                window.location.replace("/");
+            }
             this.korisnikType = response.data.uloga;
         }).catch(error=> {
             let msg = error.response.data.ErrorMessage;
