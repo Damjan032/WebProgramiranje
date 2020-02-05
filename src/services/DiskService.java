@@ -124,14 +124,10 @@ public class DiskService{
             throw new UnauthorizedException();
         }
         try{
-            Disk disk = diskDAO.fetchById(id);
-            if (!k.getOrganizacija().equals(disk.getOrganizacija())){
-                throw new BadRequestException("Ne mozete da brisete disk druge organizacije!");
-            }
+            diskDAO.delete(id);
         }catch (NotFoundException nfe){
             throw new BadRequestException("Ne postoji disk sa tim id-jem");
         }
-        diskDAO.delete(id);
         return diskDAO.fetchAll().stream().map(this::mapToDiskDTOString).collect(Collectors.toList());
     }
     private Disk mapDiskDTOToDisk(DiskDTO dt){

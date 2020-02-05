@@ -259,12 +259,12 @@ Vue.component("detalji-vm", {
             <tr v-for = "a in virtuelnaMasina.aktivnosti" >
                 <td>
                     {{a.pocetak}}
-                    <input v-bind:id="'poc'+a.id" type="datetime-local" v-bind:value="a.pocetak">
+                    <input v-if="tipKorisnika=='SUPER_ADMIN'" v-bind:id="'poc'+a.id" type="datetime-local" v-bind:value="a.pocetak">
 
                 </td>
                 <td text-align="center">
                     {{a.zavrsetak}}
-                    <input v-bind:id="'kraj'+a.id" type="datetime-local" v-bind:value="a.zavrsetak">
+                    <input v-if="tipKorisnika=='SUPER_ADMIN'" v-bind:id="'kraj'+a.id" type="datetime-local" v-bind:value="a.zavrsetak">
                 </td>
                 <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
                     <button type="button" class="btn btn-secondary" v-if="a.zavrsetak!=null" @click= "izmenaAktivnosti(a)" >Izmeni aktivnost</button>

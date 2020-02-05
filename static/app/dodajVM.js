@@ -77,28 +77,52 @@ Vue.component("dodaj-vm",{
             </router-link>
         </div>
     </div>
-    Ime virtuelne mašine: <input class="required" type="text" v-model="ime"/>
-    <p  class="alert alert-danger d-none">
-        Ovo polje je obavezno!
-    </p>
-    <br><br>
-    Kategorija:
-    <select class="required" v-model="kategorija" >
-        <option v-for = "kat in vmKategorije" v-bind:value="kat.ime">{{kat.ime}}</option>
-    </select>
-    <p  class="alert alert-danger d-none">
-        Ovo polje je obavezno!
-    </p>
-    <br><br>
-    Organizacija:
-    <select id="orginput" class="required" v-model="org" >
-        <option v-for = "org in organizacije" v-bind:value="org.id">{{org.ime}}</option>
-    </select>
-    <p  class="alert alert-danger d-none">
-        Ovo polje je obavezno!
-    </p>
-    <br><br>
-    <button class="btn btn-secondary" @click = "addVM()">Dodaj kategoriju</button>
+    <br>
+    <table class="table">
+        <tr>
+            <td>
+                Ime virtuelne mašine: 
+            </td>
+                <input class="required" type="text" v-model="ime"/>
+            <td>
+            </td>
+            <td>
+                <p  class="alert alert-danger d-none">
+                    Ovo polje je obavezno!
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Kategorija:
+            </td>
+            <td>
+                <select class="required" v-model="kategorija" >
+                    <option v-for = "kat in vmKategorije" v-bind:value="kat.ime">{{kat.ime}}</option>
+                </select>
+            </td>
+            <td>
+                <p  class="alert alert-danger d-none">
+                    Ovo polje je obavezno!
+                </p>
+            </td>
+        </tr>
+            <td>
+                Organizacija:
+            </td>
+            <td>
+                <select id="orginput" class="required" v-model="org" >
+                    <option v-for = "org in organizacije" v-bind:value="org.id">{{org.ime}}</option>
+                </select>
+            </td>
+            <td>
+                <p  class="alert alert-danger d-none">
+                    Ovo polje je obavezno!
+                </p>
+            </td>
+        </tr>
+    </table>
+    <button class="btn btn-success" @click = "addVM()">Dodaj virtuelnu mašinu</button>
 </div>
     `
 });

@@ -203,10 +203,10 @@ public class RacunService {
                 }
             }else if (krajAktivnosti.isAfter(start)){
                     hours = HOURS.between(start, krajAktivnosti);
-            }else{
+            }else {
                 continue;
             }
-            if (hours==0){
+            if (hours<=0){
                 hours = 1;
             }
             cena+= (hours)*(cenovnik.getVmCore()*vmKategorija.getBrJezgra()+cenovnik.getVmRAM()*vmKategorija.getRAM()+cenovnik.getVmCUDA()*vmKategorija.getBrGPU())/30/24;

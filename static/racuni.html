@@ -19,7 +19,8 @@
                         <h3>
                             Mesečni računi
                         </h3>
-                        <table class="table-bordered">
+                        <table class="table">
+                            <thead class="thead-dark">
                             <tr>
                                 <th>
                                     Organizacija
@@ -35,6 +36,7 @@
                                     Cena
                                 </th>
                             </tr>
+                            </thead>
                             <tr v-for="r in racuni">
                                 <td>
                                     {{r.org.ime}}
@@ -51,7 +53,7 @@
                                     </template>
                                 </td>
                                 <td>
-                                    {{r.cena}}
+                                    {{r.cena.toFixed(2)}}
                                 </td>
                             </tr>
                         </table>
@@ -84,36 +86,42 @@
                             </tr>
 
                         </table>
-                        <table class="table-bordered" v-if="intervalniRacun">
-                            <tr>
-                                <th>
-                                    Ime
-                                </th>
-                                
-                                <th>
-                                    Tip
-                                </th>
-                                <th>
-                                    Cena za period
-                                </th>
-                            </tr>
-                            <tr v-for="racun in intervalniRacun.resursRacuni">
-                                <td>
-                                    {{racun.imeResursa}}
-                                </td>
-                                <td>
-                                    {{racun.tipResursa}}
-                                </td>
-                                <td>
-                                    {{racun.cena}}
-                                </td>
-                            </tr>
-                        </table>
-                        <table v-if="intervalniRacun">
-                            <tr>
-                                <tH>Ukupna cena: </tH>
-                                <td>{{intervalniRacun.ukupnaCena}}</td>
-                            </tr>
+                        <table class="table" v-if="intervalniRacun">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>
+                                        Ime
+                                    </th>
+                                    
+                                    <th>
+                                        Tip
+                                    </th>
+                                    <th>
+                                        Cena za period
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr v-for="racun in intervalniRacun.resursRacuni">
+                                    <td>
+                                        {{racun.imeResursa}}
+                                    </td>
+                                    <td>
+                                        {{racun.tipResursa}}
+                                    </td>
+                                    <td>
+                                        {{racun.cena.toFixed(2)}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th></th>
+                                    <tH>Ukupna cena: </tH>
+                                    <th>{{intervalniRacun.ukupnaCena.toFixed(2)}}</th>
+                                </tr>
+                            </thead> 
                         </table>
                     </div>
                 </div>
