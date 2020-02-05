@@ -117,20 +117,6 @@ public class DiskDAO extends Initializer {
                 .collect(Collectors.toList()));
     }
 
-    private void checkFile(){
-        try {
-
-            File f = new File(FILE_PATH);
-            if (!f.exists()) {
-                if (!f.createNewFile()) {
-                    System.out.println("NEMOGUĆE JE KREIRATI  FILE: "+FILE_PATH);
-                }
-            }
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private void upisListeUFile(List<Disk> diskovi) throws IOException {
         Files.write(Paths.get(FILE_PATH), g.toJson(diskovi).getBytes());

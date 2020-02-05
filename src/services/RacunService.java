@@ -62,8 +62,9 @@ public class RacunService {
                 cenovnik = g.fromJson(new JsonReader(new FileReader(CENOVNIK_PATH)), Cenovnik.class);
                 if (cenovnik.getVmCUDA()==null){
                     cenovnik = new Cenovnik(25.0,15.0,1.0,0.1,0.3);
+                    Files.write(Paths.get(CENOVNIK_PATH),g.toJson(cenovnik).getBytes());
                 }
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -146,8 +147,11 @@ public class RacunService {
         if (k.getUloga()!= Uloga.ADMIN) {
             throw new UnauthorizedException();
         }
-        LocalDateTime start = LocalDateTime.from(dateFormatter.parse(pocetak));
-        LocalDateTime end = LocalDateTime.from(dateFormatter.parse(kraj));
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start1 = LocalDate.from(dateFormatter.parse(pocetak));
+        LocalDateTime start = start1.atStartOfDay();
+        LocalDate end1 = LocalDate.from(dateFormatter.parse(kraj));
+        LocalDateTime end = end1.atTime(23, 59);
         if (end.isBefore(start)){
             throw new BadRequestException("Datum kraja mora biti posle datuma poÄ�etka.");
         }

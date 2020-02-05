@@ -212,6 +212,14 @@ Vue.component("detalji-vm", {
             </tr>
             <tr>
                 <td>
+                    Organizacija
+                </td>
+                <td>
+                    {{virtuelnaMasina.organizacija.ime}}
+                </td>
+            </tr>
+            <tr>
+                <td>
                     Aktivnost:
                 </td>
                 <td>
