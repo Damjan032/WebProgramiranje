@@ -41,6 +41,9 @@ Vue.component("dodaj-kat",{
                     type: 'danger'
                 });
             });
+        },
+        back:function () {
+            this.$router.go(-1);
         }
     },
     template:`
@@ -50,9 +53,7 @@ Vue.component("dodaj-kat",{
             <h2>Dodavanje kategorije</h2>
         </div>
         <div>
-            <router-link to="/">
-                <button type="button" class="btn btn-primary">Nazad</button>
-            </router-link>
+            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
         </div>
     </div>
     <div  class="container">

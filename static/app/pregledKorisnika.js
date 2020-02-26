@@ -1,4 +1,4 @@
-Vue.component("korisnici", {
+Vue.component("pregled-korisnika", {
 	data: function () {
 		    return {
                 selektKorisnik:'',

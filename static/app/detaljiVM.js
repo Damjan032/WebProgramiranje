@@ -141,6 +141,9 @@ Vue.component("detalji-vm", {
                     type: 'danger'
                 });
             });
+        },
+        back:function () {
+            this.$router.go(-1);
         }
     },
 	mounted () {
@@ -167,9 +170,7 @@ Vue.component("detalji-vm", {
                 <h1>Virtuelna mašina: {{ime}}</h1>
             </div>
             <div>
-                <router-link to="/">
-                    <button type="button" class="btn btn-primary">Nazad</button>
-                </router-link>
+                <button type="button" class="btn btn-primary" @click="back">Nazad</button>
             </div>
         </div>
         <table class="table">

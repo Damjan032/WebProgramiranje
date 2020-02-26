@@ -68,6 +68,9 @@ Vue.component("detalji-korisnika", {
                     type: 'danger'
                 });
             })
+        },
+        back:function () {
+            this.$router.go(-1);
         }
     },
 	mounted () {
@@ -89,9 +92,7 @@ Vue.component("detalji-korisnika", {
             <h1>Korisnik: {{$route.params.korisnik.email}}</h1>
         </div>
         <div>
-            <router-link to="/">
-                <button type="button" class="btn btn-primary">Nazad</button>
-            </router-link>
+            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
         </div>
     </div>
     <table class="table">                

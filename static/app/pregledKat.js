@@ -1,4 +1,4 @@
-Vue.component("kat",{
+Vue.component("pregled-kat",{
     data:function () {
         return{
             kategorije : null,

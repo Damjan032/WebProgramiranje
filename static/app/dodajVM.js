@@ -63,6 +63,9 @@ Vue.component("dodaj-vm",{
                     type: 'danger'
                 });
             });
+        },
+        back:function () {
+            this.$router.go(-1);
         }
     },
     template:`
@@ -73,7 +76,7 @@ Vue.component("dodaj-vm",{
         </div>
         <div>
             <router-link to="/">
-                <button type="button" class="btn btn-primary">Nazad</button>
+                <button type="button" class="btn btn-primary" @click="back">Nazad</button>
             </router-link>
         </div>
     </div>

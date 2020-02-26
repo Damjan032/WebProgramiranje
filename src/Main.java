@@ -46,16 +46,16 @@ public class Main {
             ExceptionsHandler.getInstance().init();
             VirtuelnaMasinaController.getInstance().init();
 
-            get("/", (req, res) -> {
-                Session s = req.session();
-                Korisnik k = s.attribute("korisnik");
-                if (k == null) {
-                    res.redirect("/login.html");
-                    return null;
-                }
-                res.redirect("/virtuelneMasine.html");
-                return null;
-            });
+//            get("/", (req, res) -> {
+//                Session s = req.session();
+//                Korisnik k = s.attribute("korisnik");
+//                if (k == null) {
+//                    res.redirect("/login.html");
+//                    return null;
+//                }
+//                res.redirect("/virtuelneMasine.html");
+//                return null;
+//            });
 
             //DEPRECATED
             get("/isloggedin", (req, res) -> {

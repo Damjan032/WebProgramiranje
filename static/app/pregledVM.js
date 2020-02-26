@@ -1,4 +1,4 @@
-Vue.component("virtuelne-masine",{
+Vue.component("pregled-vm",{
     data:function () {
         return{
             virtuelneMasine : null,

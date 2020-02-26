@@ -1,4 +1,4 @@
-Vue.component("org",{
+Vue.component("pregled-org",{
     data:function () {
         return{                
             organizacije : null,

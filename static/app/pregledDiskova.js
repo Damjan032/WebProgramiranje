@@ -1,4 +1,4 @@
-Vue.component("diskovi",{
+Vue.component("pregled-disk",{
     data:function () {
         return{
             selektDisk:null,

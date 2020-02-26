@@ -48,6 +48,9 @@ Vue.component("detalji-org", {
                 });
             });
         },
+        back:function () {
+            this.$router.go(-1);
+        }
     },
 	mounted () {
         this.organizacija = this.$route.params.org;
@@ -70,9 +73,7 @@ Vue.component("detalji-org", {
                     <h1>Organizacija : {{oIme}}</h1>
                 </div>
                 <div>
-                    <router-link to="/">
-                        <button type="button" class="btn btn-primary">Nazad</button>
-                    </router-link>
+                    <button type="button" class="btn btn-primary" @click="back">Nazad</button>
                 </div>
             </div>
             Naziv organizacije: <input class="required" type="text" v-model="oIme" v-bind:placeholder="organizacija.ime"/>

@@ -14,19 +14,25 @@ Vue.component("site-header", {
         <div  class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li v-if = "type" class="nav-item">
+                    <router-link to="/vm">Virtualne mašine</router-link>
                     <a class="nav-link" href="virtuelneMasine.html">Virtualne mašine <span class="sr-only">(current)</span></a>
                 </li>
                 <li v-if = "type == 'SUPER_ADMIN'" class="nav-item">
+                    <router-link to="/kat">Kategorija</router-link>
                     <a class="nav-link" href="vmKat.html">Kategorije v-mašina<span class="sr-only">(current)</span></a>
                 </li>
                 <li v-if = "type" class="nav-item">
+                    <router-link to="/disk">Diskovi</router-link>
+
                     <a class="nav-link" href="diskovi.html">Diskovi <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" v-if = "type=='SUPER_ADMIN'">
+                    <router-link to="/org">Organizacije</router-link>
                     <a class="nav-link" href="organizacije.html">Organizacije <span class="sr-only">(current)</span></a>
                 </li>
             
                 <li class="nav-item">
+                    <router-link to="/korisnik">Korisnici</router-link>
                     <a v-if = "type=='SUPER_ADMIN'||type=='ADMIN'" class="nav-link" href="korisnici.html">Korisnici <span class="sr-only">(current)</span></a>
                 </li>
 
@@ -60,8 +66,10 @@ Vue.component("site-header", {
 	},
 	mounted () {
         axios.get('/korisnik').then(response => {
-            this.type = response.data.uloga;
-            this.orgid =  response.data.organizacija;
+            if(response.data){
+                this.type = response.data.uloga;
+                this.orgid =  response.data.organizacija;
+            }
         }); 
     }
 });

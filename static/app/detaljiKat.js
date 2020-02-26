@@ -50,6 +50,9 @@ Vue.component("detalji-kat", {
                     type: 'danger'
                 });
             });
+        },
+        back:function () {
+            this.$router.go(-1);
         }
     },
 	mounted () {
@@ -72,9 +75,7 @@ Vue.component("detalji-kat", {
             <h1>Kategorija: {{$route.params.kat.ime}}</h1>
         </div>
         <div>
-            <router-link to="/">
-                <button type="button" class="btn btn-primary">Nazad</button>
-            </router-link>
+            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
         </div>
     </div>
     <div  class="container">

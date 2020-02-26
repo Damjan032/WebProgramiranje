@@ -1,27 +1,35 @@
-Vue.use(VueRouter);
-const org = { template: '<org></org>' }
-const detaljiOrg = { template: '<detalji-org></detalji-org>' }
-const dodajOrg = { template: '<dodaj-org></dodaj-org>' }
+// Vue.use(VueRouter);
+// const org = { template: '<org></org>' }
+// const detaljiOrg = { template: '<detalji-org></detalji-org>' }
+// const dodajOrg = { template: '<dodaj-org></dodaj-org>' }
 
-const router = new VueRouter({
-    routes: [
-        { path: '/',
-            component: org
-        },
-        { path: '/dodajOrg',
-            component: dodajOrg
-        },  
-        { path: '/detaljiOrg/:org/:tipKorisnika',
-            name:"detaljiOrg",
-            component: detaljiOrg,
-            props: true 
-        }
-    ]
-});
+// const router = new VueRouter({
+//     routes: [
+//         { path: '/',
+//             component: org
+//         },
+//         { path: '/dodajOrg',
+//             component: dodajOrg
+//         },  
+//         { path: '/detaljiOrg/:org/:tipKorisnika',
+//             name:"detaljiOrg",
+//             component: detaljiOrg,
+//             props: true 
+//         }
+//     ]
+// });
 
-let orgapp = new Vue({
-    router,
-    el:"#orgs"
+Vue.component("org",{
+    template:
+`
+<div id="orgs">
+    <div class="jumbotron"><h1>Organizacije</h1></div>
+
+    <div class="container">
+        <router-view></router-view>
+    </div>
+</div>
+`
 });
 
 

@@ -7,6 +7,7 @@ let orgIzmena = new Vue({
          oOpis : "",
          slika : ""
     },
+    props:['id'],
     mounted () {
         let uri = window.location.search.substring(1);
         let params = new URLSearchParams(uri);

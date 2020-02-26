@@ -76,6 +76,9 @@ Vue.component("detalji-diska", {
                     type: 'danger'
                 });
             });
+        },
+        back:function () {
+            this.$router.go(-1);
         }
     },
 	mounted () {
@@ -107,9 +110,7 @@ Vue.component("detalji-diska", {
             <h1>Disk: {{$route.params.disk.ime}}</h1>
         </div>
         <div>
-            <router-link to="/">
-                <button type="button" class="btn btn-primary">Nazad</button>
-            </router-link>
+            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
         </div>
     </div>
     <table class="table">                
