@@ -1,3 +1,4 @@
+
 Vue.component("prijava",
 {
     data:function () {
@@ -5,6 +6,23 @@ Vue.component("prijava",
             kime : "",
             sifra :""
         }
+    },
+    mounted:function() {        
+        axios.get("/korisnik")
+            .then(res=>{
+                if(res.data){
+                    this.$router.push("vm");
+                    window.location.reload();
+                }
+            })
+            .catch(error=>
+                {
+                    new Toast({
+                        message:error.response.data.ErrorMessage,
+                        type: 'danger'
+                    });
+                }
+        );
     },
     methods:{
         checkParams: checkFormParams
@@ -24,6 +42,7 @@ Vue.component("prijava",
                    
                     if (response.data.status) {
                         this.$router.push("vm");
+                        bus.$emit("korisnik", response.data.k);
                         // window.location.replace("/vm");
                     }else{
                         new Toast({
@@ -50,7 +69,7 @@ Vue.component("prijava",
                         Korisničko ime
                     </td>
                     <td>
-                        <input type="text" v-model="kime"/>
+                        <input class="required" type="text" v-model="kime"/>
                     </td>
                     <td >
                         <p  class="alert alert-danger d-none">
@@ -63,7 +82,7 @@ Vue.component("prijava",
                         Šifra
                     </td>
                     <td>
-                        <input type="password" v-model="sifra"/>
+                        <input class="required" type="password" v-model="sifra"/>
                     </td>
                     <td>
                         <p  class="alert alert-danger d-none">

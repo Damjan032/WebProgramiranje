@@ -1,24 +1,18 @@
 package services;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import dao.KorisnikDAO;
+import dto.KorisnikDTO;
 import exceptions.NotFoundException;
 import komunikacija.LoginPoruka;
+import komunikacija.LoginPorukaDTO;
 import komunikacija.Poruka;
 import models.Korisnik;
 import models.KorisnikNalog;
 import spark.Request;
 import spark.Session;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class LoginService {
@@ -30,17 +24,21 @@ public class LoginService {
 
 
 
-    public Korisnik getKorisnik(Request req){
-        return req.session().attribute("korisnik");
+    public KorisnikDTO getKorisnik(Request req){
+        Korisnik k = req.session().attribute("korisnik");
+        if(k==null){
+            return null;
+        }
+        return KorisnikService.mapKorisniktoKorisnikDTO(k);
     }
 
-    public LoginPoruka tryLogin(Request req) throws IOException {
+    public LoginPorukaDTO tryLogin(Request req) throws IOException {
         Session session = req.session();
         if (session == null) {
             session = req.session(true);
         }
         if(session.attribute("korisnik")!=null){
-            return new LoginPoruka("Već ste prijavljeni", false);
+            return LoginPorukaDTO.mapLPtoLPDTO(new LoginPoruka("Već ste prijavljeni", false));
         }
         String kime = req.queryParams("kime");
         String sifra = req.queryParams("sifra");
@@ -48,10 +46,10 @@ public class LoginService {
         if(lp.isStatus()) {
             session.attribute("korisnik", lp.getKorisnik());
         }
-        return lp;
+        return LoginPorukaDTO.mapLPtoLPDTO(lp);
     }
 
-    private LoginPoruka login(String kime, String sifra) throws IOException {
+    private LoginPoruka login(String kime, String sifra) {
     	KorisnikNalog  kn;
     	try {
         kn = korisnikDAO.fetchByEmail(kime);
@@ -63,7 +61,7 @@ public class LoginService {
         }
         if(sifra.hashCode() == kn.getSifraHash()){
 
-            return new LoginPoruka("Uspešna prijava.", true, korisnikDAO.fetchByEmail(kime).getKorisnik());
+            return new LoginPoruka("Uspešna prijava.", true, kn.getKorisnik());
         }
         return new LoginPoruka("Pogrešna šifra!", false);
 

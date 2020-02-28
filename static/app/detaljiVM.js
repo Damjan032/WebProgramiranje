@@ -28,7 +28,7 @@ Vue.component("detalji-vm", {
               }
             )
             promise.then(response=>{
-                this.$router.push("/");
+                this.$router.push("/vm");
             }).catch(error=>{
                 let msg = error.response.data.ErrorMessage;
                 new Toast({
@@ -64,7 +64,7 @@ Vue.component("detalji-vm", {
         },
         obrisi:function(){
             axios.delete('/virtuelneMasine/'+this.virtuelnaMasina.id).then(response => {
-                    this.$router.push("/");
+                    this.$router.push("/vm");
              }).catch(error=> {
                 let msg = error.response.data.ErrorMessage;
                 new Toast({

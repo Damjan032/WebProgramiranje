@@ -2,7 +2,7 @@
 Vue.component("detalji-org", {
     data: function () {
         return {
-            organizacija:null,
+            organizacija:"",
             oId:"",
             oIme : "",
             oOpis : "",
@@ -22,14 +22,16 @@ Vue.component("detalji-org", {
             }
             // console.log(this.slika.name);
             let data = new FormData();
-            data.append("nazivSlike", this.slika.name)
+            if(this.slika){
+                data.append("nazivSlike", this.slika.name)
+            }
             data.append('oIme', imeOrg);
             data.append('oOpis', opis);
             data.append('oSlika',this.slika);
             let promise = axios.put('/organizacije/'+this.organizacija.id, data, { headers: {'Content-Type': 'multipart/form-data'}});
 
             promise.then(response=>{
-                this.$router.push("/");
+                this.$router.push("/org");
             }).catch(error=>{
                 let msg = error.response.data.ErrorMessage;
                 new Toast({
@@ -40,7 +42,7 @@ Vue.component("detalji-org", {
         },
         obrisiOrg:function(){
             axios.delete('/organizacije/'+this.oId).then(response => {
-                this.$router.push("/");
+                this.$router.push("/org");
             }).catch(error=>{
                 new Toast({
                     message:error.response.data.ErrorMessage,
@@ -76,6 +78,9 @@ Vue.component("detalji-org", {
                     <button type="button" class="btn btn-primary" @click="back">Nazad</button>
                 </div>
             </div>
+            Logo: <img width="50" height="50" v-bind:src="organizacija.imgPath" class="rounded" >
+            <br>
+            <br>
             Naziv organizacije: <input class="required" type="text" v-model="oIme" v-bind:placeholder="organizacija.ime"/>
             <p  class="alert alert-danger d-none">
                 Ovo polje je obavezno!
@@ -86,10 +91,7 @@ Vue.component("detalji-org", {
                 Ovo polje je obavezno!
             </p>
             <br><br>
-            Odaberi sliku:  <input @change= "onFileSelected" class="slika required" type="file"  name="slika" accept="image/*"  v-bind:placeholder="organizacija.imgPath"/>
-            <p  class="alert alert-danger d-none">
-                Ovo polje je obavezno!
-            </p>
+            Odaberi sliku:  <input @change= "onFileSelected" class="slika" type="file"  name="slika" accept="image/*"  v-bind:placeholder="organizacija.imgPath"/>
             <br><br>
             
             <button v-on:click = "izmenaOrg(oIme,oOpis)" type="button" class="btn btn-success">Izmeni organizaciju</button>

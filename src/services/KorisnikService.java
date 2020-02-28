@@ -151,6 +151,10 @@ public class KorisnikService{
         return korisnikDAO.delete(id).stream().map(this::mapToKorisnikDTOString).collect(Collectors.toList());
     }
 
+    private String mapToKorisnikDTOString(KorisnikNalog korisnikNalog) {
+        return g.toJson(mapKNToKorisnikDTO(korisnikNalog));
+    }
+
 
     private KorisnikNalog mapKorisnikTransToKorisnik(KorisnikTrans kt){
       //  return null;
@@ -158,15 +162,20 @@ public class KorisnikService{
     }
 
 
-    private String mapToKorisnikDTOString(KorisnikNalog kn){
+    private KorisnikDTO mapKNToKorisnikDTO(KorisnikNalog kn) {
+        if (kn==null){
+            return null;
+        }
+        return mapKorisniktoKorisnikDTO(kn.getKorisnik());
+    }
 
-        Korisnik k = kn.getKorisnik();
+    public static KorisnikDTO mapKorisniktoKorisnikDTO(Korisnik k){
         Organizacija o = null;
         try{
             o = new OrganizacijaDAO().fetchById(k.getOrganizacija());
-        }catch (NotFoundException e){
+        }catch (Exception e){
         }
-        return g.toJson(new KorisnikDTO.Builder().
+        return new KorisnikDTO.Builder().
                 withId(k.getId()).
                 withIme(k.getIme()).
                 withAktivnosti(k.getAktivnosti()).
@@ -174,6 +183,6 @@ public class KorisnikService{
                 withPrezime(k.getPrezime()).
                 withOrganizacija(o).
                 withUloga(k.getUloga()).
-                build());
+                build();
     }
 }

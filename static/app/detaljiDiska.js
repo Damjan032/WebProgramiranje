@@ -29,16 +29,7 @@ Vue.component("detalji-diska", {
               }
             )
             promise.then(response=>{
-                    
-                    if (response.status == 200) {
-                        this.$router.push("/");
-                    }else{
-                        new Toast({
-                            message:response.statusText,
-                            type: 'danger'
-                        });
-                    }
-
+                this.$router.push("/disk");
             });
             promise.catch(error=>{
                 new Toast({
@@ -50,15 +41,8 @@ Vue.component("detalji-diska", {
         obrisiDisk:function() {
             let promise = axios.delete("/diskovi/"+this.id);
             promise.then(response=>{
-                    
-                    if (response.status == 200) {
-                        this.$router.push("/");
-                    }else{
-                        new Toast({
-                            message:response.statusText,
-                            type: 'danger'
-                        });
-                    }
+                this.$router.push("/disk");
+
 
             });
             promise.catch(error=>{

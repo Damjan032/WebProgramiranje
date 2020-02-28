@@ -32,7 +32,7 @@ Vue.component("detalji-kat", {
               }
             )
             promise.then(response=>{
-                this.$router.push("/");
+                this.$router.push("/kat");
             }).catch(error=>{
                 let msg = error.response.data.ErrorMessage;
                 new Toast({
@@ -42,7 +42,7 @@ Vue.component("detalji-kat", {
             });
         },obrisi:function(){
             axios.delete('/vmKategorije/'+this.id).then(response => {
-                this.$router.push("/");
+                this.$router.push("/kat");
             }).catch(error=>{
                 let msg = error.response.data.ErrorMessage;
                 new Toast({

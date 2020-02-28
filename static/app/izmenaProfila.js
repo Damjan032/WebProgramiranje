@@ -1,39 +1,26 @@
-new Vue({
-    el:"#izmena-profila",
-    data: {
-        korisnik : null,
-        email:null,
-        ime:null,
-        prezime:null,
-        sifra1:null,
-        sifra2:null
+Vue.component("izmena-profila",{
+    data:function name(params) {
+        return{
+            korisnik : null,
+            email:null,
+            ime:null,
+            prezime:null,
+            sifra1:null,
+            sifra2:null
+        }
     },
-    created(){
+    mounted(){
         axios.get("/korisnik").then((res)=>{
-            if(res.status!=200){
-                new Toast({
-                    message:response.statusText,
-                    type: 'danger'
-                });
-            }else{
-                this.korisnik = res.data;
-                this.email = this.korisnik.email;
-                this.ime = this.korisnik.ime;
-                this.prezime = this.korisnik.prezime;
-            }
+            this.korisnik = res.data;
+            this.email = this.korisnik.email;
+            this.ime = this.korisnik.ime;
+            this.prezime = this.korisnik.prezime;
+        }).catch(error=>{
+            new Toast({
+                message:error.response.data.ErrorMessage,
+                type: 'danger'
+            });
         });
-    },
-    mounted() {
-        // axios.get("/korisnik").then((res)=>{
-        //     if(res.status!=200){
-        //         new Toast({
-        //             message:response.statusText,
-        //             type: 'danger'
-        //         });
-        //     }else{
-        //         this.korisnik = res.data;
-        //     }
-        // });
     },
     methods:{
         izmeniProfil:function () {
@@ -81,7 +68,65 @@ new Vue({
                 });
             }
        }
-    }
+    },
+    template:
+`
+<div id="izmena-profila">
+    <div class="jumbotron"><h1>Izmena profila</h1></div>
+    
+    <div class="container">
+        <h2>Korisnik: {{email}}</h2>
+        <table class="table">                
+            <tr>
+                <td>
+                    Email 
+                </td>
+                <td>
+                    <input type="text" v-model = "email">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Ime 
+                </td>
+                <td>
+                    <input type="text" v-model = "ime">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Prezime
+                </td>
+                <td>
+                    <input type="text" v-model = "prezime">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Šifra
+                </td>
+                <td>
+                    <input id="sifra1" type="password" v-model = "sifra1">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Ponovite šifru
+                </td>
+                <td>
+                    <input id = "sifra2" type="password" v-model = "sifra2">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button v-on:click = "izmeniProfil()" type="button" class="btn btn-success">Izmeni profil</button>
+                </td>
+            </tr>
+        </table>   
+    </div>
+
+</div>
+`
 });
 
 

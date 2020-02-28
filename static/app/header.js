@@ -1,60 +1,52 @@
 Vue.component("site-header", {
-	data: function () {
-		    return {
-              type: "",
-              orgid:null
-		    }
-	},
+    props:['korisnik'],
 	template: ` 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button v-if = "type" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button v-if = "korisnik.uloga" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <a href = "/" class="navbar-brand">Cloud service</a>
         <div  class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
-                <li v-if = "type" class="nav-item">
-                    <router-link to="/vm">Virtualne mašine</router-link>
-                    <a class="nav-link" href="virtuelneMasine.html">Virtualne mašine <span class="sr-only">(current)</span></a>
+                <li v-if = "korisnik.uloga" class="nav-item">
+                    <router-link class="nav-link" to="/vm">Virtualne mašine</router-link>
                 </li>
-                <li v-if = "type == 'SUPER_ADMIN'" class="nav-item">
-                    <router-link to="/kat">Kategorija</router-link>
-                    <a class="nav-link" href="vmKat.html">Kategorije v-mašina<span class="sr-only">(current)</span></a>
+                <li v-if = "korisnik.uloga == 'SUPER_ADMIN'" class="nav-item">
+                    <router-link class="nav-link" to="/kat">Kategorija</router-link>
                 </li>
-                <li v-if = "type" class="nav-item">
-                    <router-link to="/disk">Diskovi</router-link>
-
-                    <a class="nav-link" href="diskovi.html">Diskovi <span class="sr-only">(current)</span></a>
+                <li v-if = "korisnik.uloga" class="nav-item">
+                    <router-link class="nav-link" to="/disk">Diskovi</router-link>
                 </li>
-                <li class="nav-item" v-if = "type=='SUPER_ADMIN'">
-                    <router-link to="/org">Organizacije</router-link>
-                    <a class="nav-link" href="organizacije.html">Organizacije <span class="sr-only">(current)</span></a>
+                <li class="nav-item" v-if = "korisnik.uloga=='SUPER_ADMIN'">
+                    <router-link class="nav-link" to="/org">Organizacije</router-link>
                 </li>
             
                 <li class="nav-item">
-                    <router-link to="/korisnik">Korisnici</router-link>
-                    <a v-if = "type=='SUPER_ADMIN'||type=='ADMIN'" class="nav-link" href="korisnici.html">Korisnici <span class="sr-only">(current)</span></a>
+                    <router-link class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'||korisnik.uloga=='ADMIN'" to="/korisnik">Korisnici</router-link>
                 </li>
 
                 
 
             </ul>
         </div>
-        <span v-if = "type" class="navbar-text">
-            <a href = "/izmenaProfila.html"><button class = "dropdown-item">Izmeni nalog</button></a>
-            <a v-if="type=='ADMIN'" v-bind:href = "'/orgIzmena.html?id='+orgid"><button class = "dropdown-item">Izmeni organizaciju</button></a>
-            <a v-if="type=='ADMIN'" href = "/racuni.html"><button class = "dropdown-item">Pregled računa</button></a>
+        <span v-if = "korisnik.uloga" class="navbar-text">
+            <router-link to = "/izmenaProfila"><button class = "dropdown-item">Izmeni nalog</button></router-link>
+            <router-link v-if="korisnik.uloga=='ADMIN'" :to="{name:'detaljiOrg', params:{org:korisnik.organizacija, tipKorisnika:korisnik.uloga}}"><button class = "dropdown-item">Izmeni organizaciju</button></router-link>
+            <a v-if="korisnik.uloga=='ADMIN'" href = "/racuni.html"><button class = "dropdown-item">Pregled računa</button></a>
             <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
         </span>
         
     </nav>	  
 `
-	, 
+    , 
 	methods : {
         odjava:function () {
             axios.get('/logout').then(response => {
                 if(response.data.status){
-                    window.location.replace("/login.html");
+                    this.$router.push("/");
+                    this.$emit('korisnik', "");
+
+                    // window.location.replace("/login.html");
                 }else{
                     new Toast({
                         message:response.data.poruka,
@@ -65,12 +57,12 @@ Vue.component("site-header", {
         }
 	},
 	mounted () {
-        axios.get('/korisnik').then(response => {
-            if(response.data){
-                this.type = response.data.uloga;
-                this.orgid =  response.data.organizacija;
-            }
-        }); 
+        // axios.get('/korisnik').then(response => {
+        //     if(response.data){
+        //         this.type = response.data.uloga;
+        //         this.orgid =  response.data.organizacija;
+        //     }
+        // }); 
     }
 });
 

@@ -1,5 +1,6 @@
 package komunikacija;
 
+import dto.KorisnikDTO;
 import models.Korisnik;
 
 public class LoginPoruka extends Poruka {
@@ -15,12 +16,11 @@ public class LoginPoruka extends Poruka {
         this.k = k;
     }
 
+    public Poruka toPoruka() {
+        return this;
+    }
 
     public Korisnik getKorisnik() {
         return k;
-    }
-
-    public Poruka toPoruka() {
-        return this;
     }
 }

@@ -6,7 +6,22 @@ Vue.component("pregled-vm",{
            kategorijeRAM : [],
            kategorijeGPU : [],
            tipKorisnika : null,
-           naziv : ""
+           naziv : "",
+
+           
+           minRam:"",
+           maxRam:"",
+
+           minJZG:"",
+           maxJZG:"",
+           
+           minGPU:"",
+           maxGPU:"",
+
+           rangeRAM:[],
+           rangeJZG:[],
+           rangeGPU:[],
+
         }
     },
     
@@ -39,64 +54,69 @@ Vue.component("pregled-vm",{
                     this.kategorijeGPU = [...new Set(this.kategorijeGPU)];
                     this.kategorijeBrJezgara = [...new Set(this.kategorijeBrJezgara)];
                     this.kategorijeRAM = [...new Set(this.kategorijeRAM)];
-                    let minRam =  Math.min.apply(Math,this.kategorijeRAM);
-                    let maxRam =  Math.max.apply(Math,this.kategorijeRAM);
+                   
+                   
                     
-
                     //RAM
-                    $( "#sliderRam" ).slider({
-                        range: true,
-                        min:minRam,
-                        max: maxRam,            
-                    });
-                    $( "#sliderRam" ).on( "slidechange", function( event, ui ) {
-                        var values = $( "#sliderRam" ).slider( "option", "values" );
+                    this.minRam =  Math.min.apply(Math,this.kategorijeRAM);
+                    this.maxRam =  Math.max.apply(Math,this.kategorijeRAM);
+                    this.rangeRAM = [this.minRam, this.maxRam];
+                    // $( "#sliderRam" ).slider({
+                    //     range: true,
+                    //     min:minRam,
+                    //     max: maxRam,            
+                    // });
+                    // $( "#sliderRam" ).on( "slidechange", function( event, ui ) {
+                    //     var values = $( this ).slider( "option", "values" );
             
-                        $("#ramOd").text(values[0]);
-                        $("#ramDo").text(values[1]);
-                    } );
+                    //     $("#ramOd").text(values[0]);
+                    //     $("#ramDo").text(values[1]);
+                    // } );
                     
-                    $( "#sliderRam" ).slider( "option", "max", maxRam);
-                    $( "#sliderRam" ).slider( "option", "min", minRam);
-                    $( "#sliderRam" ).slider( "option", "values",[minRam, maxRam ] );
+                    // $( "#sliderRam" ).slider( "option", "max", maxRam);
+                    // $( "#sliderRam" ).slider( "option", "min", minRam);
+                    // $( "#sliderRam" ).slider( "option", "values",[minRam, maxRam ] );
 
 
                     //JEZGRA
-                    let minJezgra =  Math.min.apply(Math,this.kategorijeBrJezgara);
-                    let maxJezgra =  Math.max.apply(Math,this.kategorijeBrJezgara);
-                    $( "#sliderJezgra" ).slider({
-                        range: true,
-                        min:minJezgra,
-                        max: maxJezgra
-                    });
-                    $( "#sliderJezgra" ).on( "slidechange", function( event, ui ) {
-                        var values2= $( "#sliderJezgra" ).slider( "option", "values" );
-                        $("#jezgraOd").text(values2[0]);
-                        $("#jezgraDo").text(values2[1]);
-                    } );
-                    $( "#sliderJezgra" ).slider( "option", "max", maxJezgra);
-                    $( "#sliderJezgra" ).slider( "option", "min", minJezgra);
-                    $( "#sliderJezgra" ).slider( "option", "values",[minJezgra, maxJezgra] );
+                    this.minJZG =  Math.min.apply(Math,this.kategorijeBrJezgara);
+                    this.maxJZG =  Math.max.apply(Math,this.kategorijeBrJezgara);
+                    this.rangeJZG = [this.minJZG, this.maxJZG];
+                    
+                    // $( "#sliderJezgra" ).slider({
+                    //     range: true,
+                    //     min:minJezgra,
+                    //     max: maxJezgra
+                    // });
+                    // $( "#sliderJezgra" ).on( "slidechange", function( event, ui ) {
+                    //     var values2= $( "#sliderJezgra" ).slider( "option", "values" );
+                    //     $("#jezgraOd").text(values2[0]);
+                    //     $("#jezgraDo").text(values2[1]);
+                    // } );
+                    // $( "#sliderJezgra" ).slider( "option", "max", maxJezgra);
+                    // $( "#sliderJezgra" ).slider( "option", "min", minJezgra);
+                    // $( "#sliderJezgra" ).slider( "option", "values",[minJezgra, maxJezgra] );
 
 
                     //GPU
-                    let minGPU =  Math.min.apply(Math,this.kategorijeGPU);
-                    let maxGPU =  Math.max.apply(Math,this.kategorijeGPU);
+                    this.minGPU =  Math.min.apply(Math,this.kategorijeGPU);
+                    this.maxGPU =  Math.max.apply(Math,this.kategorijeGPU);
+                    this.rangeGPU = [this.minGPU, this.maxGPU];
                     
-                    $( "#sliderGpu" ).slider({
-                        range: true,
-                        min:minGPU,
-                        max: maxGPU
-                    });
-                    $( "#sliderGpu" ).on( "slidechange", function( event, ui ) {
-                        var values3= $( "#sliderGpu" ).slider( "option", "values" );
-                        $("#gpuOd").text(values3[0]);
-                        $("#gpuDo").text(values3[1]);
-                    } );
+                    // $( "#sliderGpu" ).slider({
+                    //     range: true,
+                    //     min:minGPU,
+                    //     max: maxGPU
+                    // });
+                    // $( "#sliderGpu" ).on( "slidechange", function( event, ui ) {
+                    //     var values3= $( "#sliderGpu" ).slider( "option", "values" );
+                    //     $("#gpuOd").text(values3[0]);
+                    //     $("#gpuDo").text(values3[1]);
+                    // } );
                     
-                    $( "#sliderGpu" ).slider( "option", "max", maxGPU);
-                    $( "#sliderGpu" ).slider( "option", "min", minGPU);
-                    $( "#sliderGpu" ).slider( "option", "values",[minGPU, maxGPU] );
+                    // $( "#sliderGpu" ).slider( "option", "max", maxGPU);
+                    // $( "#sliderGpu" ).slider( "option", "min", minGPU);
+                    // $( "#sliderGpu" ).slider( "option", "values",[minGPU, maxGPU] );
                 });
             },
 
@@ -135,15 +155,15 @@ Vue.component("pregled-vm",{
                 window.location.href="/virtuelnaMasinaIzmena.html?id="+id;
             },
             filtriraj:function () {
-                var valuesRam = $( "#sliderRam" ).slider( "option", "values" );
-                var valuesJezgra = $( "#sliderJezgra" ).slider( "option", "values" );
-                var valuesGPU = $( "#sliderGpu" ).slider( "option", "values" );
+                // var valuesRam = $( "#sliderRam" ).slider( "option", "values" );
+                // var valuesJezgra = $( "#sliderJezgra" ).slider( "option", "values" );
+                // var valuesGPU = $( "#sliderGpu" ).slider( "option", "values" );
                 console.log(this.naziv);
                 let pomocniNaziv = this.naziv;
                 if(this.naziv.trim() == ""){
                     pomocniNaziv=" ";
                 }
-                axios.get("/virtuelneMasine/filtriraj/"+pomocniNaziv+"/"+valuesRam[0]+"/"+valuesRam[1]+"/"+valuesGPU[0]+"/"+valuesGPU[1]+"/"+valuesJezgra[0]+"/"+valuesJezgra[1]).then(response =>{
+                axios.get("/virtuelneMasine/filtriraj/"+pomocniNaziv+"/"+this.rangeRAM[0]+"/"+this.rangeRAM[1]+"/"+this.rangeGPU[0]+"/"+this.rangeGPU[1]+"/"+this.rangeJZG[0]+"/"+this.rangeJZG[1]).then(response =>{
                     this.virtuelneMasine=response.data;
                 }).catch(error=>{
                     let msg = error.response.data.ErrorMessage;
@@ -152,15 +172,6 @@ Vue.component("pregled-vm",{
                         type: 'danger'
                     });
                 });
-                /*{
-                    naziv : this.naziv,
-                        ramOd : valuesRam[0],
-                    ramDo : valuesRam[1],
-                    jezgraOd : valuesJezgra[0],
-                    jezgraDo : valuesJezgra[1],
-                    gpuOd : valuesGPU[0],
-                    gpuDo : valuesGPU[1]
-                }*/
             }
     },
     template:`
@@ -168,7 +179,8 @@ Vue.component("pregled-vm",{
 
         <div class="page-header">
             <h2>Pregled virtuelnih mašina</h2>
-        </div>
+        </div>       
+        
         <p>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filtriraj" aria-expanded="false" aria-controls="multiCollapseExample2">Filtriraj</button>
         </p>
@@ -184,32 +196,116 @@ Vue.component("pregled-vm",{
                 </tr>
                 <tr>
                     <td align="center" colspan="3">Kolicini rama</td>
-                    <td><p id="ramOd"></p></td>
-                    <td><p id="ramDo"></p></td>
+                    <td v-for="(r, i) in rangeRAM" :key="i"><p>{{r}}</p></td>
                 </tr>
                 <tr>
                     <td colspan="5">
-                        <div id="sliderRam"></div>
+                        <v-range-slider
+                            v-model="rangeRAM"
+                            :max="maxRam"
+                            :min="minRam"
+                            hide-details
+                            class="align-center"
+                        >
+                            <template v-slot:prepend>
+                            <v-text-field
+                                disabled
+                                :value="rangeRAM[0]"
+                                class="mt-0 pt-0"
+                                hide-details
+                                single-line
+                                type="number"
+                                style="width: 60px"
+                            ></v-text-field>
+                            </template>
+                            <template v-slot:append>
+                            <v-text-field
+                                disabled
+                                :value="rangeRAM[1]"
+                                class="mt-0 pt-0"
+                                hide-details
+                                single-line
+                                type="number"
+                                style="width: 60px"
+                            ></v-text-field>
+                            </template>
+                        </v-range-slider>
                     </td>
                 </tr>
                 <tr>
                     <td align="center" colspan="3">Broju jezgara</td>
-                    <td><p id="jezgraOd"></p></td>
-                    <td><p id="jezgraDo"></p></td>
+                    <td v-for="(r, i) in rangeJZG" :key="i"><p>{{r}}</p></td>
                 </tr>
                 <tr>
                     <td colspan="5">
-                        <div id="sliderJezgra"></div>
+                        <v-range-slider
+                            v-model="rangeJZG"
+                            :max="maxJZG"
+                            :min="minJZG"
+                            hide-details
+                            class="align-center"
+                        >
+                            <template v-slot:prepend>
+                            <v-text-field
+                                disabled
+                                :value="rangeJZG[0]"
+                                class="mt-0 pt-0"
+                                hide-details
+                                single-line
+                                type="number"
+                                style="width: 60px"
+                            ></v-text-field>
+                            </template>
+                            <template v-slot:append>
+                            <v-text-field
+                                disabled
+                                :value="rangeJZG[1]"
+                                class="mt-0 pt-0"
+                                hide-details
+                                single-line
+                                type="number"
+                                style="width: 60px"
+                            ></v-text-field>
+                            </template>
+                        </v-range-slider>
                     </td>
                 </tr>
                 <tr>
                     <td align="center" colspan="3">Broju GPU jezgara</td>
-                    <td><p id="gpuOd"></p></td>
-                    <td><p id="gpuDo"></p></td>
+                    <td v-for="(r, i) in rangeGPU" :key="i"><p>{{r}}</p></td>
                 </tr>
                 <tr>
                     <td colspan="5">
-                        <div id="sliderGpu"></div>
+                        <v-range-slider
+                            v-model="rangeGPU"
+                            :max="maxGPU"
+                            :min="minGPU"
+                            hide-details
+                            class="align-center"
+                        >
+                            <template v-slot:prepend>
+                            <v-text-field
+                                disabled
+                                :value="rangeGPU[0]"
+                                class="mt-0 pt-0"
+                                hide-details
+                                single-line
+                                type="number"
+                                style="width: 60px"
+                            ></v-text-field>
+                            </template>
+                            <template v-slot:append>
+                            <v-text-field
+                                disabled
+                                :value="rangeGPU[1]"
+                                class="mt-0 pt-0"
+                                hide-details
+                                single-line
+                                type="number"
+                                style="width: 60px"
+                            ></v-text-field>
+                            </template>
+                        </v-range-slider>
                     </td>
                 </tr>
                 <tr>

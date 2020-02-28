@@ -67,7 +67,7 @@ public class DiskService{
         if (disk.getOrganizacija()==null){
             throw new BadRequestException("Niste uneli organizaciju!");
         }
-        if (!disk.getOrganizacija().equals(k.getOrganizacija())){
+        if (!disk.getOrganizacija().equals(k.getOrganizacija())&&k.getUloga()!=Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne mozete dodati disk drugoj organizaciji!");
         }
         if(disk.getIme()==null||disk.getTipDiska()==null) {
@@ -97,7 +97,7 @@ public class DiskService{
         }
         try {
             Disk stari = diskDAO.fetchById(noviDisk.getId());
-            if (!stari.getOrganizacija().equals(k.getOrganizacija())) {
+            if (!stari.getOrganizacija().equals(k.getOrganizacija())&&k.getUloga()!=Uloga.SUPER_ADMIN) {
                 throw new BadRequestException("Ne mozete da menjate disk druge organizacije!");
             }
         }catch (NotFoundException nfe){

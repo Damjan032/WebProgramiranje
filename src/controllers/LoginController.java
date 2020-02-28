@@ -16,17 +16,11 @@ public class LoginController implements Controller{
     @Override
     public void init() {
 
-        get("/korisnik", (req, res)->{
-            return g.toJson(loginService.getKorisnik(req));
-        });
+        get("/korisnik", (req, res)-> g.toJson(loginService.getKorisnik(req)));
 
-        get("/login", (req, res) -> {
-            return g.toJson(loginService.tryLogin(req));
-        });
+        get("/login", (req, res) -> g.toJson(loginService.tryLogin(req)));
 
-        get("/logout", (req, res) -> {
-            return g.toJson(loginService.tryLogout(req));
-        });
+        get("/logout", (req, res) -> g.toJson(loginService.tryLogout(req)));
     }
 
 

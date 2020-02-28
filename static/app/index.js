@@ -2,6 +2,7 @@ Vue.use(VueRouter);
 // const header = { template: '<site-header></site-header>' }
 
 const prijava = { template: '<prijava></prijava>' }
+const izmenaProfila = {template:'<izmena-profila></izmena-profila>'}
 
 const org = { template: '<org></org>' }
 const pregledOrg = { template: '<pregled-org></pregled-org>' }
@@ -36,6 +37,11 @@ const router = new VueRouter({
             path:"/",
             name:"Index",
             component:prijava
+        },
+        {
+            path:"/izmenaProfila",
+            name:"IzmenaProfila",
+            component:izmenaProfila
         },
         {
             path:"/org",
@@ -136,12 +142,34 @@ const router = new VueRouter({
 
 new Vue({
     router,
+    vuetify: new Vuetify(),
     el:"#app",
+    data:{
+        korisnik:""
+    },
+    mounted:function name(params) {
+        axios.get('/korisnik').then(response => {
+            if(response.data){
+                this.korisnik = response.data;
+            }
+        });   
+    },
+    methods:{
+        setKorisnik:function (val) {
+            this.korisnik = val;
+            console.log("Korisnik promenjan na "+val);
+        }
+    },
+    created () {
+        bus.$on('korisnik', this.setKorisnik);
+    },
     template:`
 <div>
-    <site-header/>
-    <router-view></router-view>
- </div>
+    <v-app>
+        <site-header :korisnik="korisnik" @korisnik="setKorisnik"/>
+        <router-view :korisnik="korisnik" @korisnik="setKorisnik"></router-view>
+    </v-app>
+</div>
 `
 });
 

@@ -29,16 +29,8 @@ Vue.component("detalji-korisnika", {
                 uloga:this.uloga
               }
             )
-            promise.then(response=>{
-                    
-                    if (response.status == 200) {
-                        window.location.replace("/korisnici.html");
-                    }else{
-                        new Toast({
-                            message:response.statusText,
-                            type: 'danger'
-                        });
-                    }
+            promise.then(response=>{    
+                this.$router.push("/korisnik");
 
             });
             promise.catch(error=>{
@@ -51,16 +43,7 @@ Vue.component("detalji-korisnika", {
         obrisiKorisnika:function() {
             let promise = axios.delete("/korisnici/"+this.id);
             promise.then(response=>{
-                    
-                    if (response.status == 200) {
-                        window.location.replace("/korisnici.html");
-                    }else{
-                        new Toast({
-                            message:response.statusText,
-                            type: 'danger'
-                        });
-                    }
-
+                this.$router.push("/korisnik");
             });
             promise.catch(error=>{
                 new Toast({
