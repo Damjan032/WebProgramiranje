@@ -23,6 +23,7 @@ public class DiskService{
     private Gson g = new Gson();
     private DiskDAO diskDAO = new DiskDAO();
     private VirtuelnaMasinaDAO vmDAO = new VirtuelnaMasinaDAO();
+    private OrganizacijaDAO orgDAO = new OrganizacijaDAO();
 
 
     public List<String> fetchAll(Request req) throws FileNotFoundException {
@@ -75,6 +76,16 @@ public class DiskService{
         }
         if (disk.getKapacitet()<=0){
             throw new BadRequestException("Kapacitet ne može biti negativan!");
+        }
+        if(disk.getVm()!=null) {
+            try {
+                VirtuelnaMasina vm = vmDAO.fetchById(disk.getVm());
+                if(!vm.getOrganizacija().equals(disk.getOrganizacija())){
+                    throw new BadRequestException("Ne možete dodati disk virtuelnoj mašini druge organizacije!");
+                }
+            }catch (NotFoundException e){
+                throw new BadRequestException("Odabrali ste nepostojeću virtuelnu mašinu!");
+            }
         }
         disk = diskDAO.create(disk);
         return g.toJson(disk);

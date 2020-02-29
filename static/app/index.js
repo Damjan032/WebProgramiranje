@@ -2,6 +2,7 @@ Vue.use(VueRouter);
 // const header = { template: '<site-header></site-header>' }
 
 const prijava = { template: '<prijava></prijava>' }
+const racuni = { template: '<racuni></racuni>' }
 const izmenaProfila = {template:'<izmena-profila></izmena-profila>'}
 
 const org = { template: '<org></org>' }
@@ -42,6 +43,11 @@ const router = new VueRouter({
             path:"/izmenaProfila",
             name:"IzmenaProfila",
             component:izmenaProfila
+        }, 
+        {
+            path:"/racuni",
+            name:"Racuni",
+            component:racuni
         },
         {
             path:"/org",

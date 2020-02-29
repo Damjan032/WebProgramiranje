@@ -29,13 +29,51 @@ Vue.component("site-header", {
 
             </ul>
         </div>
-        <span v-if = "korisnik.uloga" class="navbar-text">
-            <router-link to = "/izmenaProfila"><button class = "dropdown-item">Izmeni nalog</button></router-link>
-            <router-link v-if="korisnik.uloga=='ADMIN'" :to="{name:'detaljiOrg', params:{org:korisnik.organizacija, tipKorisnika:korisnik.uloga}}"><button class = "dropdown-item">Izmeni organizaciju</button></router-link>
-            <a v-if="korisnik.uloga=='ADMIN'" href = "/racuni.html"><button class = "dropdown-item">Pregled računa</button></a>
-            <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
-        </span>
-        
+
+        <v-menu 
+        v-if = "korisnik.uloga"
+        transition="slide-y-transition"
+        bottom
+        >
+            <template v-slot:activator="{ on }">
+                <v-btn
+                class="purple"
+                color="primary"
+                dark
+                v-on="on"
+                >
+                Korisnički meni
+                </v-btn>
+            </template>
+            <v-list >
+                <v-list-item
+                >
+                    <v-list-item-title>                    
+                        <router-link to = "/izmenaProfila"><button class = "dropdown-item">Izmeni nalog</button></router-link>
+                    </v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                v-if="korisnik.uloga=='ADMIN'" 
+                >
+                    <v-list-item-title>                    
+                        <router-link :to="{name:'detaljiOrg', params:{org:korisnik.organizacija, tipKorisnika:korisnik.uloga}}"><button class = "dropdown-item">Izmeni organizaciju</button></router-link>
+                    </v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                v-if="korisnik.uloga=='ADMIN'" 
+                >
+                    <v-list-item-title>                    
+                        <router-link to = "/racuni"><button class = "dropdown-item">Pregled računa</button></router-link>
+                    </v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                >
+                    <v-list-item-title>                    
+                        <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
+                    </v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>        
     </nav>	  
 `
     , 

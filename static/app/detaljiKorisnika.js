@@ -8,7 +8,8 @@ Vue.component("detalji-korisnika", {
             staraUloga:null,
             uloga: null,
             email:null,
-            organizacija:null
+            organizacija:null,
+            orgId:""
         }
 	}
 	, 
@@ -25,7 +26,7 @@ Vue.component("detalji-korisnika", {
                 email: this.email,
                 ime: this.ime,
                 prezime: this.prezime,
-                organizacija: this.organizacija,
+                organizacija: this.orgId,
                 uloga:this.uloga
               }
             )
@@ -63,6 +64,7 @@ Vue.component("detalji-korisnika", {
         this.staraUloga = this.$route.params.korisnik.uloga;
         this.email = this.$route.params.korisnik.email;
         this.organizacija = this.$route.params.korisnik.organizacija.ime;
+        this.orgId = this.$route.params.korisnik.organizacija.id;
         // let email = this.selektovaniKorisnik.email;
         // axios.get('/korisnici/'+email).then(response => {
         //     this.korisnik = response.data;
@@ -118,17 +120,11 @@ Vue.component("detalji-korisnika", {
                 Nova uloga 
             </td>
             <td>
-                <select class="required" name="org" v-model="uloga">
+                <select name="org" v-model="uloga">
                     <option value="admin">Admin</option>
                     <option value="korisnik">Korisnik</option>
                 </select> 
-            </td>
-            <td >
-                <p  class="alert alert-danger d-none">
-                    Ovo polje je obavezno!
-                </p>
-            
-            </td>                           
+            </td>\                          
         </tr>
         <tr>
             <td>

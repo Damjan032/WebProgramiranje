@@ -89,7 +89,6 @@ Vue.component("detalji-vm", {
             });
         },
         izmenaAktivnosti:function(a){
-            console.log("AAAAAA");
             let pocetak = document.getElementById("poc"+a.id).value;
             let kraj = document.getElementById("kraj"+a.id).value;
             if(pocetak=="" && kraj=="" ){

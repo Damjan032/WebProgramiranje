@@ -117,12 +117,9 @@ Vue.component("izmena-profila",{
                     <input id = "sifra2" type="password" v-model = "sifra2">
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <button v-on:click = "izmeniProfil()" type="button" class="btn btn-success">Izmeni profil</button>
-                </td>
-            </tr>
+            
         </table>   
+        <button v-on:click = "izmeniProfil()" type="button" class="btn btn-success">Izmeni profil</button>
     </div>
 
 </div>

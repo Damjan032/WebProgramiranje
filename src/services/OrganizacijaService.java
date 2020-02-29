@@ -145,12 +145,12 @@ public class OrganizacijaService implements Service<String, String> {
         }
 
         if (resursiId != null) {
-            organizacija.getResursi().forEach(resurs -> {
+           for(var resurs:resursiId){
                 ResursDTO res = mapToResursDTO(resurs);
                 if (res!=null) {
                     resursiDTO.add(res);
                 }
-            });
+            }
         }
         return
                 g.toJson(new OrganizacijaDTO.Builder().withId(organizacija.getId()).withIme(organizacija.getIme())

@@ -10,16 +10,30 @@ Vue.component("dodaj-disk",{
             organizacije: null
         }
     },
+    watch:{
+        org:function (val) {
+            if(val){
+               let vau =  this.$refs.vm;
+               console.log(vau);
+               for(let o of this.organizacije){
+                   console.log(o);
+                   if(o.id === val){
+                    if(o.resursi){
+                        this.vmasine = [];
+                        for(let r of o.resursi){
+                            if(r.tipResursa=="VM"){
+                                this.vmasine.push(r);
+                            }
+                        }
+                    }
+
+                    // break;
+                   }
+               }
+            }
+        }
+    },
     mounted:function () {
-        axios.get('/virtuelneMasine').then(response => {
-            this.vmasine = response.data;
-        }).catch(error=>{
-            let msg = error.response.data.ErrorMessage;
-            new Toast({
-                message:msg,
-                type: 'danger'
-            });
-        }); 
         axios.get('/organizacije').then(response => {
             this.organizacije = response.data;
         }).catch(error=>{
@@ -48,7 +62,7 @@ Vue.component("dodaj-disk",{
             promise.then(response=>{
                     
                     if (response.status) {
-                        this.$router.push("/");
+                        this.$router.push("/disk");
                     }else{
                         new Toast({
                             message:response.statusText,
@@ -127,16 +141,6 @@ Vue.component("dodaj-disk",{
             </tr>
             <tr>
                 <td>
-                    Virtuelna mašina
-                </td>
-                <td>
-                    <select name="vm" v-model="vm">
-                        <option v-for = "vm in vmasine" :value="vm.id">{{vm.ime}}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     Organizacija
                 </td>
                 <td>
@@ -148,6 +152,16 @@ Vue.component("dodaj-disk",{
                     <p  class="alert alert-danger d-none">
                         Ovo polje je obavezno!
                     </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Virtuelna mašina
+                </td>
+                <td>
+                    <select ref="vm" name="vm" v-model="vm">
+                        <option v-for = "vm in vmasine" :value="vm.id">{{vm.ime}}</option>
+                    </select>
                 </td>
             </tr>
             <tr>

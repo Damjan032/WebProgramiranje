@@ -4,7 +4,9 @@ Vue.component("prijava",
     data:function () {
         return{    
             kime : "",
-            sifra :""
+            sifra :"",
+            valid:false,
+            rule:[v=>!!v||'Ovo polje je obavezno'] 
         }
     },
     mounted:function() {        
@@ -25,21 +27,21 @@ Vue.component("prijava",
         );
     },
     methods:{
-        checkParams: checkFormParams
-        ,
-
-        login:function(k, s) {
-            if(!this.checkParams()){
-                return;
+        login:function() {
+            if(!this.$refs.login.validate()){
+                 new Toast({
+                     message:'Niste uneli sve podatke',
+                     type: 'danger'
+                 });
+                 return;
             }
             let promise = axios.get("/login",{params: {
-                kime:k,
-                sifra:s
+                kime:this.kime,
+                sifra:this.sifra
               }
              }
             )
             promise.then(response=>{
-                   
                     if (response.data.status) {
                         this.$router.push("vm");
                         bus.$emit("korisnik", response.data.k);
@@ -57,53 +59,50 @@ Vue.component("prijava",
     template:
 `
 <div>
-    <div class="jumbotron"><h1>Prijava korisnika</h1></div>
-    <div class="container">
-        <div class="page-header">
-            <h2>Prijavite se</h2>
-        </div>
-        <p id="login" v-on:keyup.enter = "login(kime, sifra)">
-            <table>
-                <tr>
-                    <td>
-                        Korisničko ime
-                    </td>
-                    <td>
-                        <input class="required" type="text" v-model="kime"/>
-                    </td>
-                    <td >
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Šifra
-                    </td>
-                    <td>
-                        <input class="required" type="password" v-model="sifra"/>
-                    </td>
-                    <td>
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    
-                    </td>
-                    <td>
-                        <button @click = "login(kime, sifra)">Prijavite se</button>
-                    </td>
-                </tr> 
-            </table>
+    <v-container>
+        <h1>Prijava korisnika</h1>
+    </v-container>
+    <v-container>
+        <v-card
+            class="mx-auto"
+        >
+            <v-card-title>Prijavite se</v-card-title>     
+            <v-container>   
+                <v-form 
+                    ref="login" 
+                    v-model="valid"
+                >
+                    <v-text-field
+                        v-model="kime"
+                        label="Korisničko ime"
+                        required
+                        :rules="rule"
+                        v-on:keyup.enter = "login"
 
-            
-            
-        </p>
-    </div>
+                    >
+                    </v-text-field>
+
+                    <v-text-field
+                        v-model="sifra"
+                        label="Šifra"
+                        type="password"
+                        required
+                        :rules="rule"
+                        v-on:keyup.enter = "login"
+                    >
+                    </v-text-field>
+
+                    <v-btn
+                        color="success"
+                        class="mr-4"
+                        @click="login"
+                    >
+                        Prijavite se
+                    </v-btn>
+                </v-form>
+            </v-container>
+        </v-card>
+    </v-container>
 
 </div>    
     
