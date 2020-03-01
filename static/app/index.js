@@ -173,7 +173,9 @@ new Vue({
 <div>
     <v-app>
         <site-header :korisnik="korisnik" @korisnik="setKorisnik"/>
-        <router-view :korisnik="korisnik" @korisnik="setKorisnik"></router-view>
+        <transition name="fade">
+            <router-view :korisnik="korisnik" @korisnik="setKorisnik" style="margin-top:200px"></router-view>
+        </transition>
     </v-app>
 </div>
 `

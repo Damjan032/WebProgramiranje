@@ -1,51 +1,58 @@
 Vue.component("site-header", {
+    data:function name(params) {
+      return{
+          drawer:false
+      }  
+    },
     props:['korisnik'],
-	template: ` 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button v-if = "korisnik.uloga" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a href = "/" class="navbar-brand">Cloud service</a>
-        <div  class="collapse navbar-collapse" id="navbar">
-            <ul class="navbar-nav mr-auto">
-                <li v-if = "korisnik.uloga" class="nav-item">
-                    <router-link class="nav-link" to="/vm">Virtualne mašine</router-link>
-                </li>
-                <li v-if = "korisnik.uloga == 'SUPER_ADMIN'" class="nav-item">
-                    <router-link class="nav-link" to="/kat">Kategorija</router-link>
-                </li>
-                <li v-if = "korisnik.uloga" class="nav-item">
-                    <router-link class="nav-link" to="/disk">Diskovi</router-link>
-                </li>
-                <li class="nav-item" v-if = "korisnik.uloga=='SUPER_ADMIN'">
-                    <router-link class="nav-link" to="/org">Organizacije</router-link>
-                </li>
-            
-                <li class="nav-item">
-                    <router-link class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'||korisnik.uloga=='ADMIN'" to="/korisnik">Korisnici</router-link>
-                </li>
+    template: ` 
+<div>
+    <v-app-bar
+      absolute
+      color="#6A76AB"
+      dark
+      prominent
+      src="../img/cloud.jpeg"
+      fade-img-on-scroll
+    >
+      <template v-slot:img="{ props }">
+        <v-img
+          v-bind="props"
+          gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
+        ></v-img>
+      </template>
+      
+      <v-app-bar-nav-icon @click="drawer = true">
+      </v-app-bar-nav-icon>
 
-                
+      <v-toolbar-title>       
+        <router-link to = "/" tag="p" class="navbar-brand"><h1>Cloud service</h1></router-link>
+      </v-toolbar-title>
+      
 
-            </ul>
-        </div>
-
-        <v-menu 
-        v-if = "korisnik.uloga"
-        transition="slide-y-transition"
-        bottom
+      <template v-slot:extension>
+        <v-tabs align-with-title v-if = "korisnik.uloga"
         >
-            <template v-slot:activator="{ on }">
-                <v-btn
-                class="purple"
-                color="primary"
-                dark
-                v-on="on"
-                >
-                Korisnički meni
-                </v-btn>
-            </template>
-            <v-list >
+            <router-link tag="v-tab" class="nav-link" to="/vm">Virtualne mašine</router-link>
+            <router-link tag="v-tab" class="nav-link" to="/kat">Kategorija</router-link>
+            <router-link tag="v-tab" class="nav-link" to="/disk">Diskovi</router-link>
+        
+            <router-link tag="v-tab" class="nav-link" to="/org">Organizacije</router-link>
+            <router-link tag="v-tab" class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'||korisnik.uloga=='ADMIN'" to="/korisnik">Korisnici</router-link>
+        </v-tabs>
+      </template>
+    </v-app-bar>
+
+    <v-navigation-drawer
+        v-model="drawer"
+        absolute
+        temporary
+    >
+        <v-list
+        nav
+        dense
+        >
+            <v-list-item-group>
                 <v-list-item
                 >
                     <v-list-item-title>                    
@@ -72,9 +79,10 @@ Vue.component("site-header", {
                         <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>
                     </v-list-item-title>
                 </v-list-item>
-            </v-list>
-        </v-menu>        
-    </nav>	  
+            </v-list-item-group>
+        </v-list>
+    </v-navigation-drawer>
+</div>
 `
     , 
 	methods : {

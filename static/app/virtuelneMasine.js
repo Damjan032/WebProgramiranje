@@ -26,10 +26,20 @@ Vue.component("vm",{
     template:
     `
 <div id="vmApp">
-    <div class="jumbotron"><h1>Virtuelne mašine</h1></div>
+    <v-jumbotron color="primary" dark>
+        <v-container fill-height>
+            <v-layout align-center>
+                <v-flex text-xs-center>
+                    <h1 class="display-2">Virtuelne mašine</h1>
+                </v-flex>
+            </v-layout>
+        </v-container>
+    </v-jumbotron>
 
     <div class="container">
-        <router-view></router-view>
+        <transition name="fade">
+           <router-view></router-view>
+        </transition>
     </div>
 </div>
 `
