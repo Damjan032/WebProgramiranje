@@ -63,6 +63,8 @@ public class VirtuelnaMasinaDAO extends Initializer{
             throw new BadRequestException("VM sa imenom: " + virtuelnaMasina.getIme() +" ne postoji");
         }
         List<VirtuelnaMasina> virtuelnaMasine= fetchAll();
+        System.out.println("VM : "+virtuelnaMasine.size());
+
         virtuelnaMasine.forEach(
                 oldVM -> {
                     if (oldVM.getId().equals(id)) {
@@ -93,6 +95,8 @@ public class VirtuelnaMasinaDAO extends Initializer{
     }
 
     private void upisListeUFile(List<VirtuelnaMasina> vmKategorije) throws IOException {
+        System.out.println("VM : "+vmKategorije.size());
+
         Files.write(Paths.get(FILE_PATH), g.toJson(vmKategorije).getBytes());
 
     }

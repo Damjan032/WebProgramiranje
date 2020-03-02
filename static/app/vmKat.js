@@ -23,9 +23,18 @@ Vue.component("kat",{
     template:
 `
 <div id="katapp">
-    <div class="jumbotron"><h1>Kategorije virtuelnih mašina</h1></div>  
+    <v-container color="primary">
+        <v-layout align-center>
+            <v-flex text-xs-center>
+                <h1 class="display-2">Kategorije virtuelnih mašina</h1>
+            </v-flex>
+        </v-layout>
+        <v-divider class="my-3"></v-divider>
+    </v-container>
     <div class="container">
-        <router-view></router-view>
+        <transition name="fade">
+            <router-view></router-view>
+        </transition>
     </div>    
 </div>
 `

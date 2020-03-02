@@ -21,6 +21,10 @@ public class ResursDTO {
         this.tipResursa = tipResursa;
     }
 
+    public ResursDTO() {
+
+    }
+
     public TipResursa getTipResursa() {
         return tipResursa;
     }

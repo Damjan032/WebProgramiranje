@@ -153,8 +153,16 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         if(virtuelnaMasina.getKategorija().equalsIgnoreCase("")){
             throw new BadRequestException("Izaberi kategoriju");
         }
-        VMKategorija vmKategorija = vmKategorijaDAO.fetchByIme(virtuelnaMasina.getKategorija()).get();
-        virtuelnaMasina.setKategorija(vmKategorija.getId());
+        try{
+            vmKategorijaDAO.fetchById(virtuelnaMasina.getKategorija());
+        }catch(NotFoundException nfe){
+            throw new BadRequestException("Odabrali ste nepostojeću kategoriju virtuelne mašine!");
+        }
+        try{
+            organizacijaDAO.fetchById(virtuelnaMasina.getOrganizacija());
+        }catch(NotFoundException nfe){
+            throw new BadRequestException("Odabrali ste nepostojeću organizaciju!");
+        }
         virtuelnaMasina = virtuelnaMasinaDAO.create(virtuelnaMasina);
         return g.toJson(virtuelnaMasina);
     }
@@ -216,9 +224,8 @@ public class VirtuelnaMasinaService implements Service<String, String> {
         if (k.getUloga()==Uloga.KORISNIK){
             throw new UnauthorizedException();
         }
-        String body = req.body();
         VirtuelnaMasina virtuelnaMasina = virtuelnaMasinaDAO.fetchById(id);
-        VirtuelnaMasinaDTO virtuelnaMasinaDTO = g.fromJson(body, VirtuelnaMasinaDTO.class);
+        VirtuelnaMasinaDTO virtuelnaMasinaDTO = new VirtuelnaMasinaDTO();
         virtuelnaMasinaDTO.setAktivnosti(virtuelnaMasina.getAktivnosti());
 
         boolean aktivnost = virtuelnaMasinaDTO.getIsActiv();
@@ -231,7 +238,7 @@ public class VirtuelnaMasinaService implements Service<String, String> {
             }
             virtuelnaMasina.getAktivnosti().add(new Aktivnost(LocalDateTime.now(), null));
         }
-        virtuelnaMasinaDTO.setIsActiv(!aktivnost);
+//        virtuelnaMasinaDTO.setIsActiv(!aktivnost);
         System.out.println( virtuelnaMasina.getAktivnosti().get(0).getPocetak());
         return g.toJson(virtuelnaMasinaDAO.update(virtuelnaMasina, id));
     }

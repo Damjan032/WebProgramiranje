@@ -31,7 +31,6 @@ public abstract class Initializer {
                     generateData();
                 }
             }
-            JsonReader reader = new JsonReader(new FileReader(f));
             List<Object> res = readData();
             if (res == null || res.isEmpty()){
                 return generateData();

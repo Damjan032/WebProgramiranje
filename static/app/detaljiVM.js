@@ -3,23 +3,36 @@ Vue.component("detalji-vm", {
 	data: function () {
         return {
             id:"",
-            vmKategorije : "",
+            vmKategorije : [],
+            diskovi:[],
+            aktivnosti:[],
             ime : "",
             kategorija : "",
             katIme:"",
             orgIme:"",
             virtuelnaMasina: "",
             tipKorisnika:"",
-            diskovi:""
+            validdisk:false,
+            rule:[v=>!!v||'Ovo polje je obavezno'],
+            aktivnost:false,
+            datetime:"",
+
+
+            hovers:[]
+        }
+    },
+    watch:{
+        aktivnost:function (n) {
+            console.log(n);
+            
+            this.activnost();
         }
     },
 	methods : {
 		checkParams: checkFormParams
         ,
         izmeni:function(){
-            console.log(this.kategorija);
-            console.log(this.ime);
-            if(!this.checkParams()){
+            if(!this.$refs.formaVM.validate()){
                 return;
             }
 
@@ -45,6 +58,12 @@ Vue.component("detalji-vm", {
                 this.ime = response.data.ime;
                 this.katIme = response.data.kategorija.ime;
                 this.orgIme = response.data.organizacija.ime;
+                this.diskovi = response.data.diskovi;
+                this.aktivnosti = response.data.aktivnosti;
+                for(let a of aktivnosti){
+                    this.hovers.push(true);
+                }
+                this.aktivnost = response.data.isActiv;
             }).catch(error=> {
                 let msg = error.response.data.ErrorMessage;
                 new Toast({
@@ -54,8 +73,8 @@ Vue.component("detalji-vm", {
             });
         },
         activnost:function () {
-            let promise = axios.put("/virtuelneMasine/activnost/"+this.virtuelnaMasina.id,{}).then(res=>{
-                this.$router.go();
+            let promise = axios.put("/virtuelneMasine/activnost/"+this.virtuelnaMasina.id).then(res=>{
+                this.reload();
             });
             promise.catch(error=>{
                 new Toast({
@@ -91,19 +110,15 @@ Vue.component("detalji-vm", {
             });
         },
         izmenaAktivnosti:function(a){
-            let pocetak = document.getElementById("poc"+a.id).value;
-            let kraj = document.getElementById("kraj"+a.id).value;
+            let pocetak = a.pocetak;
+            let kraj = a.zavrsetak;
             if(pocetak=="" && kraj=="" ){
                 new Toast({
                     message:"Popuni pravilno makar jedno od polja za izmenu,",
                     type: 'danger'
                 });
             }else {
-                novaAktivnost = {
-                    pocetak: pocetak,
-                    zavrsetak: kraj
-                };
-                axios.put("/virtuelneMasine/" + this.virtuelnaMasina.id + "/" + a.id, novaAktivnost).then(response => {
+                axios.put("/virtuelneMasine/" + this.virtuelnaMasina.id + "/" + a.id, a).then(response => {
                     this.reload();
                 }).catch(error => {
                     let msg = error.response.data.ErrorMessage;
@@ -116,9 +131,7 @@ Vue.component("detalji-vm", {
         },
         
         izmenaDiska:function (disk) { 
-            let ime = document.getElementById("ime"+disk.id).value;
-            let kapacitet = document.getElementById("kapacitet"+disk.id).value;
-            axios.put("/diskovi",{id:disk.id,ime:ime,kapacitet:kapacitet}).then(response=>{
+            axios.put("/diskovi",disk).then(response=>{
                 new Toast({
                     message: "Uspešno je izmenjen disk!",
                     type: 'success'
@@ -166,87 +179,73 @@ Vue.component("detalji-vm", {
     template: ` 
 <div>
     <v-row>
-        <v-col col="10">
+        <v-col cols="10">
             <h3>Detalji virtuelne mašine</h3>
         </v-col>
-        <v-col col="2">
+        <v-col cols="2">
             <v-container class="d-flex flex-row-reverse">
-                <v-btn color="primary" @click="back">Nazad</button>
-            <v-container>
+                <v-btn color="primary" @click="back">Nazad</v-btn>
+            </v-container>
         </v-col>
-    </v-row>
+    </v-row>   
+
     <v-row>
         <v-col cols="12" lg="4">
-            <v-card> 
+            <v-card height="100%"s> 
                 <v-container>   
                     <h3>Virtuelna mašina: {{ime}}</h3>
-                    <v-simple-table>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    Ime virtuelne masine:
-                                </td>
-                                <td>
-                                    <input class="required" type="text" v-model="ime" v-bind:placeholder="katIme"/>
-                                </td>
-                                <td>
-                                    <p  class="alert alert-danger d-none">
-                                        Ovo polje je obavezno!
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Kategorija:
-                                </td>
-                                <td>
-                                    {{katIme}}
-                                </td>
-                                
-                            </tr>
-                            <tr>
-                                <td>
-                                    Nova kategorija:
-                                </td>
-                                <td>
-                                    <select class="required" v-model="kategorija">
-                                        <option  v-if="vmKategorije" :selected="kat==kategorija" v-for = "kat in vmKategorije" v-bind:value="kat.ime">{{kat.ime}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <p  class="alert alert-danger d-none">
-                                        Ovo polje je obavezno!
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Organizacija
-                                </td>
-                                <td>
-                                    {{orgIme}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Aktivnost:
-                                </td>
-                                <td>
-                                    <label class="switch">
-                                        <input type="checkbox" v-bind:checked="virtuelnaMasina.isActiv" v-on:click="activnost()">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </v-simple-table>
-                    <button v-if="tipKorisnika!='KORISNIK'" class="btn btn-success"  @click = "izmeni()">Izmeni vm</button>
-                    <button v-if="tipKorisnika!='KORISNIK'" class="btn btn-danger"  @click = "obrisi()">Obriši vm</button>
-                <v-container>
+                    <v-form ref="formaVM">
+                        <v-text-field
+                            required
+                            label="Ime virtuelne mašine"
+                            v-model="ime"
+                            :rules="rule"
+                            :readonly="tipKorisnika=='KORISNIK'?true:false"
+
+                        >
+                        </v-text-field>
+                        <v-divider class="my-3"></v-divider>
+
+                        <p>
+                            Kategorija: {{katIme}}
+                        </p>
+                        <v-divider class="my-3"></v-divider>
+                        <v-select
+                            v-if="tipKorisnika!='KORISNIK'"
+                            required
+                            :items="vmKategorije"
+                            solo
+                            item-text="ime"
+                            item-value="id"
+                            :rules="rule"
+                            label="Nova kategorija"
+                            v-model="kategorija"
+                        >
+                        </v-select>
+                        <v-divider class="my-3"></v-divider>
+                        <p>
+                            Organizacija
+                            {{orgIme}}
+                        </p>
+                        <v-divider class="my-3"></v-divider>
+                        <p v-if="tipKorisnika!='KORISNIK'">
+                            Aktivnost:    
+                            <v-switch
+                                v-model="aktivnost"
+                            >
+                            </v-switch>
+                        </p>
+                    </v-form>
+                </v-container>
+                <v-card-actions>
+                    <v-btn v-if="tipKorisnika!='KORISNIK'" color="success"  @click = "izmeni()">Izmeni vm</v-btn>
+                    <v-btn v-if="tipKorisnika!='KORISNIK'" color="error"  @click = "obrisi()">Obriši vm</v-btn>
+               
+                </v-card-actions>
             </v-card>
         </v-col>	
         <v-col cols="12" lg="8">
-            <v-card>
+            <v-card height="100%" :class="{'subheading': $vuetify.breakpoint.xs}">
                 <v-container>
                     <h2>Pregled aktivnosti</h2>
                     <p v-if="virtuelnaMasina.aktivnosti.length==0">Trenutno nema aktivnosti</p>
@@ -268,39 +267,70 @@ Vue.component("detalji-vm", {
                             </th>
                         </thead>
                         <tbody>
-                            <tr v-if="virtuelnaMasina&&virtuelnaMasina.aktivnosti" v-for = "a in virtuelnaMasina.aktivnosti" >
+                            <tr v-if="aktivnosti" v-for = "(a, i) in aktivnosti" :key="a.id">
                                 <td>
-                                    {{a.pocetak}}
-                                    <input v-if="tipKorisnika=='SUPER_ADMIN'" v-bind:id="'poc'+a.id" type="datetime-local" v-bind:value="a.pocetak">
-
+                                    <v-expansion-panels>
+                                        <v-expansion-panel>
+                                            <v-expansion-panel-header>
+                                                {{a.pocetak}}
+                                            </v-expansion-panel-header>
+                                            <v-expansion-panel-content  v-if="tipKorisnika=='SUPER_ADMIN'">
+                                                <v-date-time v-model="a.pocetak"/>
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-expansion-panels>
                                 </td>
                                 <td text-align="center">
-                                    {{a.zavrsetak}}
-                                    <input v-if="tipKorisnika=='SUPER_ADMIN'" v-bind:id="'kraj'+a.id" type="datetime-local" v-bind:value="a.zavrsetak">
+                                    <v-expansion-panels v-if="a.zavrsetak!=null">
+                                        <v-expansion-panel>
+                                            <v-expansion-panel-header>
+                                                {{a.zavrsetak}}
+                                            </v-expansion-panel-header>
+                                            <v-expansion-panel-content  v-if="tipKorisnika=='SUPER_ADMIN'">
+                                                <v-date-time v-model="a.zavrsetak"/>
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-expansion-panels>
+                                                                        
+                                    <v-row align="center"
+                                    justify="center" v-else>
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-row>
+                                    <p v-for="h in hovers">
+                                        {{h}}
+                                    </p>
                                 </td>
                                 <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
-                                    <button type="button" class="btn btn-secondary" v-if="a.zavrsetak!=null" @click= "izmenaAktivnosti(a)" >Izmeni aktivnost</button>
+                                    <v-btn x-small v-if="a.zavrsetak!=null" @click= "izmenaAktivnosti(a)" >Izmeni aktivnost</v-btn>
+                                    <v-row align="center"
+                                    justify="center" v-else>
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-row>
                                 </td>
                                 <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
-                                    <button type="button" class="btn btn-secondary" v-if="a.zavrsetak!=null" @click= "brisanjeAktivnosti(a)" >Obrisi aktivnost</button>
+                                    <v-btn x-small v-if="a.zavrsetak!=null" @click= "brisanjeAktivnosti(a)" >Obrisi aktivnost</v-btn>
+                                    <v-row align="center"
+                                    justify="center" v-else>
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-row>
                                 </td>
                             </tr>
-                        </tbody
+                        </tbody>
                     </v-simple-table>
-                <v-container>
+                </v-container>
             </v-card>
         </v-col>	
     </v-row>	
     <v-row>	
         <v-col cols="12">
-            <v-card>
+            <v-card height="100%">
                 <v-container>
                     <div class="page-header">
                         <h2>Pregled diskova</h2>
                     </div>
-                    <p v-if="virtuelnaMasina.diskovi.length==0">Trenutno nema diskova</p>
-                    <table class="table" v-else>
-                        <tr>
+                    <p v-if="diskovi.length==0">Trenutno nema diskova</p>
+                    <v-simple-table v-else>
+                        <thead>
                             <th>
                                 Naziv diska
                             </th>
@@ -313,27 +343,43 @@ Vue.component("detalji-vm", {
                             <th v-if="tipKorisnika=='SUPER_ADMIN'">
                                 Obriši disk
                             </th>
-                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr  v-if="virtuelnaMasina&&virtuelnaMasina.diskovi" v-for = "disk in diskovi" :key="disk.id">
+                               
+                                    <td>
+                                        <v-text-field
+                                            v-model="disk.ime"
+                                            :rules="rule"
+                                            :readonly="tipKorisnika=='KORISNIK'?true:false"
+                                        >
 
-                        <tr  v-if="virtuelnaMasina&&virtuelnaMasina.diskovi" v-for = "disk in virtuelnaMasina.diskovi" >
-                            <td>
-                                <input v-bind:id="'ime'+disk.id" type="text" v-bind:value="disk.ime">
-                            </td>
-                            <td text-align="center">
-                                <input v-bind:id="'kapacitet'+disk.id" type="number" v-bind:value="disk.kapacitet">
-                            </td>
-                            <td v-if="tipKorisnika!='KORISNIK'">
-                                <button type="button" class="btn btn-secondary" @click= "izmenaDiska(disk)" >Izmeni disk</button>
-                            </td>
-                            <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
-                                <button type="button" class="btn btn-secondary" @click= "brisanjeDiska(disk)" >Obriši disk</button>
-                            </td>
-                        </tr>
+                                        </v-text-field>
+                                    </td>
+                                    <td text-align="center">
+                                        <v-text-field
+                                            v-model="disk.kapacitet"
+                                            :rules="rule"
+                                            type="number"
+                                            :readonly="tipKorisnika=='KORISNIK'?true:false"
+
+                                        >
+
+                                        </v-text-field>
+                                    </td>
+                                    <td v-if="tipKorisnika!='KORISNIK'">
+                                        <v-btn x-small type="button" class="btn btn-secondary" @click= "izmenaDiska(disk)" >Izmeni disk</v-btn>
+                                    </td>
+                                    <td v-if="tipKorisnika=='SUPER_ADMIN'" text-align="center">
+                                        <v-btn x-small  type="button" class="btn btn-secondary" @click= "brisanjeDiska(disk)" >Obriši disk</v-btn>
+                                    </td>
+                            </tr>
+                        </tbody>
                     </v-simple-table>
-                <v-container>
+                </v-container>
             </v-card>
         </v-col>
-    <v-row>
+    </v-row>
 </div>
 `
 	

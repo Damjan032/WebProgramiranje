@@ -28,7 +28,15 @@ Vue.component("pregled-kat",{
         });
     },
     methods:{
+        toDetaljiKat:function (kat) {
+            this.$router.push(
+                {
+                    name:'detaljiKat',
+                    params:{kat:kat, tipKorisnika:this.korisnikType}
+                }
+            );
 
+        }
     },
     template:`
 <div>
@@ -36,8 +44,8 @@ Vue.component("pregled-kat",{
     <h2>Pregled kategorija</h2>
 </div>
 <p>
-<table class="table">
-    <tr>
+<v-simple-table>
+    <thead>
         <th>
             Ime
         </th>
@@ -50,36 +58,30 @@ Vue.component("pregled-kat",{
         <th>
             Broj GPU jezgara
         </th>
-    </tr>
-
-    <tr v-for = "kat in kategorije" >
-        <td text-align="center">
-            <router-link class = "block-link" :to="{name:'detaljiKat', params:{kat:kat, tipKorisnika:korisnikType}}">
-                <p>{{kat.ime}}</p>
-            </router-link>
-        </td>
-        <td text-align="center">
-            <router-link class = "block-link" :to="{name:'detaljiKat', params:{kat:kat, tipKorisnika:korisnikType}}">
-                {{kat.brJezgra}}
-            </router-link>
-        </td>
-        <td text-align="center">
-            <router-link class = "block-link" :to="{name:'detaljiKat', params:{kat:kat, tipKorisnika:korisnikType}}">
-                {{kat.RAM}}
-            </router-link>
-        </td>
-        <td text-align="center">
-            <router-link class = "block-link" :to="{name:'detaljiKat', params:{kat:kat, tipKorisnika:korisnikType}}">
-                {{kat.brGPU}}
-            </router-link>
-        </td>
-    </tr>
+    </thead>
+    <tbody>
+        <tr v-for = "kat in kategorije" @click="toDetaljiKat(kat)">
+            <td text-align="center">
+                    <p>{{kat.ime}}</p>
+            </td>
+            <td text-align="center">
+                    {{kat.brJezgra}}
+            </td>
+            <td text-align="center">
+                    {{kat.RAM}}
+            </td>
+            <td text-align="center">
+                    {{kat.brGPU}}
+            </td>
+        </tr>
+    </tbody>
+    
         
-</table>
+</v-simple-table>
 <router-link v-if = "korisnikType=='SUPER_ADMIN'" to="/dodajKat">
-    <button type="button" class="btn btn-success">
+    <v-btn color="success">
         Dodaj kategoriju virtuelne mašine
-    </button>
+    </v-btn>
 </router-link>
 </p>
 </div>

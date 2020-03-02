@@ -4,17 +4,17 @@ Vue.component("dodaj-kat",{
             ime : null,
             brJezgara : null,
             ram : null,
-            gpuJezgara : null
+            gpuJezgara : null,
+            rule:[v=>!!v||'Ovo polje je obavezno']
+
         }
     },
     mounted:function () {
     
     },
     methods:{
-        checkParams: checkFormParams
-        ,
         addKat:function(){
-            if(!this.checkParams()){
+            if(!this.$refs.forma.validate()){
                 return;
             }
             console.log(this.ime);
@@ -32,7 +32,7 @@ Vue.component("dodaj-kat",{
               }
             )
             promise.then(response=>{
-                this.$router.push("/");
+                this.$router.push("/kat");
                 
             }).catch(error=>{
                 let msg = error.response.data.ErrorMessage;
@@ -48,37 +48,55 @@ Vue.component("dodaj-kat",{
     },
     template:`
 <div>
-    <div class="row">
-        <div class="page-header col-8">
+    <v-row>
+        <v-col cols="8">
             <h2>Dodavanje kategorije</h2>
-        </div>
-        <div>
-            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
-        </div>
-    </div>
-    <div  class="container">
-        Naziv kategorije: <input class="required" type="text" v-model="ime"/>
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-    Broj jezgara:  <input class="required" onkeypress="return event.charCode != 45" type="number" name="quantity" min="1" v-model="brJezgara">
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        RAM (u GB):  <input class="required" onkeypress="return event.charCode != 45" type="number" name="quantity" min="1" v-model="ram">
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        GPU jezgra:  <input class="required" onkeypress="return event.charCode != 45" type="number" name="quantity" min="0" v-model="gpuJezgara">
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        <button  type="button" class="btn btn-success"  @click = "addKat()">Dodaj kategoriju</button>
-    </div>
+        </v-col>
+        <v-col>
+            <router-link to="/">
+                <v-btn color="primary" @click="back">Nazad</v-btn>
+            </router-link>
+        </v-col>
+    </v-row>
+    <v-container>
+        <v-form ref="forma">
+            <v-text-field
+                v-model="ime"
+                label="Naziv kategorije"
+                required
+                :rules="rule"
+            >
+            </v-text-field>
+            <v-text-field
+                v-model="brJezgara"
+                min="1"
+                type="number"
+                label="Broj jezgara"
+                required
+                :rules="rule"
+            >
+            </v-text-field>
+            <v-text-field
+                v-model="ram"
+                min="1"
+                type="number"
+                label="RAM (u GB)"
+                required
+                :rules="rule"
+            >
+            </v-text-field>
+            <v-text-field
+                v-model="gpuJezgara"
+                min="0"
+                type="number"
+                label="GPU jezgra"
+                required
+                :rules="rule"
+            >
+            </v-text-field>
+        </v-form>
+        <v-btn color="success"  @click = "addKat()">Dodaj kategoriju</v-btn>
+    </v-container>
 </div>
     `
 });

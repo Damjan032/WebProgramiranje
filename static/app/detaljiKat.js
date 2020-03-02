@@ -7,23 +7,19 @@ Vue.component("detalji-kat", {
             brJezgara : 0,
             ram : 0,
             gpuJezgara : 0,
-            id:null
+            id:null,
+
+            valid:false,
+            rule:[v=>!!v||'Ovo polje je obavezno']
         }
     },
 	methods : {
 		checkParams: checkFormParams
         ,
         izmenaKat:function(){
-            if(!this.checkParams()){
+            if(!this.$refs.forma.validate()){
                 return;
             }
-            console.log(this.ime);
-            console.log(this.brJezgara);
-            console.log(this.gpuJezgara);
-            if(this.gpuJezgara==""){
-                this.gpuJezgara=0;
-            }
-            console.log(this.gpuJezgara);
             let promise = axios.put("/vmKategorije/"+this.kategorija.id,{
                 ime: this.ime,
                 brJezgra: this.brJezgara,
@@ -70,36 +66,59 @@ Vue.component("detalji-kat", {
     },
     template: ` 
 <div class="container">
-    <div class="row">
-        <div class="page-header col-8">
+    <v-row>
+    <v-col cols="10">
+            <h3>Detalji kategorije virtuelne mašine</h3>
+        </v-col>
+        <v-col cols="2">
+            <v-container class="d-flex flex-row-reverse">
+                <v-btn color="primary" @click="back">Nazad</v-btn>
+            </v-container>
+        </v-col>
+    </v-row>
+    <v-card>
+        <v-container>
             <h1>Kategorija: {{$route.params.kat.ime}}</h1>
-        </div>
-        <div>
-            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
-        </div>
-    </div>
-    <div  class="container">
-        Naziv kategorije: <input  type="text" v-bind:placeholder="kategorija.ime" v-model="ime"/>
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        Broj jezgara:  <input onkeypress="return event.charCode != 45" type="number" name="quantity" min="1"  v-model="brJezgara">
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        RAM (u GB):  <input onkeypress="return event.charCode != 45" type="number" name="quantity" min="1" v-model="ram">
-        <p  class="alert alert-danger d-none">
-            Ovo polje je obavezno!
-        </p>
-        <br><br>
-        GPU jezgra:  <input onkeypress="return event.charCode != 45" type="number" name="quantity" min="0" v-model="gpuJezgara">
-        <br><br>
-
-        <button type="button" class="btn btn-success" @click = "izmenaKat()">Izmeni kategorije</button>
-        <button type="button" class="btn btn-danger" @click = "obrisi()">Obriši kategoriju</button>
-    </div>
+            <v-form ref="forma">
+                <v-text-field
+                        v-model="ime"
+                        label="Naziv kategorije"
+                        required
+                        :rules="rule"
+                    >
+                </v-text-field>
+                <v-text-field
+                    v-model="brJezgara"
+                    label="Broj jezgara kategorije"
+                    required
+                    :rules="rule"
+                    type="number"
+                    min="1"
+                >
+                </v-text-field>
+                <v-text-field
+                    v-model="ram"
+                    label="RAM (u GB)"
+                    required
+                    :rules="rule"
+                    type="number"
+                    min="1"
+                >
+                </v-text-field>
+                <v-text-field
+                    v-model="gpuJezgara"
+                    label="GPU jezgra"
+                    required
+                    :rules="rule"
+                    type="number"
+                    min="0"
+                >
+                </v-text-field>
+            </v-form>
+            <v-btn color="success" @click = "izmenaKat()">Izmeni kategorije</v-btn>
+            <v-btn color="error" @click = "obrisi()">Obriši kategoriju</v-btn>
+        </v-container>
+    </v-card>
 </div>		  
 `
 	

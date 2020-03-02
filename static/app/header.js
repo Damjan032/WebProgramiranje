@@ -22,7 +22,8 @@ Vue.component("site-header", {
         ></v-img>
       </template>
       
-      <v-app-bar-nav-icon @click="drawer = true">
+      <v-app-bar-nav-icon @click="drawer = true" v-if="korisnik.uloga" 
+      >
       </v-app-bar-nav-icon>
 
       <v-toolbar-title>       
@@ -31,15 +32,16 @@ Vue.component("site-header", {
       
 
       <template v-slot:extension>
-        <v-tabs align-with-title v-if = "korisnik.uloga"
-        >
-            <router-link tag="v-tab" class="nav-link" to="/vm">Virtualne mašine</router-link>
-            <router-link tag="v-tab" class="nav-link" to="/kat">Kategorija</router-link>
-            <router-link tag="v-tab" class="nav-link" to="/disk">Diskovi</router-link>
-        
-            <router-link tag="v-tab" class="nav-link" to="/org">Organizacije</router-link>
-            <router-link tag="v-tab" class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'||korisnik.uloga=='ADMIN'" to="/korisnik">Korisnici</router-link>
-        </v-tabs>
+        <transition name="slide-fade">
+            <v-tabs align-with-title v-if = "korisnik.uloga"
+            >
+                <router-link tag="v-tab" class="nav-link" to="/vm">Virtualne mašine</router-link>
+                <router-link tag="v-tab" class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'" to="/kat">Kategorija</router-link>
+                <router-link tag="v-tab" class="nav-link" to="/disk">Diskovi</router-link>
+                <router-link tag="v-tab" class="nav-link" to="/org">Organizacije</router-link>
+                <router-link tag="v-tab" class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'||korisnik.uloga=='ADMIN'" to="/korisnik">Korisnici</router-link>
+            </v-tabs>
+        </transition>
       </template>
     </v-app-bar>
 
@@ -54,6 +56,8 @@ Vue.component("site-header", {
         >
             <v-list-item-group>
                 <v-list-item
+                v-if="korisnik.uloga" 
+
                 >
                     <v-list-item-title>                    
                         <router-link to = "/izmenaProfila"><button class = "dropdown-item">Izmeni nalog</button></router-link>
@@ -74,6 +78,8 @@ Vue.component("site-header", {
                     </v-list-item-title>
                 </v-list-item>
                 <v-list-item
+                v-if="korisnik.uloga" 
+
                 >
                     <v-list-item-title>                    
                         <button  class = "dropdown-item" v-on:click = "odjava()">Odjavi se</button>

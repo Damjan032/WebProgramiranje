@@ -22,6 +22,10 @@ public class VirtuelnaMasinaDTO extends ResursDTO {
         this.aktivnosti = aktivnosti;
     }
 
+    public VirtuelnaMasinaDTO() {
+        super();
+    }
+
     public VMKategorija getKategorija() {
         return kategorija;
     }
