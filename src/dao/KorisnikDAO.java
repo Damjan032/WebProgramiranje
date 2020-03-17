@@ -106,7 +106,7 @@ public class KorisnikDAO extends Initializer{
 
 
     public static boolean checkStringAttribute(String ime) {
-        return ime!=null&& !ime.equals("");
+        return ime!=null && !ime.equals("");
     }
 
     public List<KorisnikNalog> delete(String id) throws IOException {

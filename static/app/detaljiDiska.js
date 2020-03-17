@@ -2,22 +2,22 @@
 Vue.component("detalji-diska", {
 	data: function () {
         return {
-            id:null,
-            ime: null,
-            tip: null,
-            kapacitet: null,
-            vm:null,
+            id:"",
+            ime: "",
+            tip: "",
+            kapacitet: "",
+            vm:"",
             vmActiv:false,
-            organizacija:null,
-            tipKorisnika:null
+            organizacija:"",
+            tipKorisnika:"",
+            rule:[v=>!!v||'Ovo polje je obavezno'],
+            tipoviDiska : ['SSD', 'HDD']
         }
     },
 	methods : {
-		checkParams: checkFormParams
-        ,
         izmeniDisk:function() {
             console.log(this.korisnik);
-            if(!this.checkParams()){
+            if(!this.$refs.formaDisk.validate()){
                 return;
             }
             let promise = axios.put("/diskovi",{
@@ -66,6 +66,7 @@ Vue.component("detalji-diska", {
         }
     },
 	mounted () {
+        disk = this.$route.params.disk
         this.ime =  this.$route.params.disk.ime;
         this.id = this.$route.params.disk.id;
         this.kapacitet =  this.$route.params.disk.kapacitet;
@@ -88,79 +89,54 @@ Vue.component("detalji-diska", {
         }
     },
     template: ` 
-<div class="container">
-    <div class="row">
-        <div class="page-header col-8">
-            <h1>Disk: {{$route.params.disk.ime}}</h1>
-        </div>
-        <div>
-            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
-        </div>
-    </div>
-    <table class="table">                
-        <tr>
-            <td>
-                Ime 
-            </td>
-            <td>
-                <input class="required" type="text" v-model = "ime">
-            </td>
-            <td >
-                <p  class="alert alert-danger d-none">
-                    Ovo polje je obavezno!
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Kapacitet
-            </td>
-            <td colspan="2">
-                <input  class="required" type="number" min="1" v-model = "kapacitet">
-            </td>
-            <td >
-                <p  class="alert alert-danger d-none">
-                    Ovo polje je obavezno!
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Tip 
-            </td>
-            <td colspan="2">
-                <select class="required" name="org" v-model="tip">
-                    <option value="SSD">SSD</option>
-                    <option value="HDD">HDD</option>
-                </select> 
-                <td >
-                    <p  class="alert alert-danger d-none">
-                        Ovo polje je obavezno!
-                    </p>
-                </td>
-            </td>                           
-        </tr>
-        <tr v-if="vm">
-            <td>
-                Virtuelna mašina 
-            </td>
-            <td>
-                {{vm.ime}}
-            </td>
-            <td>
-                <label class="switch" v-if="vm">
-                    <input type="checkbox" v-bind:checked="vmActiv" v-on:click="activnost(vm.id)">
-                    <span class="slider round"></span>
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button v-if="tipKorisnika!='KORISNIK'" v-on:click = "izmeniDisk()" type="button" class="btn btn-success">Izmeni disk</button>
-                <button v-if="tipKorisnika=='SUPER_ADMIN'" v-on:click = "obrisiDisk()" type="button" class="btn btn-danger">Obriši disk</button>
-            </td>
-        </tr>
-    </table>    
+<div>
+    <v-row>
+        <v-col cols="10">
+            <h1>Detalji diska</h1>
+        </v-col>
+        <v-col cols="2">
+            <v-btn color="primary" @click="back">Nazad</v-btn>
+        </v-col>
+    </v-row>
+    <v-card> 
+        <v-container>   
+            <h3>Disk {{ime}}</h3>
+            <v-form ref="formaDisk">
+                <v-text-field
+                    required
+                    label="Ime diska"
+                    v-model="ime"
+                    :rules="rule"
+                >
+                </v-text-field>
+                <v-divider class="my-3"></v-divider>
+                <v-text-field
+                    v-model="kapacitet"
+                    label="Kapacitet diska"
+                    required
+                    :rules="rule"
+                    type="number"
+                    min="1"
+                >
+                </v-text-field>
+                <v-divider class="my-3"></v-divider>
+                <v-select
+                    required
+                    :items="tipoviDiska"
+                    solo
+                    :rules="rule"
+                    label="Tip diska"
+                    v-model="tip"
+                    :readonly="tipKorisnika=='KORISNIK'?true:false"
+                >
+                </v-select>
+            </v-form>
+        </v-container>
+        <v-card-actions>
+            <v-btn v-if="tipKorisnika!='KORISNIK'" color="success"  @click = "izmeniDisk()">Izmeni disk</v-btn>
+            <v-btn v-if="tipKorisnika=='SUPER_ADMIN'" color="error"  @click = "obrisiDisk()">Obriši disk</v-btn>
+        </v-card-actions>
+    </v-card>  
 </div>		  
 `
 	

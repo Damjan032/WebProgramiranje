@@ -1,13 +1,16 @@
 Vue.component("dodaj-disk",{
     data:function () {
         return{
-            ime: null,
-            tip: null,
-            kapacitet: null,
-            vm: null,
-            org: null,
-            vmasine: null,
-            organizacije: null
+            ime: "",
+            tip: "",
+            kapacitet: "",
+            vm: "",
+            org: "",
+            vmasine: [],
+            organizacije: [],
+            tipoviDiska:["SSD", "HDD"],
+            rule:[v=>!!v||'Ovo polje je obavezno']
+
         }
     },
     watch:{
@@ -45,10 +48,8 @@ Vue.component("dodaj-disk",{
         }); 
     },
     methods:{
-        checkParams: checkFormParams
-        ,
         dodajDisk:function() {
-            if(!this.checkParams()){
+            if(!this.$refs.forma.validate()){
                 return;
             }
             let promise = axios.post("/diskovi",{
@@ -83,97 +84,66 @@ Vue.component("dodaj-disk",{
     },
     template:`
 <div>
-
-    <div class="row">
-        <div class="page-header col-8">
-            <h2>Novi disk</h2>
-        </div>
-        <div>
-            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
-        </div>
-    </div>
-   
-    <p>
-        <table>
-            <tr>
-                <td>
-                    Ime
-                </td>
-                <td>
-                    <input class="required" type="text" v-model="ime"/>
-                </td>
-                <td >
-                    <p  class="alert alert-danger d-none">
-                        Ovo polje je obavezno!
-                    </p>
-                </td>
-            </tr>
-            
-            <tr>
-                <td>
-                    Tip diska
-                </td>
-                <td>
-                    
-                    <select class="required" v-model="tip">
-                        <option value="SSD">SSD</option>
-                        <option value="HDD">HDD</option>
-                    </select>
-                </td>
-                <td >
-                    <p  class="alert alert-danger d-none">
-                        Ovo polje je obavezno!
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Kapacitet
-                </td>
-                <td>
-                    <input class="required" type="number" min="1" v-model="kapacitet"/>
-                </td>
-                <td >
-                    <p  class="alert alert-danger d-none">
-                        Ovo polje je obavezno!
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Organizacija
-                </td>
-                <td>
-                    <select class="required" v-model="org">
-                        <option v-for = "org in organizacije" :value="org.id">{{org.ime}}</option>
-                    </select>
-                </td>
-                <td >
-                    <p  class="alert alert-danger d-none">
-                        Ovo polje je obavezno!
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Virtuelna mašina
-                </td>
-                <td>
-                    <select ref="vm" name="vm" v-model="vm">
-                        <option v-for = "vm in vmasine" :value="vm.id">{{vm.ime}}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                
-                </td>
-                <td>
-                    <button type="button" class="btn btn-success" v-on:click = "dodajDisk()">Dodaj disk</button>
-                </td>
-            </tr> 
-        </table>
-    </p>
+    <v-card>
+        <v-container>
+            <v-row>
+                <v-col cols="8">
+                    <h2>Novi disk</h2>
+                </v-col>
+                <v-col>
+                    <router-link to="/">
+                        <v-btn color="primary" @click="back">Nazad</v-btn>
+                    </router-link>
+                </v-col>
+            </v-row>
+            <v-form 
+                ref="forma"
+            >
+                <v-text-field
+                    v-model="ime"
+                    label="Ime diska"
+                    required
+                    :rules="rule"
+                >
+                </v-text-field>
+                <v-select
+                    required
+                    :items="organizacije"
+                    solo
+                    item-text="ime"
+                    item-value="id"
+                    :rules="rule"
+                    label="Organizacija"
+                    v-model="org"
+                >
+                </v-select>
+                <v-select
+                    required
+                    :items="tipoviDiska"
+                    solo
+                    :rules="rule"
+                    label="Tip diska"
+                    v-model="tip"
+                >
+                </v-select>
+                <v-text-field
+                    v-model="kapacitet"
+                    label="Kapacitet"
+                    required
+                    :rules="rule"
+                    type="number"
+                    min="1"
+                >
+                </v-text-field>
+                <v-text-field
+                    v-model="vm"
+                    label="Virtuelne mašina"
+                >
+                </v-text-field>
+            </v-form>
+            <button class="btn btn-success" @click = "dodajDisk()">Dodaj novi disk</button>
+        </v-container>
+    </v-card>
 </div>
     `
 });

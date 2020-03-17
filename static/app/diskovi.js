@@ -23,10 +23,20 @@ Vue.component("diskovi",{
     template:
 `
 <div id="diskapp">
-    <div class="jumbotron"><h1>Diskovi</h1></div>  
-    <div class="container">
-        <router-view></router-view>
-    </div>    
+    <v-container color="primary">
+        <v-layout align-center>
+            <v-flex text-xs-center>
+                <h1 class="display-2">Diskovi</h1>
+            </v-flex>
+        </v-layout>
+        <v-divider class="my-3">
+        </v-divider>
+    </v-container>  
+    <v-container>  
+        <transition name="fade">
+            <router-view></router-view>
+        </transition>
+    </v-container>
 </div>
 `
 });

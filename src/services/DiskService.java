@@ -77,7 +77,7 @@ public class DiskService{
         if (disk.getKapacitet()<=0){
             throw new BadRequestException("Kapacitet ne može biti negativan!");
         }
-        if(disk.getVm()!=null) {
+        if(disk.getVm()!=null && !disk.getVm().equals("")) {
             try {
                 VirtuelnaMasina vm = vmDAO.fetchById(disk.getVm());
                 if(!vm.getOrganizacija().equals(disk.getOrganizacija())){
@@ -151,8 +151,13 @@ public class DiskService{
     }
     private String mapToDiskDTOString(Disk d){
         VirtuelnaMasina vm = null;
-        if (d.getVm()!=null){
-            vm = vmDAO.fetchById(d.getVm());
+        if (d.getVm()!=null && !d.getVm().isEmpty()){
+            try{
+                vm = vmDAO.fetchById(d.getVm());
+            }
+            catch (NotFoundException e){
+                
+            }
         }
         Organizacija o = null;
         try{

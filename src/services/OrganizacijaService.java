@@ -77,7 +77,12 @@ public class OrganizacijaService implements Service<String, String> {
         if (organizacijaDAO.fetchByIme(ime).isPresent()) {
             throw new BadRequestException("Organizacija sa imenom: " + ime +" posotji");
         }
-        Organizacija organizacija = new Organizacija(null, ime, opis, dodajSliku(req), new ArrayList<>(), new ArrayList<>());
+        String slika = dodajSliku(req);
+        if (!KorisnikDAO.checkStringAttribute(slika)){
+            throw new BadRequestException("Niste dodalo logo za organizaciju!");
+        }
+
+        Organizacija organizacija = new Organizacija(null, ime, opis, slika, new ArrayList<>(), new ArrayList<>());
         return mapToOrganizacijaDTOString(organizacijaDAO.create(organizacija));
     }
 
@@ -159,8 +164,11 @@ public class OrganizacijaService implements Service<String, String> {
     }
 
     private String dodajSliku(Request req) throws IOException, ServletException {
-        String type = req.queryParams("nazivSlike").split("\\.")[1];
         String ime = req.queryParams("nazivSlike");
+        if(!KorisnikDAO.checkStringAttribute(ime)){
+            return null;
+        }
+        String type = ime.split("\\.")[1];
         InputStream file = req.raw().getPart("oSlika").getInputStream();
         String[] types = {"png", "jpg", "gif"};
 
@@ -187,8 +195,14 @@ public class OrganizacijaService implements Service<String, String> {
                     return null;
                 }
                 VirtuelnaMasina vm = null;
-                if(disk.getVm()!=null) {
-                    vm = virtuelnaMasinaDAO.fetchById(disk.getVm());
+                if(KorisnikDAO.checkStringAttribute(disk.getVm())) {
+                    try {
+
+                        vm = virtuelnaMasinaDAO.fetchById(disk.getVm());
+                    }
+                    catch (NotFoundException e){
+
+                    }
                 }
                 return new DiskDTO.Builder().withId(disk.getId()).withIme(disk.getIme()).withKapacitet(disk.getKapacitet())
                         .withTip(disk.getTipDiska()).withTipResursa(resurs.getTip()).withVm(vm).build();

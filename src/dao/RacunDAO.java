@@ -46,7 +46,7 @@ public class RacunDAO extends Initializer {
                 if (mesecniRacun.getCena() != null) {
                     racun.setCena(mesecniRacun.getCena());
                 }
-                if (mesecniRacun.getOrg() != null) {
+                if (KorisnikDAO.checkStringAttribute(mesecniRacun.getOrg())) {
                     racun.setOrg(mesecniRacun.getOrg());
                 }
             }

@@ -29,19 +29,22 @@ Vue.component("pregled-disk",{
         });
     },
     methods:{
-
+        toDetaljiDisk:function(disk) {
+            this.$router.push({name:'detaljiDiska', params:{disk:disk, tipKorisnika:this.tipKorisnika}});
+        },
     },
     template:`
 <div>
-    <div class="container">
-        <div class="page-header">
-            <h2>Pregled diskova</h2>
-        </div>
-        <h4 v-if="diskovi.length==0">
-            Trenutno nema diskova za prikaz
+    <v-card>
+    <v-container>
+
+        <h2>Pregled diskova</h2>
+        
+        <h4 class="error my-10" v-if="diskovi&&diskovi.length==0">
+        Trenutno nema diskova za pregled.
         </h4>
-        <table v-else class="table">
-            <tr class="thead-light">
+        <v-simple-table v-else>
+            <thead>
                 <th>
                     Ime
                 </th>
@@ -51,31 +54,30 @@ Vue.component("pregled-disk",{
                 <th>
                     Virtuelna mašina
                 </th>
-            </tr>
-            <tr v-for="disk in diskovi">
-                <td>
-                    <router-link class = "block-link" :to="{name:'detaljiDiska', params:{disk:disk, tipKorisnika:tipKorisnika}}">
+            </thead>
+            <tbody>
+                <tr v-for="disk in diskovi" @click="toDetaljiDisk(disk)">
+                    <td>
                         {{disk.ime}}
-                    </router-link>
-                </td>
-                <td>
-                    <router-link class = "block-link" :to="{name:'detaljiDiska', params:{disk:disk, tipKorisnika:tipKorisnika}}">
+                    </td>
+                    <td>
                         {{disk.kapacitet}}     
-                    </router-link>
-                </td>
-                <td>
-                    <router-link v-if="disk.vm" class = "block-link" :to="{name:'detaljiDiska', params:{disk:disk, tipKorisnika:tipKorisnika}}">
-                        {{disk.vm.ime}}
-                    </router-link>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                    <td>
+                        <template v-if="disk.vm">
+                            {{disk.vm.ime}}
+                        </template>
+                    </td>
+                </tr>
+            </tbody>
+        </v-simple-table>
         <router-link v-if = "tipKorisnika!='KORISNIK'" to="/dodajDisk">
-            <button type="button" class="btn btn-success">
+            <v-btn color="success">
                 Dodaj disk
-            </button>
+            </v-btn>
         </router-link>
-    </div>
+        </v-container>
+    </v-card>
 </div>
     `
 

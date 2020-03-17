@@ -76,6 +76,9 @@ public class OrganizacijaDAO extends Initializer{
         KorisnikDAO korisnikDAO = new KorisnikDAO();
 
         Organizacija o = fetchById(id);
+        if(!o.getResursi().isEmpty()){
+            throw new BadRequestException("Organizacija se ne moze obrisati jer postoje resursi vezani za nju.");
+        }
         o.getKorisnici().forEach(k->{
             try {
                 korisnikDAO.delete(k);

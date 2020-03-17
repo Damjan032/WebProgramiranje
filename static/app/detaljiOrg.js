@@ -6,7 +6,9 @@ Vue.component("detalji-org", {
             oId:"",
             oIme : "",
             oOpis : "",
-            slika : ""
+            slika : null,
+            rule:[v=>!!v||'Ovo polje je obavezno'],
+
         }
     },
 	methods : {
@@ -51,7 +53,7 @@ Vue.component("detalji-org", {
             });
         },
         back:function () {
-            this.$router.go(-1);
+            this.$router.go("/org");
         }
     },
 	mounted () {
@@ -67,64 +69,73 @@ Vue.component("detalji-org", {
     },
     template: ` 
 <div class="container">
-   
-    <div class="row">
-        <div  class="col container">
-            <div class="row">
-                <div class="page-header col-8">
-                    <h1>Organizacija : {{oIme}}</h1>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-primary" @click="back">Nazad</button>
-                </div>
-            </div>
-            Logo: <img width="50" height="50" v-bind:src="organizacija.imgPath" class="rounded" >
-            <br>
-            <br>
-            Naziv organizacije: <input class="required" type="text" v-model="oIme" v-bind:placeholder="organizacija.ime"/>
-            <p  class="alert alert-danger d-none">
-                Ovo polje je obavezno!
-            </p>
-            <br><br>
-            Opis organizacije: <input class="required" type="text" v-model="oOpis" v-bind:placeholder="organizacija.opis"/>
-            <p  class="alert alert-danger d-none">
-                Ovo polje je obavezno!
-            </p>
-            <br><br>
-            Odaberi sliku:  <input @change= "onFileSelected" class="slika" type="file"  name="slika" accept="image/*"  v-bind:placeholder="organizacija.imgPath"/>
-            <br><br>
-            
-            <button v-on:click = "izmenaOrg(oIme,oOpis)" type="button" class="btn btn-success">Izmeni organizaciju</button>
-            <button v-on:click = "obrisiOrg()" type="button" class="btn btn-danger">Obriši organizaciju</button>
-        
-        </div> 
-        <div class="col">
-            <h3>
-                Resursi
-            </h3>
-            <h4 v-if="organizacija.resursi.length==0">
-                Trenutno nema resursa u ovoj organizaciji
-            </h4>
-            <table class="table" v-else>                
-                <tr>
-                    <th>
-                        Ime
-                    </th>
-                    <th>
-                        Tip
-                    </th>
-                </tr>
-                <tr v-for="resurs in organizacija.resursi">
-                    <td>
-                        {{resurs.ime}}
-                    </td>
-                    <td>
-                        {{resurs.tipResursa}}
-                    </td>
-                </tr>
-            </table>  
-        </div>
-    </div>
+    <v-row>
+        <v-col cols="10">
+            <h1>Detalji organizacije</h1>
+        </v-col>
+        <v-col cols="2">
+            <v-btn color="primary" @click="back">Nazad</v-btn>
+        </v-col>
+    </v-row>
+    <v-row>
+        <v-col cols="12" lg="6">
+            <v-card>
+                <v-container>
+
+                    
+                    <h2><img width="50" height="50" v-bind:src="organizacija.imgPath" class="rounded mr-5">Organizacija : {{organizacija.ime}}</h2>
+                        
+                    <v-text-field
+                        required
+                        label="Naziv organizacije"
+                        v-model="oIme"
+                        :rules="rule"
+                    >
+                    </v-text-field>
+                        <v-text-field
+                        required
+                        label="Opis organizacije"
+                        v-model="oOpis"
+                        :rules="rule"
+                    >
+                    </v-text-field>
+                    <v-file-input prepend-icon="mdi-camera" accept="image/*" label="Novi logo organizacije" v-model="slika"></v-file-input>
+                    <v-btn v-on:click = "izmenaOrg(oIme,oOpis)" color="success">Izmeni organizaciju</v-btn>
+                    <v-btn v-on:click = "obrisiOrg()" type="button" color="error">Obriši organizaciju</v-btn>
+                </v-container>
+            </v-card>
+        </v-col> 
+        <v-col cols="12" lg="6">
+            <v-card>
+                <v-container>
+                    <h3>
+                        Resursi
+                    </h3>
+                    <h4 v-if="organizacija.resursi.length==0">
+                        Trenutno nema resursa u ovoj organizaciji
+                    </h4>
+                    <table class="table" v-else>                
+                        <tr>
+                            <th>
+                                Ime
+                            </th>
+                            <th>
+                                Tip
+                            </th>
+                        </tr>
+                        <tr v-for="resurs in organizacija.resursi">
+                            <td>
+                                {{resurs.ime}}
+                            </td>
+                            <td>
+                                {{resurs.tipResursa}}
+                            </td>
+                        </tr>
+                    </table>
+                </v-container> 
+            </v-card>
+        </v-col>
+    </v-row>
 </div>		  
 `
 	

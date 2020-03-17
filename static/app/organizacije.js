@@ -23,11 +23,18 @@ Vue.component("org",{
     template:
 `
 <div id="orgs">
-    <div class="jumbotron"><h1>Organizacije</h1></div>
-
-    <div class="container">
+    <v-container color="primary">
+        <v-layout align-center>
+            <v-flex text-xs-center>
+                <h1 class="display-2">Organizacije</h1>
+            </v-flex>
+        </v-layout>
+        <v-divider class="my-3"></v-divider>
+    </v-container>
+    
+    <v-container>
         <router-view></router-view>
-    </div>
+    </v-container>
 </div>
 `
 });

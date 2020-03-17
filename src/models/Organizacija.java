@@ -51,7 +51,9 @@ public class Organizacija {
     }
 
     public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
+        if (imgPath != null) {
+            this.imgPath = imgPath;
+        }
     }
 
     public List<String> getKorisnici() {

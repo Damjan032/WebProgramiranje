@@ -50,7 +50,7 @@ public class DiskDAO extends Initializer {
         }catch (NotFoundException ignored){
         }
         disk.setId(UUID.randomUUID().toString());
-        if (disk.getVm()!=null) {
+        if (KorisnikDAO.checkStringAttribute(disk.getVm())) {
             VirtuelnaMasinaDAO vmDAO = new VirtuelnaMasinaDAO();
             VirtuelnaMasina vm = vmDAO.fetchById(disk.getVm());
             vm.getDiskovi().add(disk.getId());
@@ -87,7 +87,7 @@ public class DiskDAO extends Initializer {
                     if (disk.getTipDiska()!=null) {
                         oldDisk.setTipDiska(disk.getTipDiska());
                     }
-                    if (disk.getVm()!=null) {
+                    if (KorisnikDAO.checkStringAttribute(disk.getVm())) {
                         oldDisk.setVm(disk.getVm());
                     }
 
@@ -100,7 +100,7 @@ public class DiskDAO extends Initializer {
 
     public void delete(String id) throws IOException {
         Disk d = fetchById(id);
-        if (d.getVm()!=null) {
+        if (KorisnikDAO.checkStringAttribute(d.getVm())) {
             VirtuelnaMasina vm = virtuelnaMasinaDAO.fetchById(d.getVm());
             vm.getDiskovi().remove(id);
             virtuelnaMasinaDAO.update(vm, vm.getId());

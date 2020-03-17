@@ -180,199 +180,208 @@ Vue.component("pregled-vm",{
             }
     },
     template:`
-<div class="container">
+<div>
+    <v-card>
+    <v-container>
 
-        <div class="page-header">
-            <h2>Pregled virtuelnih mašina</h2>
-        </div>       
-        <v-expansion-panels>
+        <h2>Pregled virtuelnih mašina</h2>
+        <h4 class="error my-10" v-if="virtuelneMasine&&virtuelneMasine.length==0">
+        Trenutno nema virtuelnih mašina za pregled.
+        </h4>
+        <template v-else>
+            <v-expansion-panels>
 
-            <v-expansion-panel>
-                <v-expansion-panel-header>Filtriraj</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                    <table  class="table table-striped table-dark">
-                        <tr>
-                            <td align="center" colspan="5"><b>Filtriranje</b></td>
-                        </tr>
-                        <tr>
-                            <td align="center" colspan="3">FILTRIRANJE PO</td>
-                            <td>OD</td>
-                            <td>DO</td>
-                        </tr>
-                        <tr>
-                            <td align="center" colspan="3">Kolicini rama</td>
-                            <td v-for="(r, i) in rangeRAM" :key="i"><p>{{r}}</p></td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <v-range-slider
-                                    v-model="rangeRAM"
-                                    :max="maxRam"
-                                    :min="minRam"
-                                    hide-details
-                                    class="align-center"
-                                >
-                                    <template v-slot:prepend>
-                                    <v-text-field
-                                        disabled
-                                        :value="rangeRAM[0]"
-                                        class="mt-0 pt-0"
+                <v-expansion-panel>
+                    <v-expansion-panel-header>Filtriraj</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                        <table  class="table table-striped table-dark">
+                            <tr>
+                                <td align="center" colspan="5"><b>Filtriranje</b></td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3">FILTRIRANJE PO</td>
+                                <td>OD</td>
+                                <td>DO</td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3">Kolicini rama</td>
+                                <td v-for="(r, i) in rangeRAM" :key="i"><p>{{r}}</p></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <v-range-slider
+                                        v-model="rangeRAM"
+                                        :max="maxRam"
+                                        :min="minRam"
                                         hide-details
-                                        single-line
-                                        type="number"
-                                        style="width: 60px"
-                                    ></v-text-field>
-                                    </template>
-                                    <template v-slot:append>
-                                    <v-text-field
-                                        disabled
-                                        :value="rangeRAM[1]"
-                                        class="mt-0 pt-0"
+                                        class="align-center"
+                                    >
+                                        <template v-slot:prepend>
+                                        <v-text-field
+                                            disabled
+                                            :value="rangeRAM[0]"
+                                            class="mt-0 pt-0"
+                                            hide-details
+                                            single-line
+                                            type="number"
+                                            style="width: 60px"
+                                        ></v-text-field>
+                                        </template>
+                                        <template v-slot:append>
+                                        <v-text-field
+                                            disabled
+                                            :value="rangeRAM[1]"
+                                            class="mt-0 pt-0"
+                                            hide-details
+                                            single-line
+                                            type="number"
+                                            style="width: 60px"
+                                        ></v-text-field>
+                                        </template>
+                                    </v-range-slider>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3">Broju jezgara</td>
+                                <td v-for="(r, i) in rangeJZG" :key="i"><p>{{r}}</p></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <v-range-slider
+                                        v-model="rangeJZG"
+                                        :max="maxJZG"
+                                        :min="minJZG"
                                         hide-details
-                                        single-line
-                                        type="number"
-                                        style="width: 60px"
-                                    ></v-text-field>
-                                    </template>
-                                </v-range-slider>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center" colspan="3">Broju jezgara</td>
-                            <td v-for="(r, i) in rangeJZG" :key="i"><p>{{r}}</p></td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <v-range-slider
-                                    v-model="rangeJZG"
-                                    :max="maxJZG"
-                                    :min="minJZG"
-                                    hide-details
-                                    class="align-center"
-                                >
-                                    <template v-slot:prepend>
-                                    <v-text-field
-                                        disabled
-                                        :value="rangeJZG[0]"
-                                        class="mt-0 pt-0"
+                                        class="align-center"
+                                    >
+                                        <template v-slot:prepend>
+                                        <v-text-field
+                                            disabled
+                                            :value="rangeJZG[0]"
+                                            class="mt-0 pt-0"
+                                            hide-details
+                                            single-line
+                                            type="number"
+                                            style="width: 60px"
+                                        ></v-text-field>
+                                        </template>
+                                        <template v-slot:append>
+                                        <v-text-field
+                                            disabled
+                                            :value="rangeJZG[1]"
+                                            class="mt-0 pt-0"
+                                            hide-details
+                                            single-line
+                                            type="number"
+                                            style="width: 60px"
+                                        ></v-text-field>
+                                        </template>
+                                    </v-range-slider>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3">Broju GPU jezgara</td>
+                                <td v-for="(r, i) in rangeGPU" :key="i"><p>{{r}}</p></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <v-range-slider
+                                        v-model="rangeGPU"
+                                        :max="maxGPU"
+                                        :min="minGPU"
                                         hide-details
-                                        single-line
-                                        type="number"
-                                        style="width: 60px"
-                                    ></v-text-field>
-                                    </template>
-                                    <template v-slot:append>
-                                    <v-text-field
-                                        disabled
-                                        :value="rangeJZG[1]"
-                                        class="mt-0 pt-0"
-                                        hide-details
-                                        single-line
-                                        type="number"
-                                        style="width: 60px"
-                                    ></v-text-field>
-                                    </template>
-                                </v-range-slider>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center" colspan="3">Broju GPU jezgara</td>
-                            <td v-for="(r, i) in rangeGPU" :key="i"><p>{{r}}</p></td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <v-range-slider
-                                    v-model="rangeGPU"
-                                    :max="maxGPU"
-                                    :min="minGPU"
-                                    hide-details
-                                    class="align-center"
-                                >
-                                    <template v-slot:prepend>
-                                    <v-text-field
-                                        disabled
-                                        :value="rangeGPU[0]"
-                                        class="mt-0 pt-0"
-                                        hide-details
-                                        single-line
-                                        type="number"
-                                        style="width: 60px"
-                                    ></v-text-field>
-                                    </template>
-                                    <template v-slot:append>
-                                    <v-text-field
-                                        disabled
-                                        :value="rangeGPU[1]"
-                                        class="mt-0 pt-0"
-                                        hide-details
-                                        single-line
-                                        type="number"
-                                        style="width: 60px"
-                                    ></v-text-field>
-                                    </template>
-                                </v-range-slider>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center" colspan="3"><p>Nazivu</p></td>
-                            <td  align="center" colspan="3">
-                                <input v-model="naziv" class="form-control" type="text" placeholder="Default input">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">
-                                <button type="button"   class="btn btn-secondary btn-lg btn-block" @click="filtriraj()">Filtriraj</button>
-                            </td>
-                        </tr>
-                    </table>   
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-expansion-panels>
+                                        class="align-center"
+                                    >
+                                        <template v-slot:prepend>
+                                        <v-text-field
+                                            disabled
+                                            :value="rangeGPU[0]"
+                                            class="mt-0 pt-0"
+                                            hide-details
+                                            single-line
+                                            type="number"
+                                            style="width: 60px"
+                                        ></v-text-field>
+                                        </template>
+                                        <template v-slot:append>
+                                        <v-text-field
+                                            disabled
+                                            :value="rangeGPU[1]"
+                                            class="mt-0 pt-0"
+                                            hide-details
+                                            single-line
+                                            type="number"
+                                            style="width: 60px"
+                                        ></v-text-field>
+                                        </template>
+                                    </v-range-slider>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3"><p>Nazivu</p></td>
+                                <td  align="center" colspan="3">
+                                    <input v-model="naziv" class="form-control" type="text" placeholder="Default input">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                    <button type="button"   class="btn btn-secondary btn-lg btn-block" @click="filtriraj()">Filtriraj</button>
+                                </td>
+                            </tr>
+                        </table>   
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-expansion-panels>
 
+        
 
-        <v-simple-table>
-            <template v-slot:default>
-                <thead>
-                    <th>
-                        Naziv
-                    </th>
-                    <th>
-                        Broj jezgara
-                    </th>
-                    <th>
-                        RAM
-                    </th>
-                    <th>
-                        GPU jezgra
-                    </th>
-                    <th>
-                        Organizacija
-                    </th>
-                </thead>
-                <tbody>
-                    <tr :key="vm.id" v-for = "vm in virtuelneMasine" @click="toDetaljiVM(vm)">
-                        <td text-align="center">
-                                <p>{{vm.ime}}</p>
-                        </td>
-                        <td text-align="center">
-                                {{vm.kategorija.brJezgra}}
-                        </td>
-                        <td text-align="center">
-                                {{vm.kategorija.RAM}}
-                        </td>
-                        <td text-align="center">
-                                {{vm.kategorija.brGPU}}
-                        </td>
-                        <td text-align="center">
-                                <p>{{vm.organizacija.ime}}</p>
-                        </td>
-                    </tr>
-                </tbody>
+            <v-simple-table>
+                <template v-slot:default>
+                    <thead>
+                        <th>
+                            Naziv
+                        </th>
+                        <th>
+                            Broj jezgara
+                        </th>
+                        <th>
+                            RAM
+                        </th>
+                        <th>
+                            GPU jezgra
+                        </th>
+                        <th>
+                            Organizacija
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr :key="vm.id" v-for = "vm in virtuelneMasine" @click="toDetaljiVM(vm)">
+                            <td text-align="center">
+                                    <p>{{vm.ime}}</p>
+                            </td>
+                            <td text-align="center">
+                                    {{vm.kategorija.brJezgra}}
+                            </td>
+                            <td text-align="center">
+                                    {{vm.kategorija.RAM}}
+                            </td>
+                            <td text-align="center">
+                                    {{vm.kategorija.brGPU}}
+                            </td>
+                            <td text-align="center">
+                                    <p>{{vm.organizacija.ime}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
             </template>
-        </v-simple-table>
         <router-link color="success" v-if = "tipKorisnika!='KORISNIK'" to="/dodajVM">
             <v-btn color="success">Dodaj virtuelnu mašinu</v-btn>
         </router-link>
+        </v-container>
+
+        <v-card>
     </div>
     `
 });

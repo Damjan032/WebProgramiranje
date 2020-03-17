@@ -10,7 +10,7 @@ Vue.component("detalji-vm", {
             kategorija : "",
             katIme:"",
             orgIme:"",
-            virtuelnaMasina: "",
+            virtuelnaMasina: null,
             tipKorisnika:"",
             validdisk:false,
             rule:[v=>!!v||'Ovo polje je obavezno'],

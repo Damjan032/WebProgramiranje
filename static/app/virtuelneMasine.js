@@ -35,11 +35,11 @@ Vue.component("vm",{
         <v-divider class="my-3"></v-divider>
 
     </v-container>
-    <div class="container">
+    <v-container>
         <transition name="fade">
            <router-view></router-view>
         </transition>
-    </div>
+    </v-container>
 </div>
 `
 });
