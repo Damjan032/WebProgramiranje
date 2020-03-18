@@ -216,28 +216,6 @@ Vue.component("pregled-vm",{
                                         hide-details
                                         class="align-center"
                                     >
-                                        <template v-slot:prepend>
-                                        <v-text-field
-                                            disabled
-                                            :value="rangeRAM[0]"
-                                            class="mt-0 pt-0"
-                                            hide-details
-                                            single-line
-                                            type="number"
-                                            style="width: 60px"
-                                        ></v-text-field>
-                                        </template>
-                                        <template v-slot:append>
-                                        <v-text-field
-                                            disabled
-                                            :value="rangeRAM[1]"
-                                            class="mt-0 pt-0"
-                                            hide-details
-                                            single-line
-                                            type="number"
-                                            style="width: 60px"
-                                        ></v-text-field>
-                                        </template>
                                     </v-range-slider>
                                 </td>
                             </tr>
@@ -254,28 +232,6 @@ Vue.component("pregled-vm",{
                                         hide-details
                                         class="align-center"
                                     >
-                                        <template v-slot:prepend>
-                                        <v-text-field
-                                            disabled
-                                            :value="rangeJZG[0]"
-                                            class="mt-0 pt-0"
-                                            hide-details
-                                            single-line
-                                            type="number"
-                                            style="width: 60px"
-                                        ></v-text-field>
-                                        </template>
-                                        <template v-slot:append>
-                                        <v-text-field
-                                            disabled
-                                            :value="rangeJZG[1]"
-                                            class="mt-0 pt-0"
-                                            hide-details
-                                            single-line
-                                            type="number"
-                                            style="width: 60px"
-                                        ></v-text-field>
-                                        </template>
                                     </v-range-slider>
                                 </td>
                             </tr>
@@ -292,28 +248,6 @@ Vue.component("pregled-vm",{
                                         hide-details
                                         class="align-center"
                                     >
-                                        <template v-slot:prepend>
-                                        <v-text-field
-                                            disabled
-                                            :value="rangeGPU[0]"
-                                            class="mt-0 pt-0"
-                                            hide-details
-                                            single-line
-                                            type="number"
-                                            style="width: 60px"
-                                        ></v-text-field>
-                                        </template>
-                                        <template v-slot:append>
-                                        <v-text-field
-                                            disabled
-                                            :value="rangeGPU[1]"
-                                            class="mt-0 pt-0"
-                                            hide-details
-                                            single-line
-                                            type="number"
-                                            style="width: 60px"
-                                        ></v-text-field>
-                                        </template>
                                     </v-range-slider>
                                 </td>
                             </tr>

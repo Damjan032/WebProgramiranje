@@ -23,12 +23,19 @@ Vue.component("korisnici",{
     template:
 `
 <div>
-    <div class="jumbotron"><h1>Korisnici</h1></div>
-
-    <div class="container">
-        <router-view :selektovani-korisnik="selKorisnik"></router-view>
-    </div>
-
+    <v-container color="primary">
+        <v-layout align-center>
+            <v-flex text-xs-center>
+                <h1 class="display-2">Korisnici</h1>
+            </v-flex>
+        </v-layout>
+        <v-divider class="my-3"></v-divider>
+    </v-container>
+    <v-container>
+        <transition name="fade">  
+              <router-view></router-view>
+        </transition>
+    </v-container>
 </div>
     
 `

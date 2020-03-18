@@ -9,6 +9,9 @@ Vue.component("pregled-korisnika", {
 	methods : {
 		select:function (korisnik) {
             this.selektKorisnik = korisnik;
+        },
+        toDetaljiKorisnik:function (k) {
+            this.$router.push({name:'detaljiKorisnika', params:{korisnik:k}})
         }
 	},
 	mounted () {
@@ -23,58 +26,52 @@ Vue.component("pregled-korisnika", {
     },
     template: `
 <div>
-    <div class="page-header">
-        <h2>Pregled korisnika</h2>
-    </div>
-    <h3 v-if = "korisnici.length == 0">
-        Trenutno nema korisnika 
-    </h3>
-    <table class="table" v-else>
-        <tr class = "thead-light">
-                <th>
-                    Email
-                </th>
-                <th>
-                    Ime
-                </th>
-                <th>
-                    Prezime
-                </th>
-                <th v-if = "korisnikType=='SUPER_ADMIN'">
-                    Organizacija
-                </th>
-        </tr>
+    <v-card>
+        <v-container>
+            <h2>Pregled korisnika</h2>
+            <h4 class="error my-10" v-if="korisnici&&korisnici.length==0">
+                Trenutno nema korisnika za pregled.
+            </h4>
+            <v-simple-table v-else>
+                <thead>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Ime
+                    </th>
+                    <th>
+                        Prezime
+                    </th>
+                    <th v-if = "korisnikType=='SUPER_ADMIN'">
+                        Organizacija
+                    </th>
+                </thead>
+                <tbody>
+                    <tr v-for = "k in korisnici" @click="toDetaljiKorisnik(k)">
+                        <td>
+                            {{ k.email }} 
+                        </td>
+                        <td>
+                            {{ k.ime }}
+                        </td>
+                        <td>
+                            {{ k.prezime }} 
+                        </td>
+                        <td v-if = "korisnikType=='SUPER_ADMIN'">
+                            <template v-if="k.organizacija!=null">
+                                {{ k.organizacija.ime }} 
+                            </template>    
+                        </td>
+                    </tr>
+                </tbody>
+            </v-simple-table>
 
-        <tr v-for = "k in korisnici" class="clickable-table-row">
-            <td>
-                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
-                    {{ k.email }} 
-                </router-link>
-            </td>
-            <td>
-                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
-                    {{ k.ime }}
-                </router-link> 
-            </td>
-            <td>
-                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
-                    {{ k.prezime }} 
-                </router-link>
-            </td>
-            <td v-if = "korisnikType=='SUPER_ADMIN'">
-                <router-link class = "block-link" :to="{name:'detaljiKorisnika', params:{korisnik:k}}">
-                    <template v-if="k.organizacija!=null">
-                        {{ k.organizacija.ime }} 
-                    </template>    
-                
-                </router-link>
-            </td>
-        </tr>
-    </table>
-
-    <router-link v-if = "korisnikType=='SUPER_ADMIN'||korisnikType=='ADMIN'" to="/dodajKorisnika">
-        <button type="button" class="btn btn-success">Dodaj korisnika</button>
-    </router-link>
+            <router-link v-if = "korisnikType=='SUPER_ADMIN'||korisnikType=='ADMIN'" to="/dodajKorisnika">
+                <button type="button" class="btn btn-success">Dodaj korisnika</button>
+            </router-link>
+        </v-container>
+    </v-card>
 </div>	  
 `
 	

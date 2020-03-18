@@ -9,7 +9,11 @@ Vue.component("detalji-korisnika", {
             uloga: null,
             email:null,
             organizacija:null,
-            orgId:""
+            orgId:"",
+            rules:[v=>!!v||'Ovo polje je obavezno'],
+            erules:[v=>!!v||'Ovo polje je obavezno', e=>e.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)?!!e:"Email ne odgovara obrascu korisnik@kompanija.domen!"],
+            tipoviKorisnika:['admin','korisnik']
+
         }
 	}
 	, 
@@ -54,7 +58,7 @@ Vue.component("detalji-korisnika", {
             })
         },
         back:function () {
-            this.$router.go(-1);
+            this.$router.push("/korisnik");
         }
     },
 	mounted () {
@@ -62,6 +66,7 @@ Vue.component("detalji-korisnika", {
         this.ime =  this.$route.params.korisnik.ime;
         this.prezime =  this.$route.params.korisnik.prezime;
         this.staraUloga = this.$route.params.korisnik.uloga;
+        this.uloga = this.$route.params.korisnik.uloga;
         this.email = this.$route.params.korisnik.email;
         this.organizacija = this.$route.params.korisnik.organizacija.ime;
         this.orgId = this.$route.params.korisnik.organizacija.id;
@@ -72,86 +77,60 @@ Vue.component("detalji-korisnika", {
     },
     template: `
 <div>
-    <div class="row">
-        <div class="page-header col-8">
-            <h1>Korisnik: {{$route.params.korisnik.email}}</h1>
-        </div>
-        <div>
-            <button type="button" class="btn btn-primary" @click="back">Nazad</button>
-        </div>
-    </div>
-    <table class="table">                
-        <tr>
-            <td>
-                Ime 
-            </td>
-            <td>
-                <input class="required" type="text" v-model = "ime">
-            </td>
-            <td >
-                <p  class="alert alert-danger d-none">
-                    Ovo polje je obavezno!
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Prezime
-            </td>
-            <td>
-                <input class="required" type="text" v-model = "prezime">
-            </td>
-            <td >
-                <p  class="alert alert-danger d-none">
-                    Ovo polje je obavezno!
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Uloga 
-            </td>
-            <td>
-                {{staraUloga}}
-            </td>                          
-        </tr>
-        <tr>
-            <td>
-                Nova uloga 
-            </td>
-            <td>
-                <select name="org" v-model="uloga">
-                    <option value="admin">Admin</option>
-                    <option value="korisnik">Korisnik</option>
-                </select> 
-            </td>\                          
-        </tr>
-        <tr>
-            <td>
-                Email 
-            </td>
-            <td>
-                {{$route.params.korisnik.email}}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Organizacija 
-            </td>
-            <td>
-                <template v-if="$route.params.korisnik.organizacija!=null">
-                    {{$route.params.korisnik.organizacija.ime}}
-                </template>
-            </td>
-            <td >
-                <p  class="alert alert-dangers d-none">
-                    Ovo polje je obavezno!
-                </p>
-            </td> 
-        </tr>
-    </table>    
-    <button v-on:click = "izmeniKorisnika()" type="button" class="btn btn-success">Izmeni korisnika</button>
-    <button v-on:click = "obrisiKorisnika()" type="button" class="btn btn-danger">Obriši korisnika</button>
+    <v-row>
+        <v-col cols="10">
+            <h1>Detalji korisnika</h1>
+        </v-col>
+        <v-col cols="2">
+            <v-btn color="primary" @click="back">Nazad</v-btn>
+        </v-col>
+    </v-row>
+    <v-card> 
+        <v-container>
+            <v-form ref = "forma">
+                <v-text-field
+                    required
+                    label="Ime"
+                    v-model="ime"
+                    :rules="rules"
+                />
+                <v-text-field
+                    required
+                    label="Prezime"
+                    v-model="prezime"
+                    :rules="rules"
+                />
+                <v-text-field
+                    readonly
+                    label="Uloga"
+                    v-model="staraUloga"
+                />
+                <v-select
+                    required
+                    label="Nova uloga"
+                    :items="tipoviKorisnika"
+                    v-model="uloga"
+                    :rules="rules"
+                />
+                <v-text-field
+                readonly
+                :rules="erules"
+                v-model="email"
+                label="Email"
+                />
+                <v-text-field
+                v-if="$route.params.korisnik.organizacija!=null"
+                readonly
+                :rules="rules"
+                item-text="ime"
+                v-model="organizacija"
+                label="Organizacija"
+                />
+            </v-form>
+            <v-btn v-on:click = "izmeniKorisnika()" color="success">Izmeni korisnika</v-btn>
+            <v-btn v-on:click = "obrisiKorisnika()" color="error">Obriši korisnika</v-btn>
+        </v-container>
+    </v-card>   
 </div>		  
 `
 });

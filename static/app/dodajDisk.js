@@ -15,13 +15,14 @@ Vue.component("dodaj-disk",{
     },
     watch:{
         org:function (val) {
+            console.log(val);
+            
             if(val){
-               let vau =  this.$refs.vm;
-               console.log(vau);
                for(let o of this.organizacije){
-                   console.log(o);
-                   if(o.id === val){
+                console.log(o.resursi);
+                  if(o.id === val){
                     if(o.resursi){
+                        
                         this.vmasine = [];
                         for(let r of o.resursi){
                             if(r.tipResursa=="VM"){
@@ -135,11 +136,14 @@ Vue.component("dodaj-disk",{
                     min="1"
                 >
                 </v-text-field>
-                <v-text-field
+                <v-select
+                    :items="vmasine"
+                    item-text="ime"
+                    item-value="id"
+                    label="Virtuelna mašina"
                     v-model="vm"
-                    label="Virtuelne mašina"
                 >
-                </v-text-field>
+                </v-select>
             </v-form>
             <button class="btn btn-success" @click = "dodajDisk()">Dodaj novi disk</button>
         </v-container>

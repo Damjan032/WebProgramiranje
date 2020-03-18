@@ -53,7 +53,7 @@ Vue.component("detalji-org", {
             });
         },
         back:function () {
-            this.$router.go("/org");
+            this.$router.push("/org");
         }
     },
 	mounted () {

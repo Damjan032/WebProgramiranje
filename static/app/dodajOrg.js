@@ -58,7 +58,7 @@ Vue.component("dodaj-org",{
             });
         },
         back:function () {
-            this.$router.go("/org");
+            this.$router.push("/org");
         }
     },
     template:`
@@ -71,9 +71,7 @@ Vue.component("dodaj-org",{
                         <h2>Nova organizacija</h2>
                     </v-col>
                     <v-col>
-                        <router-link to="/">
-                            <v-btn color="primary" @click="back">Nazad</v-btn>
-                        </router-link>
+                        <v-btn color="primary" @click="back">Nazad</v-btn>
                     </v-col>
                 </v-row>
                 <v-form

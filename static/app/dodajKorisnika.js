@@ -2,20 +2,21 @@ Vue.component("dodaj-korisnika", {
 	data: function () {
         return {
             korisnik : null,
-            email: null,
+            email: "",
             ime: null,
             prezime: null,
             tipKorisnika: null,
             sifra: null,
             organizacija: null,
-            organizacije : null
+            organizacije : [],
+            rules:[v=>!!v||'Ovo polje je obavezno'],
+            erules:[v=>!!v||'Ovo polje je obavezno', e=>e.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)?!!e:"Email ne odgovara obrascu korisnik@kompanija.domen!"],
+            tipoviKorisnika:['admin','korisnik']
         }
 	},
 	methods : {
-		checkParams: checkFormParams
-        ,
         dodajKorisnika:function() {
-            if(!this.checkParams()){
+            if(!this.$refs.forma.validate()){
                 return;
             }
             axios.post("/korisnici",{
@@ -27,16 +28,7 @@ Vue.component("dodaj-korisnika", {
                 uloga:this.tipKorisnika
               }
             ).then(response=>{
-                    
-                    if (response.status) {
-                        window.location.replace("/korisnici.html");
-                    }else{
-                        new Toast({
-                            message:response.statusText,
-                            type: 'danger'
-                        });
-                    }
-
+                this.$router.push("/korisnik");
             }).catch(error=>{
                 new Toast({
                     message:error.response.data.ErrorMessage,
@@ -45,7 +37,7 @@ Vue.component("dodaj-korisnika", {
             });
         },
         back:function () {
-            this.$router.go(-1);
+            this.$router.push("/korisnik");
         }
     },
 	mounted () {
@@ -60,8 +52,9 @@ Vue.component("dodaj-korisnika", {
         });  
         axios.get('/korisnik').then(response => {
             this.korisnik = response.data;
-            let org = response.data.uloga;
-            $("#org").prop("disabled", true).prop("value", org);
+            console.log(this.korisnik);
+            
+            this.organizacija = response.data.organizacija;
         }).catch(error=>{
             let msg = error.response.data.ErrorMessage;
             new Toast({
@@ -72,123 +65,72 @@ Vue.component("dodaj-korisnika", {
     },
     template: `
 <div>
-    <div v-if  = "organizacije.length == 0"  >
-        <h2>Dodavanje korisnika nije moguće jer ne postoji nijedna organizacija</h2>
-    </div>
-    <template v-else>
-        <div class="row">
-            <div class="page-header col-8">
+    <h4 class="my-10 error" v-if  = "organizacije.length == 0"  >
+        Dodavanje korisnika nije moguće jer ne postoji nijedna organizacija
+    </h4>
+    <v-card v-else>
+        <v-container>
+        <v-row>
+            <v-col cols="8">
                 <h2>Novi korisnik</h2>
-            </div>
-            <div>
-                    <button type="button" class="btn btn-primary" @click="back">Nazad</button>
-            </div>
-        </div>
-        <p>
-            <table>
-                <tr>
-                    <td>
-                        Ime
-                    </td>
-                    <td>
-                        <input class="required" type="text" v-model="ime"/>
-                    </td>
-                    <td >
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                       
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Prezime
-                    </td>
-                    <td>
-                        <input class="required" type="text" v-model="prezime"/>
-                    </td>
-                    <td >
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Email
-                    </td>
-                    <td>
-                        <input class="required email"  type="text" v-model="email"/>
-                    </td>
-        
-                    <td>
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                        <p  class="alert email-message alert-danger d-none">
-                            Email nije odgovarajućeg formata ime@domen.org
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Šifra
-                    </td>
-                    <td>
-                        <input class="required" type="password" v-model="sifra"/>
-                    </td>
-                    <td>
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Tip korisnika
-                    </td>
-                    <td>
-                        
-                        <select class="required" name="org" v-model="tipKorisnika">
-                            <option value="admin">Admin</option>
-                            <option value="korisnik">Korisnik</option>
-                        </select class="required">
-                    </td>
-                    <td >
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Organizacija
-                    </td>
-                    <td>
-                        <select class="required" name="org" v-model="organizacija">
-                            <option v-for = "o in organizacije" :value="o.id">{{o.ime}}</option>
-                        </select class="required">
-                    </td>
-                    <td >
-                        <p  class="alert alert-danger d-none">
-                            Ovo polje je obavezno!
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-success" v-on:click = "dodajKorisnika()">Dodaj korisnika</button>
-                    </td>
-                </tr> 
-            </table>
-
-            
-            
-        </p>
-    </template>		  
+            </v-col>
+            <v-col>
+                <v-btn color="primary" @click="back">Nazad</v-btn>
+            </v-col>
+        </v-row>
+        <v-form ref="forma">
+            <v-text-field
+            required
+            :rules="rules"
+            v-model="ime"
+            label="Ime korisnika"
+            >
+            </v-text-field>
+            <v-text-field
+            required
+            :rules="rules"
+            v-model="prezime"
+            label="Prezime korisnika"
+            >
+            </v-text-field>
+            <v-text-field
+            required
+            :rules="erules"
+            v-model="email"
+            label="Email korisnika"
+            >
+            </v-text-field>
+            <v-text-field
+                v-model="sifra"
+                label="Šifra korisnika"
+                type="password"
+                required
+                :rules="rules"
+            >
+            </v-text-field>
+            <v-select
+                label="Tip korisnika"
+                :items="tipoviKorisnika"
+                required
+                :rules="rules"
+                v-model="tipKorisnika"
+            >
+            </v-select>
+            <v-select
+                label="Organizacija korisnika"
+                :items="organizacije"
+                required
+                :rules="rules"
+                item-text="ime"
+                item-value="id"
+                v-model="organizacija"
+                :disabled="korisnik.uloga!='SUPER_ADMIN'?true:false"
+            >
+            </v-select>
+        </v-form>
+        <v-btn color="success" v-on:click = "dodajKorisnika()">Dodaj korisnika</v-btn>
+        </v-container>
+    </v-card>		  
 </div>
 `
 });
