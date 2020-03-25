@@ -6,7 +6,10 @@ Vue.component("izmena-profila",{
             ime:null,
             prezime:null,
             sifra1:null,
-            sifra2:null
+            sifra2:null,
+            rules:[v=>!!v||'Ovo polje je obavezno'],
+            erules:[v=>!!v||'Ovo polje je obavezno', e=>e.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)?!!e:"Email ne odgovara obrascu korisnik@kompanija.domen!"],
+            
         }
     },
     mounted(){
@@ -25,7 +28,8 @@ Vue.component("izmena-profila",{
     methods:{
         izmeniProfil:function () {
 
-            checkFormParams();
+            if(!this.$refs.forma.validate())
+                return
             if(this.sifra1&&!this.sifra2){
                 new Toast({
                     message:"Niste ponovili šifru",
@@ -71,56 +75,46 @@ Vue.component("izmena-profila",{
     },
     template:
 `
-<div id="izmena-profila">
-    <div class="jumbotron"><h1>Izmena profila</h1></div>
-    
-    <div class="container">
-        <h2>Korisnik: {{email}}</h2>
-        <table class="table">                
-            <tr>
-                <td>
-                    Email 
-                </td>
-                <td>
-                    <input type="text" v-model = "email">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Ime 
-                </td>
-                <td>
-                    <input type="text" v-model = "ime">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Prezime
-                </td>
-                <td>
-                    <input type="text" v-model = "prezime">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Šifra
-                </td>
-                <td>
-                    <input id="sifra1" type="password" v-model = "sifra1">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Ponovite šifru
-                </td>
-                <td>
-                    <input id = "sifra2" type="password" v-model = "sifra2">
-                </td>
-            </tr>
-            
-        </table>   
-        <button v-on:click = "izmeniProfil()" type="button" class="btn btn-success">Izmeni profil</button>
-    </div>
+<div>
+    <v-container>
+
+        <v-row>
+            <h1>Izmena Profila</h1>
+        </v-row>
+        
+
+        <v-card> 
+            <v-container>
+                <h2>Korisnik: {{email}}</h2>
+                <v-form ref = "forma">
+                    <v-text-field
+                        label="Email"
+                        v-model="email"
+                    />
+                    <v-text-field
+                        label="Ime"
+                        v-model="ime"
+                    />
+                    <v-text-field
+                        :rules="rules"
+                        required
+                        label="Prezime"
+                        v-model="prezime"
+                    />
+                    <v-text-field
+                        v-model="sifra"
+                        label="Šifra"
+                        type="password"
+                    />
+                    <v-text-field
+                        label="Ponovite šifru"
+                        type="password"
+                    />
+                </v-form>
+                <v-btn v-on:click = "izmeniProfil()" color="success">Izmeni profil</v-btn>
+            </v-container>
+        </v-card>    
+    </v-container>
 
 </div>
 `

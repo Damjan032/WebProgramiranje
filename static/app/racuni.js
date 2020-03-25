@@ -46,119 +46,131 @@ Vue.component("racuni",{
     template:
 `
         <div>
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <h3>
-                            Mesečni računi
-                        </h3>
-                        <table class="table">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th>
-                                    Organizacija
-                                </th>
-                                
-                                <th>
-                                    Početak
-                                </th>
-                                <th>
-                                    Kraj
-                                </th>
-                                <th>
-                                    Cena
-                                </th>
-                            </tr>
-                            </thead>
-                            <tr v-for="r in racuni">
-                                <td>
-                                    {{r.org.ime}}
-                                </td>
-                                <td>
-                                    <template v-if="r.pocetak">
+            <v-container>
+                <h1>Pregled računa</h1>
+                <v-row>
+                    <v-col>
+                        <v-card>
+                            <v-container>
 
-                                        {{r.pocetak}}
-                                    </template>
-                                </td>
-                                <td>
-                                    <template v-if="r.kraj">
-                                        {{r.kraj.day}}-{{r.kraj.month}}-{{r.kraj.year}}
-                                    </template>
-                                </td>
-                                <td>
-                                    {{r.cena.toFixed(2)}}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col">
-                        <h3>
-                            Cena za određeni period
-                        </h3>
-                        <table>
-                            <tr>
-                                
-                                <th>
-                                    Početni datum
-                                </th>
-                                <th>
-                                    Krajnji datum
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="date" v-model="pocetniDatum">
+                                <h3>
+                                    Mesečni računi
+                                </h3>
+                                <v-simple-table>
+                                    <thead class="thead-dark">
+                                    <tr>
+                                        <th>
+                                            Organizacija
+                                        </th>
+                                        
+                                        <th>
+                                            Početak
+                                        </th>
+                                        <th>
+                                            Kraj
+                                        </th>
+                                        <th>
+                                            Cena
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="r in racuni">
+                                            <td>
+                                                {{r.org.ime}}
+                                            </td>
+                                            <td>
+                                                <template v-if="r.pocetak">
 
-                                </td>
-                                <td>
-                                    <input type="date" v-model="krajnjiDatum">
-                                </td>
-                                <td>
-                                    <button @click= "pretrazi()" type="button" class="btn btn-success">Pretraži</button>
-                                </td>
-                            </tr>
+                                                    {{r.pocetak}}
+                                                </template>
+                                            </td>
+                                            <td>
+                                                <template v-if="r.kraj">
+                                                    {{r.kraj.day}}-{{r.kraj.month}}-{{r.kraj.year}}
+                                                </template>
+                                            </td>
+                                            <td>
+                                                {{r.cena.toFixed(2)}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-simple-table>
+                            </v-container>
+                        </v-card>
+                    </v-col>
+                    <v-col>
+                        <v-card>
+                            <v-container>
+                                <h3>
+                                    Cena za određeni period
+                                </h3>
+                                <v-simple-table>
+                                    <tr>
+                                        
+                                        <th>
+                                            Početni datum
+                                        </th>
+                                        <th>
+                                            Krajnji datum
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <v-date-picker v-model="pocetniDatum" show-current="2013-07-13"></v-date-picker>
 
-                        </table>
-                        <table class="table" v-if="intervalniRacun">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>
-                                        Ime
-                                    </th>
-                                    
-                                    <th>
-                                        Tip
-                                    </th>
-                                    <th>
-                                        Cena za period
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                                        </td>
+                                        <td>
+                                            <v-date-picker v-model="krajnjiDatum" show-current="2013-07-13"></v-date-picker>
+                                        </td>
+                                        <td>
+                                            <v-btn @click= "pretrazi()" color="success">Pretraži</v-btn>
+                                        </td>
+                                    </tr>
 
-                                <tr v-for="racun in intervalniRacun.resursRacuni">
-                                    <td>
-                                        {{racun.imeResursa}}
-                                    </td>
-                                    <td>
-                                        {{racun.tipResursa}}
-                                    </td>
-                                    <td>
-                                        {{racun.cena.toFixed(2)}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <thead class="thead-light">
-                                <tr>
-                                    <th></th>
-                                    <tH>Ukupna cena: </tH>
-                                    <th>{{intervalniRacun.ukupnaCena.toFixed(2)}}</th>
-                                </tr>
-                            </thead> 
-                        </table>
-                    </div>
-                </div>
-            </div>
+                                </v-simple-table>
+                                <v-simple-table v-if="intervalniRacun">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Ime
+                                            </th>
+                                            
+                                            <th>
+                                                Tip
+                                            </th>
+                                            <th>
+                                                Cena za period
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr v-for="racun in intervalniRacun.resursRacuni">
+                                            <td>
+                                                {{racun.imeResursa}}
+                                            </td>
+                                            <td>
+                                                {{racun.tipResursa}}
+                                            </td>
+                                            <td>
+                                                {{racun.cena.toFixed(2)}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th></th>
+                                            <tH>Ukupna cena: </tH>
+                                            <th>{{intervalniRacun.ukupnaCena.toFixed(2)}}</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </v-container>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
         </div>
  
 `
