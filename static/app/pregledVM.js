@@ -315,7 +315,7 @@ Vue.component("pregled-vm",{
         </router-link>
         </v-container>
 
-        <v-card>
+        </v-card>
     </div>
     `
 });

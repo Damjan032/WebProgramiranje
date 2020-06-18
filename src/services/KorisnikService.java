@@ -68,6 +68,7 @@ public class KorisnikService{
             throw new BadRequestException("Ne mozete da kreirate korisnike kao obican korisnik!");
         }
         String body = req.body();
+        System.out.println(body);
         KorisnikTrans korisnikTrans = g.fromJson(body, KorisnikTrans.class);
         if (k.getUloga()==Uloga.ADMIN){
             if (!korisnikTrans.getOrganizacija().equals(k.getOrganizacija())){
@@ -138,6 +139,9 @@ public class KorisnikService{
         if (k == null){
             throw new UnauthorizedException();
         }
+        if(k.getId().equals(id)){
+            throw new BadRequestException("Ne možete obrisati sopstveni nalog!");
+        }
         Korisnik korisnikBrisani = korisnikDAO.fetchById(id).getKorisnik();
         if (korisnikBrisani.getUloga()==Uloga.SUPER_ADMIN){
             throw new BadRequestException("Ne može se brisati super admin!");
@@ -170,6 +174,9 @@ public class KorisnikService{
     }
 
     public static KorisnikDTO mapKorisniktoKorisnikDTO(Korisnik k){
+        if (k == null){
+            return null;
+        }
         Organizacija o = null;
         try{
             o = new OrganizacijaDAO().fetchById(k.getOrganizacija());

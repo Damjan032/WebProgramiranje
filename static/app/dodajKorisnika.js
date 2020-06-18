@@ -24,12 +24,14 @@ Vue.component("dodaj-korisnika", {
                 ime: this.ime,
                 prezime: this.prezime,
                 sifra: this.sifra,
-                organizacija: this.organizacija,
+                organizacija: this.organizacija.id,
                 uloga:this.tipKorisnika
               }
             ).then(response=>{
+                console.log(response);
                 this.$router.push("/korisnik");
             }).catch(error=>{
+                console.log(error);
                 new Toast({
                     message:error.response.data.ErrorMessage,
                     type: 'danger'
