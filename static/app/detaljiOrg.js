@@ -8,7 +8,7 @@ Vue.component("detalji-org", {
             oOpis : "",
             slika : null,
             rule:[v=>!!v||'Ovo polje je obavezno'],
-
+            tipKorisnika:""
         }
     },
 	methods : {
@@ -90,6 +90,7 @@ Vue.component("detalji-org", {
                         label="Naziv organizacije"
                         v-model="oIme"
                         :rules="rule"
+                        :readonly="tipKorisnika!='SUPER_ADMIN'"
                     >
                     </v-text-field>
                         <v-text-field
@@ -97,11 +98,12 @@ Vue.component("detalji-org", {
                         label="Opis organizacije"
                         v-model="oOpis"
                         :rules="rule"
+                        :readonly="tipKorisnika!='SUPER_ADMIN'"
                     >
                     </v-text-field>
-                    <v-file-input prepend-icon="mdi-camera" accept="image/*" label="Novi logo organizacije" v-model="slika"></v-file-input>
-                    <v-btn v-on:click = "izmenaOrg(oIme,oOpis)" color="success">Izmeni organizaciju</v-btn>
-                    <v-btn v-on:click = "obrisiOrg()" type="button" color="error">Obriši organizaciju</v-btn>
+                    <v-file-input v-if="tipKorisnika!='KORISNIK'" prepend-icon="mdi-camera" accept="image/*" label="Novi logo organizacije" v-model="slika"></v-file-input>
+                    <v-btn v-if="tipKorisnika!='KORISNIK'" v-on:click = "izmenaOrg(oIme,oOpis)" color="success">Izmeni organizaciju</v-btn>
+                    <v-btn v-if="tipKorisnika=='SUPER_ADMIN'" v-on:click = "obrisiOrg()" type="button" color="error">Obriši organizaciju</v-btn>
                 </v-container>
             </v-card>
         </v-col> 

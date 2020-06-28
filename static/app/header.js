@@ -38,7 +38,7 @@ Vue.component("site-header", {
                 <router-link tag="v-tab" class="nav-link" to="/vm">Virtualne mašine</router-link>
                 <router-link tag="v-tab" class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'" to="/kat">Kategorija</router-link>
                 <router-link tag="v-tab" class="nav-link" to="/disk">Diskovi</router-link>
-                <router-link tag="v-tab" class="nav-link" to="/org">Organizacije</router-link>
+                <router-link tag="v-tab" class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'||korisnik.uloga=='ADMIN'" to="/org">Organizacije</router-link>
                 <router-link tag="v-tab" class="nav-link" v-if = "korisnik.uloga=='SUPER_ADMIN'||korisnik.uloga=='ADMIN'" to="/korisnik">Korisnici</router-link>
             </v-tabs>
         </transition>

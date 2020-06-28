@@ -127,6 +127,10 @@ public class OrganizacijaService implements Service<String, String> {
 
     @Override
     public void delete(Request r, String id) throws IOException {
+        Korisnik k = r.session().attribute("korisnik");
+        if (k==null||k.getUloga()!=Uloga.SUPER_ADMIN){
+            throw new UnauthorizedException();
+        }
         organizacijaDAO.delete(id);
     }
 

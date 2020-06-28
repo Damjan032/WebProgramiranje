@@ -107,6 +107,7 @@ Vue.component("detalji-diska", {
                     label="Ime diska"
                     v-model="ime"
                     :rules="rule"
+                    :readonly="tipKorisnika=='KORISNIK'"
                 >
                 </v-text-field>
                 <v-divider class="my-3"></v-divider>
@@ -117,6 +118,7 @@ Vue.component("detalji-diska", {
                     :rules="rule"
                     type="number"
                     min="1"
+                    :readonly="tipKorisnika=='KORISNIK'"
                 >
                 </v-text-field>
                 <v-divider class="my-3"></v-divider>
@@ -127,7 +129,7 @@ Vue.component("detalji-diska", {
                     :rules="rule"
                     label="Tip diska"
                     v-model="tip"
-                    :readonly="tipKorisnika=='KORISNIK'?true:false"
+                    :readonly="tipKorisnika=='KORISNIK'"
                 >
                 </v-select>
             </v-form>

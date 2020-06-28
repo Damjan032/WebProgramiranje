@@ -169,10 +169,7 @@ Vue.component("detalji-vm", {
         axios.get('/vmKategorije').then(response => {
             this.vmKategorije = response.data;
         }).catch(error=>{
-            new Toast({
-                message:error.response.data.ErrorMessage,
-                type: 'danger'
-            });
+            console.log(error)
         });
         this.reload();
     },
@@ -200,8 +197,7 @@ Vue.component("detalji-vm", {
                             label="Ime virtuelne mašine"
                             v-model="ime"
                             :rules="rule"
-                            :readonly="tipKorisnika=='KORISNIK'?true:false"
-
+                            :readonly="tipKorisnika=='KORISNIK'"
                         >
                         </v-text-field>
                         <v-divider class="my-3"></v-divider>
@@ -220,6 +216,7 @@ Vue.component("detalji-vm", {
                             :rules="rule"
                             label="Nova kategorija"
                             v-model="kategorija"
+                            :readonly="tipKorisnika=='KORISNIK'"
                         >
                         </v-select>
                         <v-divider class="my-3"></v-divider>
